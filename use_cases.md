@@ -112,12 +112,20 @@
 
 ## 3.  SCIM Use Cases
    This section we will describe the most common SCIM use cases, and will explain when, where, why and how we find them in the cross domain environment for managing resources. This list by no way tries to be exhaustive and complete and tried to guide developers for the possibility of such models and will try to explain the challenges and the components.
+   As mention before SCIM is a protocol for cross domains where two entities exchange information about a resource, with the use cases we try to go further and explain on how the different components can interact to allow from simple to complex architectures for cross domain resource management.
+   Typically each bellow  use case add something on top of the previous one, starting in the most simple one, and finishing in the most complex ones, to make it easier the explanation, assume that what was describe in the previous use case applies to the use cases that come after.
 
 ###   3.1.  Single RM/RC/RU and multiple RS
-      This is the most common SCIM use case, and allows that in IdM do all CRUD operation into the resources and using the trigger mechanisms described before be able to update the Resource Subscribers inta 
+      This is very common SCIM use case and basic use case, allows that the IdM do all CRUD operation with the resources, then using the trigger mechanisms described before we achieve that the resource information reach the Resource Subscribers. The RS will take the decision on which resource attributes to take and how the Resource Object will show in their resource database.
+      Typically we can find this kind of use case in small to mid size organization, where there were no Resource organization before and they start fresh or it is a greenfield Organization.
 
 ###   3.2.  One or more ERC with single RM/RC/RU and multiple RS
-
+      This is the most common use case, because it allow the organization to adopt SCIM protocol for CRUD operations of their resources, but in this use case the organization already have an existent database of resources that is going to be the source of truth for the Resource Manager or is going to be the starting point. At no point in time the SCIM RM will provide SCIM operation with that External Resource Creator.
+      Normally this ERC, specially if we are talking about user Identity, will have a User database that can be accessible using LDAP or can provide information of their user attributes by doing an SAML Single SignOn using Just in time Provision. Most of the IDaaS also provide softwares that allow them to get resource information by using proprietary protocols, generally using HTTP REST to get the information from the ERC to the RM.
+      Typically in this use case the RM will become the new source of truth for the resources of our Organization, and will add extra Resource Attributes and ignore other that existed in the ERC.
+      Some organization that already realize that going forward the RM will be the authority answer for the Resources Object and Attributes, will start create new Resource Objects in this service.
+      As the previous use cases the Resource Subscriber will consume all the resource information from the RM.
+    
 ###   3.3.  One or more RC/RU, with single RM and multiple RS
 
 ###   3.4.  One or more ERC, one or more RC/RU, with single RM and multiple RS
