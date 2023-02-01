@@ -1,20 +1,20 @@
-              System for Cross-domain Identity Management:
-           Definitions, Overview, Concepts, and Requirements
+#               System for Cross-domain Identity Management:
+#           Definitions, Overview, Concepts, and Requirements
 
-Abstract
+## Abstract
    This document provides definitions and an overview of the System for
    Cross-domain Identity Management (SCIM).  It lays out the system's
    concepts, models, and flows, and it includes user scenarios, use
    cases, and requirements.
 
-1.  Introduction
+## 1.  Introduction
    This document provides the SCIM definitions, overview, concepts, flows, scenarios, and use cases.  It also provides a list of the requirements derived from the use cases.
    The document's objective is to help with understanding of the design and applicability of the SCIM schema [RFC7643] and SCIM protocol [RFC7644].
    Unlike the practice of some protocols like Application Bridging for Federated Access Beyond web (ABFAB) and SAML2 WebSSO, SCIM provides provisioning and de-provisioning of resources in a separate context from authentication (aka just-in-time provisioning).
    This document will describe the different construct that we have in the SCIM protocol and will provide the most typical use case that we will find in the implementation, will also help identify the interactions between the different constructs and guide on the roles that each has in the SCIM protocol.
    SCIM is a protocol where it relies on one-to-one interaction, in a client-server model. Any interaction is based on a trigger that will start a CRUD event on one or many resources.
 
-   1.1.  Terminology
+###    1.1.  Terminology
       The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC2119] when they appear in ALL CAPS.  These words may also appear in this document in lowercase as plain English words, absent their normative meanings.
       Here is a list of acronyms and abbreviations used in this document:
          - **COI:** Community of Interest
@@ -37,15 +37,15 @@ Abstract
          - **SCIM:** System for Cross-domain Identity Management
          - **SSO:** Single Sign-On
 
-2.  SCIM User Scenarios
-   2.1.  Background and Context
+## 2.  SCIM User Scenarios
+###   2.1.  Background and Context
       The System for Cross-domain Identity Management (SCIM) specification is designed to manage resources and services in cloud-based applications in a standardized way to enable interoperability, security, and scalability.
       The specification suite seeks to build upon experience with existing schemas and deployments, placing specific emphasis on simplicity of development and integration, while applying existing authentication, authorization, and privacy models.
       The intent of the SCIM specification is to reduce the cost and complexity of user management operations by providing a common user schema and extension model, as well as binding documents to provide patterns for exchanging this schema using standard protocols. In essence, make it fast, cheap, and easy to move users in to, out of, and around the cloud.
       The SCIM scenarios are overviews of user stories designed to help clarify the intended scope of the SCIM effort.
 
-   2.2.  Model Concepts
-      2.2.1.  Triggers
+###   2.2.  Model Concepts
+####      2.2.1.  Triggers
          Quite simply, triggers are actions or activities that start SCIM flows.
          Triggers may not be relevant at the protocol level or the schema level; they really serve to help identify the type or activity that resulted in a SCIM protocol exchange. 
          Triggers used to allow CRUD (Create, Read, Update, Delete) operations as it is designed to capture a class of use case that makes sense to the actor requesting it rather than to describe a protocol operation.
@@ -62,7 +62,7 @@ Abstract
             - **Notification of Deletion of a SCIM Resource –** Service Notification of termination Trigger: A "delete SCIM resource" trigger represents a specific and deliberate action to remove a resource from a given SCIM service point.
             An example of this could be the RC or RU to send an event to the RM notifying him that a resource has been deleted. This trigger can send the information of the RO was deleted. 
 
-      2.2.2.  Roles/Constructs
+####      2.2.2.  Roles/Constructs
          Constructs are the operating parties that take part in both sides of a SCIM protocol exchange and help identify the source of a given Trigger. 
          A specific element can have one or more constructs roles, depending on the type of services that is delivering in the SCIM architecture.
          So far, we have identified the following SCIM constructs:
@@ -110,29 +110,29 @@ Abstract
                                     Figure 1: SCIM Roles Constructs
 
 
-3.  SCIM Use Cases
+## 3.  SCIM Use Cases
    This section we will describe the most common SCIM use cases, and will explain when, where, why and how we find them in the cross domain environment for managing resources. This list by no way tries to be exhaustive and complete and tried to guide developers for the possibility of such models and will try to explain the challenges and the components.
 
-   3.1.  Single RM/RC/RU and multiple RS
+###   3.1.  Single RM/RC/RU and multiple RS
       This is the most common SCIM use case, and allows that in IdM do all CRUD operation into the resources and using the trigger mechanisms described before be able to update the Resource Subscribers inta 
 
-   3.2.  One or more ERC with single RM/RC/RU and multiple RS
+###   3.2.  One or more ERC with single RM/RC/RU and multiple RS
 
-   3.3.  One or more RC/RU, with single RM and multiple RS
+###   3.3.  One or more RC/RU, with single RM and multiple RS
 
-   3.4.  One or more ERC, one or more RC/RU, with single RM and multiple RS
+###   3.4.  One or more ERC, one or more RC/RU, with single RM and multiple RS
 
-   3.5.  One or more ERC, one or more RC/RU, with single RM/RU/RS and multiple RS/RU
+###   3.5.  One or more ERC, one or more RC/RU, with single RM/RU/RS and multiple RS/RU
 
-   3.6.  One or more ERC, one or more RC/RU/RS, with single RM/RU/RS and multiple RS/RU
+###   3.6.  One or more ERC, one or more RC/RU/RS, with single RM/RU/RS and multiple RS/RU
 
-   3.7.  One or more ERC, one or more RC/RU/RS, with one or more RM/RU/RS and multiple RS/RU
-
-
+###   3.7.  One or more ERC, one or more RC/RU/RS, with one or more RM/RU/RS and multiple RS/RU
 
 
 
-4.  Security Considerations
+
+
+## 4.  Security Considerations
    Authentication and authorization must be guaranteed for the SCIM
    operations to ensure that only authenticated entities can perform the
    SCIM requests and the requested SCIM operations are authorized.
@@ -153,13 +153,13 @@ Abstract
 
 
 
-5.  References
-   5.1.  Normative References
+## 5.  References
+###   5.1.  Normative References
       [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
                Requirement Levels", BCP 14, RFC 2119,
                DOI 10.17487/RFC2119, March 1997,
                <http://www.rfc-editor.org/info/rfc2119>.
-   5.2.  Informative References
+###   5.2.  Informative References
       [RFC7643]  Hunt, P., Ed., Grizzle, K., Wahlstroem, E., and
                C. Mortimore, "System for Cross-domain Identity
                Management: Core Schema", RFC 7643, DOI 10.17487/RFC7643,
@@ -169,9 +169,7 @@ Abstract
                Management: Protocol", RFC 7644, DOI 10.17487/RFC7644,
                September 2015, <http://www.rfc-editor.org/info/rfc7644>.
 
+## Acknowledgments
 
-
-Acknowledgments
-
-Authors' Addresses
+## Authors' Addresses
 
