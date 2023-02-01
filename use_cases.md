@@ -121,7 +121,7 @@ o  External Resource Creator (ERC): IS an entity that has information about reso
 3.  SCIM Use Cases
    This section lists the SCIM use cases.
 3.1.  Single RM/RC/RU and multiple RS
-
+   This is the most common SCIM use case, and allows that in IdM do all CRUD operation into the resources and using the trigger mechanisms described before be able to update the Resource subscribers inta 
 3.2.  One or more ERC with single RM/RC/RU and multiple RS
 
 3.3.  One or more RC/RU, with single RM and multiple RS
@@ -145,9 +145,6 @@ o  External Resource Creator (ERC): IS an entity that has information about reso
    SCIM resources (e.g., Users and Groups) can contain sensitive
    information.  Thus, data confidentiality MUST be guaranteed at the
    transport layer.
-LI, et al.                    Informational                    [Page 17]
- 
-RFC 7642                    SCIM Requirements             September 2015
    There can be privacy issues that go beyond transport security, e.g.,
    moving personally identifying information (PII) offshore between
    CSPs.  Regulatory requirements shall be met when migrating identity
