@@ -14,55 +14,55 @@
    This document will describe the different construct that we have in the SCIM protocol and will provide the most typical use case that we will find in the implementation, will also help identify the interactions between the different constructs and guide on the roles that each has in the SCIM protocol.
    SCIM is a protocol where it relies on one-to-one interaction, in a client-server model. Any interaction is based on a trigger that will start a CRUD event on one or many resources.
 
-###    1.1.  Terminology
-      The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC2119] when they appear in ALL CAPS.  These words may also appear in this document in lowercase as plain English words, absent their normative meanings.
-      Here is a list of acronyms and abbreviations used in this document:
-         - **COI:** Community of Interest
-         - **CRM:** Customer Relationship Management
-         - **CRUD:** Create, Read, Update, Delete
-         - **RC:** Resource Creator
-         - **RU:** Resource Updater
-         - **RM:** Resource Manager 
-         - **RS:** Resource Subscriber 
-         - **RO:** Resource Object 
-         - **RA:** Resource Attribute 
-         - **ERC:** External Resource Creator 
-         - **IaaS:** Infrastructure as a Service
-         - **JIT:** Just In Time
-         - **PaaS:** Platform as a Service
-         - **SaaS:** Software as a Service
-         - **IDaaS:** ID as a Service
-         - **IdM:** Identity Manager
-         - **SAML:** Security Assertion Markup Language
-         - **SCIM:** System for Cross-domain Identity Management
-         - **SSO:** Single Sign-On
+### 1.1.  Terminology
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC2119] when they appear in ALL CAPS.  These words may also appear in this document in lowercase as plain English words, absent their normative meanings.
+   Here is a list of acronyms and abbreviations used in this document:
+   - **COI:** Community of Interest
+   - **CRM:** Customer Relationship Management
+   - **CRUD:** Create, Read, Update, Delete
+   - **RC:** Resource Creator
+   - **RU:** Resource Updater
+   - **RM:** Resource Manager 
+   - **RS:** Resource Subscriber 
+   - **RO:** Resource Object 
+   - **RA:** Resource Attribute 
+   - **ERC:** External Resource Creator 
+   - **IaaS:** Infrastructure as a Service
+   - **JIT:** Just In Time
+   - **PaaS:** Platform as a Service
+   - **SaaS:** Software as a Service
+   - **IDaaS:** ID as a Service
+   - **IdM:** Identity Manager
+   - **SAML:** Security Assertion Markup Language
+   - **SCIM:** System for Cross-domain Identity Management
+   - **SSO:** Single Sign-On
 
 ## 2.  SCIM User Scenarios
-###   2.1.  Background and Context
-      The System for Cross-domain Identity Management (SCIM) specification is designed to manage resources and services in cloud-based applications in a standardized way to enable interoperability, security, and scalability.
-      The specification suite seeks to build upon experience with existing schemas and deployments, placing specific emphasis on simplicity of development and integration, while applying existing authentication, authorization, and privacy models.
-      The intent of the SCIM specification is to reduce the cost and complexity of user management operations by providing a common user schema and extension model, as well as binding documents to provide patterns for exchanging this schema using standard protocols. In essence, make it fast, cheap, and easy to move users in to, out of, and around the cloud.
-      The SCIM scenarios are overviews of user stories designed to help clarify the intended scope of the SCIM effort.
+### 2.1.  Background and Context
+   The System for Cross-domain Identity Management (SCIM) specification is designed to manage resources and services in cloud-based applications in a standardized way to enable interoperability, security, and scalability.
+   The specification suite seeks to build upon experience with existing schemas and deployments, placing specific emphasis on simplicity of development and integration, while applying existing authentication, authorization, and privacy models.
+   The intent of the SCIM specification is to reduce the cost and complexity of user management operations by providing a common user schema and extension model, as well as binding documents to provide patterns for exchanging this schema using standard protocols. In essence, make it fast, cheap, and easy to move users in to, out of, and around the cloud.
+   The SCIM scenarios are overviews of user stories designed to help clarify the intended scope of the SCIM effort.
 
-###   2.2.  Model Concepts
-####      2.2.1.  Triggers
-         Quite simply, triggers are actions or activities that start SCIM flows.
-         Triggers may not be relevant at the protocol level or the schema level; they really serve to help identify the type or activity that resulted in a SCIM protocol exchange. 
-         Triggers used to allow CRUD (Create, Read, Update, Delete) operations as it is designed to capture a class of use case that makes sense to the actor requesting it rather than to describe a protocol operation.
-            - **Instruction to Create SCIM Resource -** Service On-boarding Trigger: This is a service for the on-boarding activity in which a business action such as a new hire or new service subscription is initiated.
-            An example of this could be the RC (Resource Creator) pushes the RO (Resource Object) to the RM (Resource Manager).
-            - **Notification of Creation of a SCIM Resource –** Service Notification of creation Trigger: This is a service for the on-boarding activity in which a business action such as a new hire or new service subscription is initiated.
-            An example of this could be the RC to create send an event to RM notifying him that an resource has been created. This trigger can send the information of the RO was created and provide its RA or can just provide the information on the it was created and expect that the RM pull the RO/RA from the RC. 
-            - **Instruction to Update SCIM Resource -** Service Change Trigger: An "update SCIM resource" trigger is a service change activity as a result of a resource moving or changing its service level.
-            An example of this could be the RC (Resource Creator) or RU (Resource Updater) pushes the update of RO (Resource Object) or its RA (Resource Attributes) to the RM (Resource Manager).
-            - **Notification of Update SCIM Resource -** Service Notification of Change Trigger: An "update SCIM resource" trigger is a service change activity as a result of a resource moving or changing its service level.
-            An example of this could be the RC or RU sends an event to RM notifying him that RO or RA has been updated. This trigger can send the information of the RO updated and provide its RA or can just provide the information on the it was updated and expect that the RM pull the RO/RA from the RC or RU. 
-            - **Instruct to Delete SCIM Resource -** Service Termination Trigger: A "delete SCIM resource" trigger represents a specific and deliberate action to remove a resource from a given SCIM service point.
-            An Example of this could be the RC (Resource Creator) or RU (Resource Updater) pushes the delete operation to the RM (Resource Manager).
-            - **Notification of Deletion of a SCIM Resource –** Service Notification of termination Trigger: A "delete SCIM resource" trigger represents a specific and deliberate action to remove a resource from a given SCIM service point.
-            An example of this could be the RC or RU to send an event to the RM notifying him that a resource has been deleted. This trigger can send the information of the RO was deleted. 
+### 2.2.  Model Concepts
+#### 2.2.1.  Triggers
+   Quite simply, triggers are actions or activities that start SCIM flows.
+   Triggers may not be relevant at the protocol level or the schema level; they really serve to help identify the type or activity that resulted in a SCIM protocol exchange. 
+   Triggers used to allow CRUD (Create, Read, Update, Delete) operations as it is designed to capture a class of use case that makes sense to the actor requesting it rather than to describe a protocol operation.
+   - **Instruction to Create SCIM Resource -** Service On-boarding Trigger: This is a service for the on-boarding activity in which a business action such as a new hire or new service subscription is initiated.
+   An example of this could be the RC (Resource Creator) pushes the RO (Resource Object) to the RM (Resource Manager).
+   - **Notification of Creation of a SCIM Resource –** Service Notification of creation Trigger: This is a service for the on-boarding activity in which a business action such as a new hire or new service subscription is initiated.
+   An example of this could be the RC to create send an event to RM notifying him that an resource has been created. This trigger can send the information of the RO was created and provide its RA or can just provide the information on the it was created and expect that the RM pull the RO/RA from the RC. 
+   - **Instruction to Update SCIM Resource -** Service Change Trigger: An "update SCIM resource" trigger is a service change activity as a result of a resource moving or changing its service level.
+   An example of this could be the RC (Resource Creator) or RU (Resource Updater) pushes the update of RO (Resource Object) or its RA (Resource Attributes) to the RM (Resource Manager).
+   - **Notification of Update SCIM Resource -** Service Notification of Change Trigger: An "update SCIM resource" trigger is a service change activity as a result of a resource moving or changing its service level.
+   An example of this could be the RC or RU sends an event to RM notifying him that RO or RA has been updated. This trigger can send the information of the RO updated and provide its RA or can just provide the information on the it was updated and expect that the RM pull the RO/RA from the RC or RU. 
+   - **Instruct to Delete SCIM Resource -** Service Termination Trigger: A "delete SCIM resource" trigger represents a specific and deliberate action to remove a resource from a given SCIM service point.
+   An Example of this could be the RC (Resource Creator) or RU (Resource Updater) pushes the delete operation to the RM (Resource Manager).
+   - **Notification of Deletion of a SCIM Resource –** Service Notification of termination Trigger: A "delete SCIM resource" trigger represents a specific and deliberate action to remove a resource from a given SCIM service point.
+   An example of this could be the RC or RU to send an event to the RM notifying him that a resource has been deleted. This trigger can send the information of the RO was deleted. 
 
-####2.2.2.  Roles/Constructs
+#### 2.2.2.  Roles/Constructs
    Constructs are the operating parties that take part in both sides of a SCIM protocol exchange and help identify the source of a given Trigger. 
    A specific element can have one or more constructs roles, depending on the type of services that is delivering in the SCIM architecture.
    So far, we have identified the following SCIM constructs:
@@ -150,9 +150,6 @@
 ### 3.7.  One or more ERC, one or more RC/RU/RS, with one or more RM/RU/RS and multiple RS/RU
 
 
-
-
-
 ## 4.  Security Considerations
    Authentication and authorization must be guaranteed for the SCIM
    operations to ensure that only authenticated entities can perform the
@@ -172,23 +169,21 @@
    Detailed security considerations are specified in Section 7 of the
    SCIM protocol [RFC7644] and Section 9 of the SCIM schema [RFC7643].
 
-
-
 ## 5.  References
-###   5.1.  Normative References
-      [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-               Requirement Levels", BCP 14, RFC 2119,
-               DOI 10.17487/RFC2119, March 1997,
-               <http://www.rfc-editor.org/info/rfc2119>.
-###   5.2.  Informative References
-      [RFC7643]  Hunt, P., Ed., Grizzle, K., Wahlstroem, E., and
-               C. Mortimore, "System for Cross-domain Identity
-               Management: Core Schema", RFC 7643, DOI 10.17487/RFC7643,
-               September 2015, <http://www.rfc-editor.org/info/rfc7643>.
-      [RFC7644]  Hunt, P., Ed., Grizzle, K., Ansari, M., Wahlstroem, E.,
-               and C. Mortimore, "System for Cross-domain Identity
-               Management: Protocol", RFC 7644, DOI 10.17487/RFC7644,
-               September 2015, <http://www.rfc-editor.org/info/rfc7644>.
+### 5.1.  Normative References
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+   Requirement Levels", BCP 14, RFC 2119,
+   DOI 10.17487/RFC2119, March 1997,
+   <http://www.rfc-editor.org/info/rfc2119>.
+### 5.2.  Informative References
+   [RFC7643]  Hunt, P., Ed., Grizzle, K., Wahlstroem, E., and
+   C. Mortimore, "System for Cross-domain Identity
+   Management: Core Schema", RFC 7643, DOI 10.17487/RFC7643,
+   September 2015, <http://www.rfc-editor.org/info/rfc7643>.
+   [RFC7644]  Hunt, P., Ed., Grizzle, K., Ansari, M., Wahlstroem, E.,
+   and C. Mortimore, "System for Cross-domain Identity
+   Management: Protocol", RFC 7644, DOI 10.17487/RFC7644,
+   September 2015, <http://www.rfc-editor.org/info/rfc7644>.
 
 ## Acknowledgments
 
