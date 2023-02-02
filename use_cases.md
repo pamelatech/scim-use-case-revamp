@@ -37,7 +37,7 @@
    - **SCIM:** System for Cross-domain Identity Management
    - **SSO:** Single Sign-On
 
-## 2.  SCIM User Scenarios
+## 2.  SCIM Components and Architecture
 ### 2.1.  Background and Context
    The System for Cross-domain Identity Management (SCIM) specification is designed to manage resources and services in cloud-based applications in a standardized way to enable interoperability, security, and scalability.
    The specification suite seeks to build upon experience with existing schemas and deployments, placing specific emphasis on simplicity of development and integration, while applying existing authentication, authorization, and privacy models.
