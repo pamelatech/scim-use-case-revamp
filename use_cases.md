@@ -14,7 +14,7 @@
    This document will describe the different construct that we have in the SCIM protocol and will provide the most typical use case that we will find in the implementation, will also help identify the interactions between the different constructs and guide on the roles that each has in the SCIM protocol.
    SCIM is a protocol where it relies on one-to-one interaction, in a client-server model. Any interaction is based on a trigger that will start a CRUD event on one or many resources.
 
-###    1.1.  Terminology
+##    1.1.  Terminology
       The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC2119] when they appear in ALL CAPS.  These words may also appear in this document in lowercase as plain English words, absent their normative meanings.
       Here is a list of acronyms and abbreviations used in this document:
          - **COI:** Community of Interest
@@ -38,14 +38,14 @@
          - **SSO:** Single Sign-On
 
 ## 2.  SCIM User Scenarios
-###   2.1.  Background and Context
+##   2.1.  Background and Context
       The System for Cross-domain Identity Management (SCIM) specification is designed to manage resources and services in cloud-based applications in a standardized way to enable interoperability, security, and scalability.
       The specification suite seeks to build upon experience with existing schemas and deployments, placing specific emphasis on simplicity of development and integration, while applying existing authentication, authorization, and privacy models.
       The intent of the SCIM specification is to reduce the cost and complexity of user management operations by providing a common user schema and extension model, as well as binding documents to provide patterns for exchanging this schema using standard protocols. In essence, make it fast, cheap, and easy to move users in to, out of, and around the cloud.
       The SCIM scenarios are overviews of user stories designed to help clarify the intended scope of the SCIM effort.
 
-###   2.2.  Model Concepts
-####      2.2.1.  Triggers
+##   2.2.  Model Concepts
+##      2.2.1.  Triggers
          Quite simply, triggers are actions or activities that start SCIM flows.
          Triggers may not be relevant at the protocol level or the schema level; they really serve to help identify the type or activity that resulted in a SCIM protocol exchange. 
          Triggers used to allow CRUD (Create, Read, Update, Delete) operations as it is designed to capture a class of use case that makes sense to the actor requesting it rather than to describe a protocol operation.
@@ -62,7 +62,7 @@
             - **Notification of Deletion of a SCIM Resource –** Service Notification of termination Trigger: A "delete SCIM resource" trigger represents a specific and deliberate action to remove a resource from a given SCIM service point.
             An example of this could be the RC or RU to send an event to the RM notifying him that a resource has been deleted. This trigger can send the information of the RO was deleted. 
 
-####      2.2.2.  Roles/Constructs
+##      2.2.2.  Roles/Constructs
          Constructs are the operating parties that take part in both sides of a SCIM protocol exchange and help identify the source of a given Trigger. 
          A specific element can have one or more constructs roles, depending on the type of services that is delivering in the SCIM architecture.
          So far, we have identified the following SCIM constructs:
@@ -115,11 +115,11 @@
    As mention before SCIM is a protocol for cross domains where two entities exchange information about a resource, with the use cases we try to go further and explain on how the different components can interact to allow from simple to complex architectures for cross domain resource management.
    Typically each bellow  use case add something on top of the previous one, starting in the most simple one, and finishing in the most complex ones, to make it easier the explanation, assume that what was describe in the previous use case applies to the use cases that come after.
 
-###   3.1.  Single RM/RC/RU and multiple RS
+##   3.1.  Single RM/RC/RU and multiple RS
       This is very common SCIM use case and basic use case, allows that the IdM do all CRUD operation with the resources, then using the trigger mechanisms described before we achieve that the resource information reach the Resource Subscribers. The RS will take the decision on which resource attributes to take and how the Resource Object will show in their resource database.
       Typically we can find this kind of use case in small to mid size organization, where no structure method to handle the resources and the Organization start fresh or it is a greenfield Organization.
 
-###   3.2.  One or more ERC with single RM/RC/RU and multiple RS
+##   3.2.  One or more ERC with single RM/RC/RU and multiple RS
       This is the most common use case, because it allow the organization to adopt SCIM protocol for CRUD operations of their resources, but in this use case the organization already have an existent database of resources that is going to be the source of truth for the Resource Manager or is going to be the starting point. At no point in time the SCIM RM will provide SCIM operation with that External Resource Creator.
       Normally this ERC, specially if we are talking about user Identity, will have a User database that can be accessible using LDAP or can provide information of their user attributes by doing an SAML Single SignOn using Just in time Provision. Most of the IDaaS also provide softwares that allow them to get resource information by using proprietary protocols, generally using HTTP REST to get the information from the ERC to the RM.
       Typically in this use case the RM will become the new source of truth for the resources of our Organization, and will add extra Resource Attributes and ignore other that existed in the ERC.
@@ -127,7 +127,7 @@
       The Resource Subscribers will consume all the resource information from the RM.
       Typically we will see this use case in small to mid size organization where resources were organized in a non standard and non open platform for Resources Management and it isn't possible to cut/replace everything with a new system.
     
-###   3.3.  One or more RC/RU, with single RM and multiple RS
+##   3.3.  One or more RC/RU, with single RM and multiple RS
       In this use case, the authority for the CRUD operation to the Resource Object and its Resource Attributes does not belong to the Resource Manager, thi sis done in a separate entity that has this responsibilities. 
       A good example of this is use case is those Organization that have their HR application, and the lifecycle of the resource (typically groups and Users) is done by that application.
       We could also have this use case where the RM is extended with the Roles of RC/RU for extra resources that are not authoritative by the "HR System", but normally that bring more complexity to the authority models for the CRUD operation of the resources.  
@@ -135,7 +135,7 @@
       Typically we will see this use case in mid to large organization where no structure method to handle the resources and the Organization start fresh or it is a greenfield Organization.
 
 
-###   3.4.  One or more ERC, one RC/RU, with single RM and multiple RS
+##   3.4.  One or more ERC, one RC/RU, with single RM and multiple RS
       In this use case the Resource information is in a External Resource Creator, and the entity that has the role of RC/RU (example given before the HR System) consumes information from the ERC, but it add extra Resource Attributes, so from a model perspective, the RM get its authoritative Information from both systems the RC/RU and ERC.
       In this model there need to be careful thoughts so that we avoid loops where specific Resource Attributes write over and over again by the ERC and RC/RU.
       The Resource Subscribers will consume all the resource information from the RM.
@@ -143,11 +143,11 @@
       The Resource Subscribers will consume all the resource information from the RM.
       Typically we will see this use case in mid to large organization where resources were organized in a non standard and non open platform for Resources Management and it isn't possible to cut/replace everything with a new system.
 
-###   3.5.  One or more ERC, one or more RC/RU, with single RM/RU/RS and multiple RS/RU
+##   3.5.  One or more ERC, one or more RC/RU, with single RM/RU/RS and multiple RS/RU
 
-###   3.6.  One or more ERC, one or more RC/RU/RS, with single RM/RU/RS and multiple RS/RU
+##   3.6.  One or more ERC, one or more RC/RU/RS, with single RM/RU/RS and multiple RS/RU
 
-###   3.7.  One or more ERC, one or more RC/RU/RS, with one or more RM/RU/RS and multiple RS/RU
+##   3.7.  One or more ERC, one or more RC/RU/RS, with one or more RM/RU/RS and multiple RS/RU
 
 
 
@@ -175,12 +175,12 @@
 
 
 ## 5.  References
-###   5.1.  Normative References
+##   5.1.  Normative References
       [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
                Requirement Levels", BCP 14, RFC 2119,
                DOI 10.17487/RFC2119, March 1997,
                <http://www.rfc-editor.org/info/rfc2119>.
-###   5.2.  Informative References
+##   5.2.  Informative References
       [RFC7643]  Hunt, P., Ed., Grizzle, K., Wahlstroem, E., and
                C. Mortimore, "System for Cross-domain Identity
                Management: Core Schema", RFC 7643, DOI 10.17487/RFC7643,
