@@ -45,7 +45,9 @@
    The SCIM scenarios are overviews of user stories designed to help clarify the intended scope of the SCIM effort.
 
 ### 2.2.  Model Concepts
-#### 2.2.1.  Triggers
+#### 2.2.1.  The basics
+
+#### 2.2.2.  Triggers
    Quite simply, triggers are actions or activities that start SCIM flows.
    Triggers may not be relevant at the protocol level or the schema level; they really serve to help identify the type or activity that resulted in a SCIM protocol exchange. 
    Triggers used to allow CRUD (Create, Read, Update, Delete) operations as it is designed to capture a class of use case that makes sense to the actor requesting it rather than to describe a protocol operation.
@@ -62,7 +64,7 @@
    - **Notification of Deletion of a SCIM Resource –** Service Notification of termination Trigger: A "delete SCIM resource" trigger represents a specific and deliberate action to remove a resource from a given SCIM service point.
    An example of this could be the RC or RU to send an event to the RM notifying him that a resource has been deleted. This trigger can send the information of the RO was deleted. 
 
-#### 2.2.2.  Roles/Constructs
+#### 2.2.3.  Roles/Constructs
    Constructs are the operating parties that take part in both sides of a SCIM protocol exchange and help identify the source of a given Trigger. 
    A specific element can have one or more constructs roles, depending on the type of services that is delivering in the SCIM architecture.
    So far, we have identified the following SCIM constructs:
@@ -132,7 +134,7 @@
    A good example of this is use case is those Organization that have their HR application, and the lifecycle of the resource (typically groups and Users) is done by that application.
    We could also have this use case where the RM is extended with the Roles of RC/RU for extra resources that are not authoritative by the "HR System", but normally that bring more complexity to the authority models for the CRUD operation of the resources.  
    The Resource Subscribers will consume all the resource information from the RM.
-   Typically we will see this use case in mid to large organization where no structure method to handle the resources and the Organization start fresh or it is a greenfield Organization.
+   Typically we will see this use case in mid to large organization where no structure method to handle the resources and they start fresh or it is a greenfield.
 
 
 ### 3.4.  One or more ERC, one RC/RU, with single RM and multiple RS
