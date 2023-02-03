@@ -70,7 +70,7 @@
    So far, we have identified the following SCIM constructs:
    - **Resource Object (RO):** Is and object that is going to be manipulated (CRUD) by the different SCIM players, and in the end the ultimate goal to be pass across different systems and to make sure that consistent information is exchange. The Resource Object have attributes that are define by Schemas, an example of that is the SCIM Core Schema defines in RFC 7643.
    - **Resource Attributes (RA):** Is one element of the Resource Object (RO), it can have a single value or continue multiple values to describe a specific resource and all its characteristics, an example of this can be the different attributes for user and/or groups under the SCIM Core Schema defined in RFC 7643.
-   - **Resource Creator (RC):** Is an entity operating in a given service, is responsible of creating the Resource Object (RO) with is attributes (RA), typically we can see this role in HR or resource management applications that are responsible to create resources and be authorities for some or all its attributes. 
+   - **Resource Creator (RC):** Is an entity operating in a given service, is responsible of creating the Resource Object (RO) with is attributes (RA), typically we can see this role in HR or resource management applications that are responsible to create resources and be authorities for some or all its attributes.
    - **Resource Updater (RU):** Is an entity that is responsible for update specific attributes (RA) of a Resource Object (RO). Typically, this role is use in conjunction with other SCIM roles that allow this SCIM entity to be authority for a specific Resource Attribute (RA)
    - **Resource Manager (RM):** Is an entity that consolidated the resource Objects (RO) from the Resource Creators/Updaters (RC/RU) and make it available for the Resource Subscribers (RS), typically this entity/role is handle by the IDaaS.
    - **Resource Subscriber (RS):** Is an entity that consumes Resource Objects (RO) but that is not authoritative to create them or any of its Resource Attribute (RA), normally this entity is only interested in part of the Resource Objects available in the Resource Manager (RM), typically it is application that requires information on resources to operate.
@@ -111,6 +111,10 @@
          +-------------+ +-------------+   +-------------+ +-------------+
                                     Figure 1: SCIM Roles Constructs
 
+#### 2.2.4.  Mechanics behind Resource Object (RO) and/or Resource Attributes (RA)
+   Cover in the previous section it was stated that the RC/RU were authoritative over the RO/RA, that could be achieved using the mutability, where they would have ReadWrite capabilities over them and this information would be pass to the RM. 
+   In more complex scenarios where the SCIM element doesn't has direct contact with the RC/RU that create/update a specific RO/RA, then the RM that received the original information will have the ReadWrite capabilities in the mutability field. this can be pass from RM to RM.
+   With this mechanism we can prevent loops. Different components that have bi-direction connection, where they can update each other, would not enter loop where each one will have a different value in a specific RA and will try to update the other SCIM element of it.
 
 ## 3.  SCIM Use Cases
    This section we will describe the most common SCIM use cases, and will explain when, where, why and how we find them in the cross domain environment for managing resources. This list by no way tries to be exhaustive and complete and tried to guide developers for the possibility of such models and will try to explain the challenges and the components.
@@ -129,28 +133,31 @@
    The Resource Subscribers will consume all the resource information from the RM.
    Typically we will see this use case in small to mid size organization where resources were organized in a non standard and non open platform for Resources Management and it isn't possible to cut/replace everything with a new system.
     
-### 3.3.  One or more RC/RU, with single RM and multiple RS
-   In this use case, the authority for the CRUD operation to the Resource Object and its Resource Attributes does not belong to the Resource Manager, thi sis done in a separate entity that has this responsibilities. 
+### 3.3.  One or more RC/RU, with single RM/RC/RU/RS and multiple RS
+   In this use case, the authority for the CRUD operation to the Resource Object and its Resource Attributes does not belong to the Resource Manager, this is done in a separate entity that has this responsibilities. 
    A good example of this is use case is those Organization that have their HR application, and the lifecycle of the resource (typically groups and Users) is done by that application.
    We could also have this use case where the RM is extended with the Roles of RC/RU for extra resources that are not authoritative by the "HR System", but normally that bring more complexity to the authority models for the CRUD operation of the resources.  
-   The Resource Subscribers will consume all the resource information from the RM.
    Typically we will see this use case in mid to large organization where no structure method to handle the resources and they start fresh or it is a greenfield.
 
 
-### 3.4.  One or more ERC, one RC/RU, with single RM and multiple RS
-   In this use case the Resource information is in a External Resource Creator, and the entity that has the role of RC/RU (example given before the HR System) consumes information from the ERC, but it add extra Resource Attributes, so from a model perspective, the RM get its authoritative Information from both systems the RC/RU and ERC.
+### 3.4.  One or more ERC, one or more RC/RU, with single RM/RC/RU/RS and multiple RS
+   In this use case the Resource information is in a External Resource Creator, and the entity that has the role of RC/RU (example given before the HR System) consumes information from the ERC. To avoid delays or loops the RM will also get original information from the ERC, just like the RC/RU. The RC/RU can add extra Resource Attributes, so from a model perspective, the RM get its authoritative Information from both systems the RC/RU and from the ERC.
    In this model there need to be careful thoughts so that we avoid loops where specific Resource Attributes write over and over again by the ERC and RC/RU.
+   Typically we will see this use case in mid to large organization where resources were organized in a non standard, non open platform for Resources Management and it isn't possible to cut/replace everything with a new system.
+
+### 3.5.  One or more ERC, one or more RC/RU, with single RM/RC/RU/RS and multiple RS/RU
+   In this use case we we add the capability of the Resource Subscriber to be also an Resource Update, it is very common that an SaaS application can be authoritative for specific RA and add extra details to the RO.
    The Resource Subscribers will consume all the resource information from the RM.
-   Typically we will see this use case in mid to large organization where the where there were no structure method to handle the resources and the Organization start fresh or it is a greenfield Organization.
-   The Resource Subscribers will consume all the resource information from the RM.
-   Typically we will see this use case in mid to large organization where resources were organized in a non standard and non open platform for Resources Management and it isn't possible to cut/replace everything with a new system.
+   Typically we will see this use case in large organization where resources were organized in a non standard, non open platform for Resources Management and it isn't possible to cut/replace everything with a new system.
 
-### 3.5.  One or more ERC, one or more RC/RU, with single RM/RU/RS and multiple RS/RU
+### 3.6.  One or more ERC, one or more RC/RU/RS, with single RM/RC/RU/RS and multiple RS/RU
+   In this use case we introduce the possibility of the RC/RU (example given before the HR System) be interested in the attribute that was created updated by the RS/RU (also known as the SaaS application), an example could be adding the business email that was created by the mail service (that came from RS/RU) to the HR information service (the RC/RU/RS element)
+   Typically we will see this use case in large organization where resources were organized in a non standard, non open platform for Resources Management and it isn't possible to cut/replace everything with a new system.
 
-### 3.6.  One or more ERC, one or more RC/RU/RS, with single RM/RU/RS and multiple RS/RU
-
-### 3.7.  One or more ERC, one or more RC/RU/RS, with one or more RM/RU/RS and multiple RS/RU
-
+### 3.7.  One or more ERC, one or more RC/RU/RS, with one or more RM/RC/RU/RS and multiple RS/RU
+   In this use case we introduce the possibility of having multiple Resource Managers, where the information from  the RO/RA is consolidated across different domains/services.
+   As in the previous 3 uses cases we need to have careful thoughts so that we avoid loops where specific Resource Attributes write over and over again by the ERC and RC/RU, having now extra consideration for the fact that now we can have multiple Resource Managers.
+   Typically we will see this use case in large organization, or between organization that have their own business to business communication and have the need for exchange information about Resources. Many other good example can be provided like organizations that by merging or acquisition, arrive to a situation where multiple RM exist, and they IT departments have to merge Resource information. 
 
 ## 4.  Security Considerations
    Authentication and authorization must be guaranteed for the SCIM
