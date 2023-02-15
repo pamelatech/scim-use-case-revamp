@@ -186,15 +186,14 @@
 ## Acknowledgments
 
 ## Authors' Addresses
+      Paulo Jorge Correia 
+      Cisco Systems 
+      Av. 31 Janeiro, 603 
+      4710-452 Braga
+      Portugal 
+      Email: paucorre@cisco.com
 
-  > Paulo Jorge Correia
-  > Cisco Systems
-  > Av. 31 Janeiro, 603
-  > 4710-452 Braga
-  > Portugal 
-  > Email: paucorre@cisco.com
+      Pamela Dingle
+      Microsoft 
 
-  > Pamela Dingle
-  > Microsoft 
-  > 
-  > email: pamela.dingle@microsoft.com
+      Email: pamela.dingle@microsoft.com
