@@ -116,66 +116,55 @@
    An example of this could be the RC (Resource Creator) or RU (Resource Updater) to send an event to the RM (Resource Manager) notifying him that a resource has been deleted. This trigger can send the information of the RO (Resource Object) was deleted. 
 
 ## 3.  SCIM Use Cases
-   This section we will describe the most common SCIM use cases, and will explain when, where, why and how we find them in the cross domain environment for managing resources. This list by no way tries to be exhaustive and complete and tried to guide developers for the possibility of such models and will try to explain the challenges and the components.
+   This section we will describe the most common SCIM use cases, and will explain when, where, why and how we find them in the cross domain environment for resources managing. This list by no way tries to be exhaustive and complete, its ultimate goal is to guide developers for the possibility of such models and will try to explain their challenges and components.
    As mention before SCIM is a protocol for cross domains where two entities exchange information about a resource, with the use cases we try to go further and explain on how the different components can interact to allow from simple to complex architectures for cross domain resource management.
-   Typically each bellow  use case add something on top of the previous one, starting in the most simple one, and finishing in the most complex ones, to make it easier the explanation, assume that what was describe in the previous use case applies to the use cases that come after.
+   Typically each use case add something on top of the previous one, starting in the most simple one, and finishing in the most complex ones, to make it easier the explanation, assume that what was describe in the previous use case applies to the use cases that come after.
 
 ### 3.1.  Single RM/RC/RU and multiple RS
-   This is very common SCIM use case and basic use case, allows that the IdM do all CRUD operation with the resources, then using the trigger mechanisms described before we achieve that the resource information reach the Resource Subscribers. The RS will take the decision on which resource attributes to take and how the Resource Object will show in their resource database.
-   Typically we can find this kind of use case in small to mid size organization, where no structure method to handle the resources and the Organization start fresh or it is a greenfield Organization.
+   This is very common and simple SCIM use case. We have the IdM/Device Managers/etc. do all CRUD operation with the resources, then using the trigger mechanisms the resource information reach the Resource Subscribers. 
+   The RS (Resource Subscriber) will take the decision on which RA (Resource Attributes) to consider and how the Resource Object will show in their resource database.
+   Typically we can find this kind of use case in small to mid size organization, where there is no structure method to handle the resources and typically in Organization that start with a blank sheet of paper or it is a greenfield Organization.
 
 ### 3.2.  One or more ERC with single RM/RC/RU and multiple RS
-   This is the most common use case, because it allow the organization to adopt SCIM protocol for CRUD operations of their resources, but in this use case the organization already have an existent database of resources that is going to be the source of truth for the Resource Manager or is going to be the starting point. At no point in time the SCIM RM will provide SCIM operation with that External Resource Creator.
-   Normally this ERC, specially if we are talking about user Identity, will have a User database that can be accessible using LDAP or can provide information of their user attributes by doing an SAML Single SignOn using Just in time Provision. Most of the IDaaS also provide softwares that allow them to get resource information by using proprietary protocols, generally using HTTP REST to get the information from the ERC to the RM.
-   Typically in this use case the RM will become the new source of truth for the resources of our Organization, and will add extra Resource Attributes and ignore other that existed in the ERC.
+   This is the most common use case, because it allow the organization to adopt SCIM protocol for CRUD operations of their resources. In this use case the organization already have an existent database of resources that is going to be the source of truth for the Resource Manager. At no point in time the SCIM RM will provide SCIM operation with that External Resource Creator.
+   Normally this ERC, specially if we are talking about user Identity, will have a User database that can be accessible using LDAP or can provide information of their user attributes by doing an SAML Single Sign-On using Just in time Provision. Most of the IDaaS also provide softwares that allow them to get resource information by using proprietary protocols. It is common to see HTTP REST to get the information from the ERC to the RM.
+   Typically in this use case the RM will become the new source of truth for the resources of our Organization, will add extra Resource Attributes and ignore other RA that existed in the ERC.
    Some organization that already realize that going forward the RM will be the authority answer for the Resources Object and Attributes, will start create new Resource Objects in this service.
    The Resource Subscribers will consume all the resource information from the RM.
-   Typically we will see this use case in small to mid size organization where resources were organized in a non standard and non open platform for Resources Management and it isn't possible to cut/replace everything with a new system.
+   Typically we will see this use case in small to mid size organization where resources were organized in a non standard and non open platform for Resources Management, where it isn't possible to cut/replace everything with a new system.
     
 ### 3.3.  One or more RC/RU, with single RM/RC/RU/RS and multiple RS
-   In this use case, the authority for the CRUD operation to the Resource Object and its Resource Attributes does not belong to the Resource Manager, this is done in a separate entity that has this responsibilities. 
-   A good example of this is use case is those Organization that have their HR application, and the lifecycle of the resource (typically groups and Users) is done by that application.
-   We could also have this use case where the RM is extended with the Roles of RC/RU for extra resources that are not authoritative by the "HR System", but normally that bring more complexity to the authority models for the CRUD operation of the resources.  
+   In this use case, the the CRUD operation for the RO (Resource Object) and its RA (Resource Attributes) does not belong to the RM (Resource Manager), this is done in a separate SCIM entity, the Resource Creator/Resource Updater. 
+   A good example of this is use case on Users where Organization have their HR application, and the lifecycle of the resource (typically groups and Users) is done by that application.
+   We could also have this use case where the RM is extended with the Roles of RC/RU for extra RA (Resources Attributes) that are not authoritative by the "HR System", but normally that bring more complexity to the authority models for the CRUD operation of the resources.  
    Typically we will see this use case in mid to large organization where no structure method to handle the resources and they start fresh or it is a greenfield.
 
 
 ### 3.4.  One or more ERC, one or more RC/RU, with single RM/RC/RU/RS and multiple RS
-   In this use case the Resource information is in a External Resource Creator, and the entity that has the role of RC/RU (example given before the HR System) consumes information from the ERC. To avoid delays or loops the RM will also get original information from the ERC, just like the RC/RU. The RC/RU can add extra Resource Attributes, so from a model perspective, the RM get its authoritative Information from both systems the RC/RU and from the ERC.
+   In this use case, the Resource information is in a ERC (External Resource Creator), and the entity that has the role of RC/RU (example given before the HR System) consumes information from the ERC. To avoid delays or loops the RM will also get original information from the ERC, just like the RC/RU. The RC/RU, either in the ERC or in the "HR application" can add extra Resource Attributes, so from a model perspective, the RM get its authoritative Information from both systems the RC/RU and from the ERC.
    In this model there need to be careful thoughts so that we avoid loops where specific Resource Attributes write over and over again by the ERC and RC/RU.
    Typically we will see this use case in mid to large organization where resources were organized in a non standard, non open platform for Resources Management and it isn't possible to cut/replace everything with a new system.
 
 ### 3.5.  One or more ERC, one or more RC/RU, with single RM/RC/RU/RS and multiple RS/RU
-   In this use case we we add the capability of the Resource Subscriber to be also an Resource Update, it is very common that an SaaS application can be authoritative for specific RA and add extra details to the RO.
-   The Resource Subscribers will consume all the resource information from the RM.
-   Typically we will see this use case in large organization where resources were organized in a non standard, non open platform for Resources Management and it isn't possible to cut/replace everything with a new system.
+   In this use case we add the capability of the Resource Subscriber to be also an Resource Update, it is very common that an SaaS application can be authoritative for specific RA and add extra details to the RO.
+   Typically we will see this use case in large organization where resources were organized in a non standard, non open platform for Resources Management and it isn't possible to cut/replace everything with a new system. Those organization start to adopt many application that brings attributes to the different resources that already exist in the system.
 
 ### 3.6.  One or more ERC, one or more RC/RU/RS, with single RM/RC/RU/RS and multiple RS/RU
    In this use case we introduce the possibility of the RC/RU (example given before the HR System) be interested in the attribute that was created updated by the RS/RU (also known as the SaaS application), an example could be adding the business email that was created by the mail service (that came from RS/RU) to the HR information service (the RC/RU/RS element)
-   Typically we will see this use case in large organization where resources were organized in a non standard, non open platform for Resources Management and it isn't possible to cut/replace everything with a new system.
+   Typically we will see this use case in large organization where resources were organized in a non standard, non open platform for Resources Management and it isn't possible to cut/replace everything with a new system. hose organization start to adopt many application that brings attributes to the different resources that already exist in the system, but they need to have all the important attributes of Resources in a application in our examples "HR application"
 
 ### 3.7.  One or more ERC, one or more RC/RU/RS, with one or more RM/RC/RU/RS and multiple RS/RU
    In this use case we introduce the possibility of having multiple Resource Managers, where the information from  the RO/RA is consolidated across different domains/services.
    As in the previous 3 uses cases we need to have careful thoughts so that we avoid loops where specific Resource Attributes write over and over again by the ERC and RC/RU, having now extra consideration for the fact that now we can have multiple Resource Managers.
-   Typically we will see this use case in large organization, or between organization that have their own business to business communication and have the need for exchange information about Resources. Many other good example can be provided like organizations that by merging or acquisition, arrive to a situation where multiple RM exist, and they IT departments have to merge Resource information. 
+   Typically we will see this use case in large organization, or between organization that have their own business to business communication and have the need for exchange information about Resources. Many other good example can be provided like organizations that by merging or acquisition, arrive to a situation where multiple RM exist, and their IT departments have to merge Resource information. 
 
 ## 4.  Security Considerations
-   Authentication and authorization must be guaranteed for the SCIM
-   operations to ensure that only authenticated entities can perform the
-   SCIM requests and the requested SCIM operations are authorized.
-   SCIM resources (e.g., Users and Groups) can contain sensitive
-   information.  Thus, data confidentiality MUST be guaranteed at the
-   transport layer.
-   There can be privacy issues that go beyond transport security, e.g.,
-   moving personally identifying information (PII) offshore between
-   CSPs.  Regulatory requirements shall be met when migrating identity
-   information between jurisdictional regions (e.g., countries and
-   states may have differing regulations on privacy).
-   Additionally, privacy-sensitive data elements may be omitted or
-   obscured in SCIM transactions or stored records to protect these data
-   elements for a user.  For instance, a role-based identifier might be
-   used in place of an individual's name.
-   Detailed security considerations are specified in Section 7 of the
-   SCIM protocol [RFC7644] and Section 9 of the SCIM schema [RFC7643].
+   Authentication and authorization must be guaranteed for the SCIM operations to ensure that only authenticated entities can perform the SCIM requests and the requested SCIM operations are authorized. 
+   SCIM resources (e.g., Users and Groups) can contain sensitive information.  Thus, data confidentiality MUST be guaranteed at the transport layer.
+   There can be privacy issues that go beyond transport security, e.g., moving personally identifying information (PII) offshore between different SCIM elements. 
+   Regulatory requirements shall be met when migrating identity information between jurisdictional regions (e.g., countries and states may have differing regulations on privacy).
+   Additionally, privacy-sensitive data elements may be omitted or obscured in SCIM transactions or stored records to protect these data elements for a user. For instance, a role-based identifier might be used in place of an individual's name.
+   Detailed security considerations are specified in Section 7 of the SCIM protocol [RFC7644] and Section 9 of the SCIM schema [RFC7643].
 
 ## 5.  References
 ### 5.1.  Normative References
@@ -198,3 +187,14 @@
 
 ## Authors' Addresses
 
+Paulo Jorge Correia
+Cisco Systems
+Av. 31 Janeiro, 603
+4710-452 Braga
+Portugal 
+Email: paucorre@cisco.com
+
+Pamela Dingle
+Microsoft 
+
+email: pamela.dingle@microsoft.com
