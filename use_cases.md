@@ -41,12 +41,8 @@
    The intent of the SCIM specification is to reduce the cost and complexity of user management operations by providing a common user schema and extension model, as well as binding documents to provide patterns for exchanging this schema using standard protocols. In essence, make it fast, cheap, and easy to move resources in to, out of, and around the applications.
    The SCIM scenarios are overviews of user stories designed to help clarify the intended scope of the SCIM effort.
 
-### 2.2.  Model Concepts
-#### 2.2.1.  The Architecture Basics
-
-
-
-#### 2.2.2.  Roles/Constructs
+### 2.2.  Implementation Concepts
+#### 2.2.1.  Roles/Constructs
    Constructs are the operating parties that take part in both sides of a SCIM protocol exchange and help identify the source of a given Trigger. 
    A specific element can have one or more constructs roles, depending on the type of services that is delivering in the SCIM architecture.
    So far, we have identified the following SCIM constructs:
@@ -93,12 +89,12 @@
          +-------------+ +-------------+   +-------------+ +-------------+
                                     Figure 1: SCIM Roles Constructs
 
-#### 2.2.3.  Mechanics behind Resource Object (RO) and/or Resource Attributes (RA)
+#### 2.2.2.  Mechanics behind Resource Object (RO) and/or Resource Attributes (RA)
    Cover in the previous section it was stated that the RC/RU were authoritative over the RO/RA, that could be achieved using the mutability, concept introduced in [RFC 7644], where they would have readWrite/readOnly capabilities over them and this information would be pass to the RM. 
    In more complex scenarios where the SCIM element doesn't has direct contact with the RC/RU that create/update a specific RO/RA, then the RM that received the original information will have the ReadWrite capabilities in the mutability field. this can be pass from RM to RM, with this mechanism we can prevent loops. 
    When different components exist that have bi-direction connection, where they can update each other in different RA (Resource Attributes), there can only be on readWrite for a specific RA, so that we don't enter loops.
 
-#### 2.2.4.  Triggers
+#### 2.2.3.  Triggers
    Quite simply, triggers are actions or activities that start SCIM flows.
    Triggers may not be relevant at the protocol level or the schema level; they really serve to help identify the type or activity that resulted in a SCIM protocol exchange. 
    Triggers used to allow CRUD (Create, Read, Update, Delete) operations as it is designed to capture a class of use case that makes sense to the actor requesting it rather than to describe a protocol operation.
@@ -158,7 +154,15 @@
    As in the previous 3 uses cases we need to have careful thoughts so that we avoid loops where specific Resource Attributes write over and over again by the ERC and RC/RU, having now extra consideration for the fact that now we can have multiple Resource Managers.
    Typically we will see this use case in large organization, or between organization that have their own business to business communication and have the need for exchange information about Resources. Many other good example can be provided like organizations that by merging or acquisition, arrive to a situation where multiple RM exist, and their IT departments have to merge Resource information. 
 
-## 4.  Security Considerations
+## 4.  SCIM standardize Concepts
+
+
+
+
+
+
+
+## 5.  Security Considerations
    Authentication and authorization must be guaranteed for the SCIM operations to ensure that only authenticated entities can perform the SCIM requests and the requested SCIM operations are authorized. 
    SCIM resources (e.g., Users and Groups) can contain sensitive information.  Thus, data confidentiality MUST be guaranteed at the transport layer.
    There can be privacy issues that go beyond transport security, e.g., moving personally identifying information (PII) offshore between different SCIM elements. 
@@ -166,13 +170,13 @@
    Additionally, privacy-sensitive data elements may be omitted or obscured in SCIM transactions or stored records to protect these data elements for a user. For instance, a role-based identifier might be used in place of an individual's name.
    Detailed security considerations are specified in Section 7 of the SCIM protocol [RFC7644] and Section 9 of the SCIM schema [RFC7643].
 
-## 5.  References
-### 5.1.  Normative References
+## 6.  References
+### 6.1.  Normative References
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
    Requirement Levels", BCP 14, RFC 2119,
    DOI 10.17487/RFC2119, March 1997,
    <http://www.rfc-editor.org/info/rfc2119>.
-### 5.2.  Informative References
+### 6.2.  Informative References
    [RFC7643]  Hunt, P., Ed., Grizzle, K., Wahlstroem, E., and
    C. Mortimore, "System for Cross-domain Identity
    Management: Core Schema", RFC 7643, DOI 10.17487/RFC7643,
