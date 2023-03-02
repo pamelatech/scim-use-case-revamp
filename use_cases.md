@@ -198,6 +198,6 @@
    Email: paucorre@cisco.com
 
    Pamela Dingle     
-   Microsoft 
+   Microsoft Corporation
 
    Email: pamela.dingle@microsoft.com
