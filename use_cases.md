@@ -14,8 +14,6 @@
 ### 1.1.  Terminology
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC2119] when they appear in ALL CAPS.  These words may also appear in this document in lowercase as plain English words, absent their normative meanings.
    Here is a list of acronyms and abbreviations used in this document:
-   - **COI:** Community of Interest
-   - **CRM:** Customer Relationship Management
    - **CRUD:** Create, Read, Update, Delete
    - **RC:** Resource Creator
    - **RU:** Resource Updater
