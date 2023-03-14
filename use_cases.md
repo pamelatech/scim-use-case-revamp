@@ -162,6 +162,9 @@ The SCIM protocol defines interactions between two standardized parties that con
 #### 4.3.1 Hub & Spoke Model (Use case 3.1)
    Entities can use SCIM in two different deployments to satisfy this use case.
    ##### 4.3.1.1 Hub: SCIM Server, Spoke: SCIM Client
+   //TODO - will ASCII-fy after we agree on the overall format
+   <img width="679" alt="image" src="https://user-images.githubusercontent.com/2591320/225139362-af9c69dc-3546-4dc4-b937-d8d7aa2f52a3.png">
+
    ##### 4.3.1.1 Hub: SCIM Client, Spoke: SCIM Server
    
 
