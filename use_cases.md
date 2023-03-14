@@ -158,7 +158,13 @@ The SCIM protocol defines interactions between two standardized parties that con
    A SCIM Server is a RESTful API endpoint offering access to a data model that can be used to push or pull data between two parties. SCIM servers have additional responsibilities such as API Security, managing client identifiers & keys as well as performance management such as API throttling.
 ### 4.2 SCIM Client
    A SCIM Client is active software that can call one or more SCIM servers in order to push or pull data between two parties. 
-## 4.3 Use Case Example 
+### 4.3 Use Case Examples
+#### 4.3.1 Hub & Spoke Model (Use case 3.1)
+   Entities can use SCIM in two different deployments to satisfy this use case.
+   ##### 4.3.1.1 Hub: SCIM Server, Spoke: SCIM Client
+   ##### 4.3.1.1 Hub: SCIM Client, Spoke: SCIM Server
+   
+
 
 
 
