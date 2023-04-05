@@ -164,12 +164,31 @@ The SCIM protocol defines interactions between two standardized parties that con
     A SCIM Client is active software that can call one or more SCIM servers in order to push or pull data between two parties. 
 
 ### 4.3 Use Case mapping to RFC 7643 and 7644
+   The use case described before needs to be mapped to [RFC 7643] and [RFC 7644], we will bring the concepts of RO (Resource Object), RA (Resource Attribute), RC (Resource Creator), RU (Resource Updater), RM (Resource Manager) and RS (Resource Subscriber) to the concepts of SCIM Client, Server, Resource and Attribute. 
 
 #### 4.3.1 Client active Push
-   Entities can use SCIM in two different deployments to satisfy this use case.
+   Client will use HTTP PUSH to create a RO and will use HTTP PATCH/PUT to update its RA. In this section we will cover the basic constructs and will not detail the most complex use case describe before, sicne they would be just adding new elements to basic constructs describe bellow.
    
 ##### 4.3.1.1 Resource Object creation from Client to Server
-
+   In this make model we will have a Client that is going to provide information about a RO and its RA to a Server can also be called as Service Provider in [RFC 7643] and [RFC 7644]
+          +----------------+                                   +----------------+
+          |                |                (1)                |                |
+          |                | --------------------------------> |                |
+          |                |                                   |                |
+          |                |                (2)                |                |
+          |     Client     | <-------------------------------- |      Server    |
+          |   (typically   |                                   |  (typically a  |
+          |    and IDaaS)  |                (3)                |   Application) |
+          |                | --------------------------------> |                |   
+          |                |                                   |                |
+          |                |                (4)                |                |
+          |                | <-------------------------------- |                |
+          +----------------+                                   +----------------+
+   (1) Before creating an RO or update it or its RA the SCIM client will always do an HTTP GET to get an update from the SCIM Service Provider.
+   (2) Service Provider will provide it RO and RA for that resource asked by the SCIM Client.
+   (3) Based on the RO and RA returned by the SP (Service Provider), there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve.
+   (4) the Service Provider will return the RO and its RA with additional metadata information to allow for audit.
+   In the use cases that we saw before this applies to section 3.1 where the SCIM client will map to the RM/RC/RU and the Server will map into RS.
 
 ##### 4.3.1.2 Resource Object creation from a Creation Entity 
 
