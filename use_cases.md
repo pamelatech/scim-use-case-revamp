@@ -171,6 +171,7 @@
    
 ##### 4.3.1.1 Resource Object creation from Client to Server
    In this make model we will have a Client that is going to provide information about a RO and its RA to a Server can also be called as Service Provider in [RFC 7643] and [RFC 7644]
+
          +----------------+                                   +----------------+
          |                |                (1)                |                |
          |                | --------------------------------> |                |
@@ -180,10 +181,12 @@
          |   (typically   |                                   |  (typically a  |
          |    and IDaaS)  |                (3)                |   Application) |
          |                | --------------------------------> |                |   
-         |                |                                   |                |
+         |     RM/RC/RU   |                                   |        RS      |
          |                |                (4)                |                |
          |                | <-------------------------------- |                |
          +----------------+                                   +----------------+
+                     Figure 2:  SCIM  Flow and Entities maps 
+   
    (1) Before creating an RO or update it or its RA the SCIM client will always do an HTTP GET to get an update from the SCIM Service Provider.
    (2) Service Provider will provide it RO and RA for that resource asked by the SCIM Client.
    (3) Based on the RO and RA returned by the SP (Service Provider), there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve.
