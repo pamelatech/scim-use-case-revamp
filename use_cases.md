@@ -153,7 +153,7 @@
    Typically we will see this use case in large organization, or between organization that have their own business to business communication and have the need for exchange information about Resources. Many other good example can be provided like organizations that by merging or acquisition, arrive to a situation where multiple RM exist, and their IT departments have to merge Resource information. 
 
 ## 4.  SCIM standardized Concepts
-The SCIM protocol defines interactions between two standardized parties that conform to HTTP RESTful conventions. The protocol enables CRUD activities by corresponding those activities to HTTP verbs such as POST, GET, DELETE etc.  The protocol itself doesn't assume a direction of data flow, and use cases discussed in section 3 can be accomplished by entities in either protocol role.
+   The SCIM protocol defines interactions between two standardized parties that conform to HTTP RESTful conventions. The protocol enables CRUD activities by corresponding those activities to HTTP verbs such as POST, GET, DELETE etc.  The protocol itself doesn't assume a direction of data flow, and use cases discussed in section 3 can be accomplished by entities in either protocol role.
 
 ### 4.1 SCIM Server or Service Provider
    An HTTP web application that provides identity information via the SCIM protocol.
@@ -171,19 +171,19 @@ The SCIM protocol defines interactions between two standardized parties that con
    
 ##### 4.3.1.1 Resource Object creation from Client to Server
    In this make model we will have a Client that is going to provide information about a RO and its RA to a Server can also be called as Service Provider in [RFC 7643] and [RFC 7644]
-          +----------------+                                   +----------------+
-          |                |                (1)                |                |
-          |                | --------------------------------> |                |
-          |                |                                   |                |
-          |                |                (2)                |                |
-          |     Client     | <-------------------------------- |      Server    |
-          |   (typically   |                                   |  (typically a  |
-          |    and IDaaS)  |                (3)                |   Application) |
-          |                | --------------------------------> |                |   
-          |                |                                   |                |
-          |                |                (4)                |                |
-          |                | <-------------------------------- |                |
-          +----------------+                                   +----------------+
+         +----------------+                                   +----------------+
+         |                |                (1)                |                |
+         |                | --------------------------------> |                |
+         |                |                                   |                |
+         |                |                (2)                |                |
+         |     Client     | <-------------------------------- |      Server    |
+         |   (typically   |                                   |  (typically a  |
+         |    and IDaaS)  |                (3)                |   Application) |
+         |                | --------------------------------> |                |   
+         |                |                                   |                |
+         |                |                (4)                |                |
+         |                | <-------------------------------- |                |
+         +----------------+                                   +----------------+
    (1) Before creating an RO or update it or its RA the SCIM client will always do an HTTP GET to get an update from the SCIM Service Provider.
    (2) Service Provider will provide it RO and RA for that resource asked by the SCIM Client.
    (3) Based on the RO and RA returned by the SP (Service Provider), there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve.
