@@ -154,25 +154,38 @@
 
 ## 4.  SCIM standardized Concepts
 The SCIM protocol defines interactions between two standardized parties that conform to HTTP RESTful conventions. The protocol enables CRUD activities by corresponding those activities to HTTP verbs such as POST, GET, DELETE etc.  The protocol itself doesn't assume a direction of data flow, and use cases discussed in section 3 can be accomplished by entities in either protocol role.
-### 4.1 SCIM Server
+
+### 4.1 SCIM Server or Service Provider
+   An HTTP web application that provides identity information via the SCIM protocol.
    A SCIM Server is a RESTful API endpoint offering access to a data model that can be used to push or pull data between two parties. SCIM servers have additional responsibilities such as API Security, managing client identifiers & keys as well as performance management such as API throttling.
+
 ### 4.2 SCIM Client
-   A SCIM Client is active software that can call one or more SCIM servers in order to push or pull data between two parties. 
-### 4.3 Use Case Examples
-#### 4.3.1 Hub & Spoke Model (Use case 3.1)
+    A website or application that uses the SCIM protocol to manage identity data maintained by the service provider.  The client initiates SCIM HTTP requests to a target service provider. 
+    A SCIM Client is active software that can call one or more SCIM servers in order to push or pull data between two parties. 
+
+### 4.3 Use Case mapping to RFC 7643 and 7644
+
+#### 4.3.1 Client active Push
    Entities can use SCIM in two different deployments to satisfy this use case.
-   ##### 4.3.1.1 Hub: SCIM Server, Spoke: SCIM Client
-   //TODO - will ASCII-fy after we agree on the overall format
-   <img width="679" alt="image" src="https://user-images.githubusercontent.com/2591320/225139362-af9c69dc-3546-4dc4-b937-d8d7aa2f52a3.png">
-
-   ##### 4.3.1.1 Hub: SCIM Client, Spoke: SCIM Server
    
+##### 4.3.1.1 Resource Object creation from Client to Server
 
 
+##### 4.3.1.2 Resource Object creation from a Creation Entity 
 
 
+##### 4.3.1.3 Resource Object creation from a Creation Entity and consumption from an Application
 
 
+##### 4.3.1.4 Resource Object creation from a Creation Entity and consumption from an Application when different Resource Attributes are generated in different entities                
+
+#### 4.3.2 Client active Pull
+
+##### 4.3.2.1 Resource Object creation from Server to Client
+
+##### 4.3.2.2 Resource Object Server consumption from Client
+
+##### 4.3.2.2 Resource Object creation and consumption from Client and Server
 
 ## 5.  Security Considerations
    Authentication and authorization must be guaranteed for the SCIM operations to ensure that only authenticated entities can perform the SCIM requests and the requested SCIM operations are authorized. 
