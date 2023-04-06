@@ -171,6 +171,7 @@
    
 ##### 4.3.1.1 Resource Object creation from Client to Server
    In this model we will have a Client that is going to provide information about a RO and its RA to a Server, that can also be called as Service Provider in [RFC 7643] and [RFC 7644].
+   
          +----------------+                                   +----------------+
          |                |                (1)                |                |
          |                | --------------------------------> |                |
@@ -194,6 +195,7 @@
 
 ##### 4.3.1.2 Resource Object creation from a Creation Entity 
    In this model we will have a Client that is going to provide information about a RO and its RA to a Server, can also be called as Service Provider in [RFC 7643] and [RFC 7644], in this model the Client is just responsible for a limit set of attributes and do not do any management overall, and the Resource management function resides on the Server.
+
          +----------------+                                   +----------------+
          |                |                (1)                |                |
          |                | --------------------------------> |                |
@@ -217,6 +219,7 @@
 
 ##### 4.3.1.3 Resource Object creation from a Creation Entity and consumption from an Application
    In this model we will have a Client that is going to provide information about a RO and its RA to a Server, can also be called as Service Provider in [RFC 7643] and [RFC 7644], in this model the Client is just responsible for a limit set of attributes and do not do any management overall, the Resource management function resides on the Server, that is also a client to an server that is the final recipient of the information RO and its RA.
+
          +----------------+                         +---------------------------+                         +----------------+
          |                |           (1)           |                           |           (1)           |                |
          |                | ----------------------> |                           | ----------------------> |                |
@@ -241,6 +244,7 @@
 
 ##### 4.3.1.4 Resource Object creation from a Creation Entity and consumption from an Application when different Resource Attributes are generated in different entities                
     In this model we will have a Client that is going to provide information about a RO and its RA to a Server, can also be called as Service Provider in [RFC 7643] and [RFC 7644], in this model the Client is just responsible for a limit set of attributes and do not do any management overall, the Resource management function resides on the Server, that is also a client to an server that is the final recipient of the information RO and its RA.
+
          +----------------+                         +---------------------------+                         +----------------+
          |                | ----------(1)---------> |                           | ----------(1)---------> |                |
          |        Client  | <---------(2)---------- |Service Provider     Client| <---------(2)---------- |Service Provider|
