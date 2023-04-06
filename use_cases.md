@@ -160,8 +160,8 @@
    A SCIM Server is a RESTful API endpoint offering access to a data model that can be used to push or pull data between two parties. SCIM servers have additional responsibilities such as API Security, managing client identifiers & keys as well as performance management such as API throttling.
 
 ### 4.2 SCIM Client
-    A website or application that uses the SCIM protocol to manage identity data maintained by the service provider.  The client initiates SCIM HTTP requests to a target service provider. 
-    A SCIM Client is active software that can call one or more SCIM servers in order to push or pull data between two parties. 
+   A website or application that uses the SCIM protocol to manage identity data maintained by the service provider.  The client initiates SCIM HTTP requests to a target service provider. 
+   A SCIM Client is active software that can call one or more SCIM servers in order to push or pull data between two parties. 
 
 ### 4.3 Use Case mapping to RFC 7643 and 7644
    The use case described before needs to be mapped to [RFC 7643] and [RFC 7644], we will bring the concepts of RO (Resource Object), RA (Resource Attribute), RC (Resource Creator), RU (Resource Updater), RM (Resource Manager) and RS (Resource Subscriber) to the concepts of SCIM Client, Server, Resource and Attribute. 
@@ -187,11 +187,11 @@
          +----------------+                                   +----------------+
                      Figure 2:  SCIM  Flow and Entities maps 
    
-   (1) Before creating an RO or update it or its RA the SCIM client will always do an HTTP GET to get an update from the SCIM Service Provider.
-   (2) Service Provider will provide it RO and RA for that resource asked by the SCIM Client.
-   (3) Based on the RO and RA returned by the SP (Service Provider), there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve.
-   (4) the Service Provider will return the RO and its RA with additional metadata information to allow for audit.
-   In the use cases that we saw before this applies to section 3.1 where the SCIM client will map to the RM/RC/RU and the Server will map into RS.
+   (1) Before creating an RO or update it or its RA the SCIM client will always do an HTTP GET to get an update from the SCIM Service Provider. 
+   (2) Service Provider will provide it RO and RA for that resource asked by the SCIM Client. 
+   (3) Based on the RO and RA returned by the SP (Service Provider), there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve. 
+   (4) the Service Provider will return the RO and its RA with additional metadata information to allow for audit. 
+   In the use cases that we saw before this applies to section 3.1 where the SCIM client will map to the RM/RC/RU and the Server will map into RS. 
 
 ##### 4.3.1.2 Resource Object creation from a Creation Entity 
 
