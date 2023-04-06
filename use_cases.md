@@ -171,7 +171,6 @@
    
 ##### 4.3.1.1 Resource Object creation from Client to Server
    In this model we will have a Client that is going to provide information about a RO and its RA to a Server, that can also be called as Service Provider in [RFC 7643] and [RFC 7644].
-
          +----------------+                                   +----------------+
          |                |                (1)                |                |
          |                | --------------------------------> |                |
@@ -195,7 +194,6 @@
 
 ##### 4.3.1.2 Resource Object creation from a Creation Entity 
    In this model we will have a Client that is going to provide information about a RO and its RA to a Server, can also be called as Service Provider in [RFC 7643] and [RFC 7644], in this model the Client is just responsible for a limit set of attributes and do not do any management overall, and the Resource management function resides on the Server.
-
          +----------------+                                   +----------------+
          |                |                (1)                |                |
          |                | --------------------------------> |                |
@@ -219,20 +217,19 @@
 
 ##### 4.3.1.3 Resource Object creation from a Creation Entity and consumption from an Application
    In this model we will have a Client that is going to provide information about a RO and its RA to a Server, can also be called as Service Provider in [RFC 7643] and [RFC 7644], in this model the Client is just responsible for a limit set of attributes and do not do any management overall, the Resource management function resides on the Server, that is also a client to an server that is the final recipient of the information RO and its RA.
-
-         +----------------+                         +--------------------------------+                         +----------------+
-         |                |           (1)           |                                |           (1)           |                |
-         |                | ----------------------> |                                | ----------------------> |                |
-         |                |                         |                                |                         |                |
-         |                |           (2)           |Service Provider                |           (2)           |Service Provider|
-         |     Client     | <---------------------- |     / Server        Client     | <---------------------- |     / Server   |
-         |   (typically   |                         |         (typically an          |                         |   (typically   |
-         |    an HR       |           (3)           |              IdM)              |           (3)           |        an      |
-         |   Application) | ----------------------> |                                | ----------------------> |   Application) |
-         |                |                         |          RM/RS/RC/RU           |                         |                |
-         |     RC/RU      |           (4)           |                                |           (4)           |        RS      |
-         |                | <---------------------- |                                | <---------------------- |                |
-         +----------------+                        +---------------------------------+                         +----------------+
+         +----------------+                         +---------------------------+                         +----------------+
+         |                |           (1)           |                           |           (1)           |                |
+         |                | ----------------------> |                           | ----------------------> |                |
+         |                |                         |                           |                         |                |
+         |                |           (2)           |Service Provider           |           (2)           |Service Provider|
+         |     Client     | <---------------------- |     / Server        Client| <---------------------- |     / Server   |
+         |   (typically   |                         |       (typically an       |                         |   (typically   |
+         |    an HR       |           (3)           |           IdM)            |           (3)           |        an      |
+         |   Application) | ----------------------> |                           | ----------------------> |   Application) |
+         |                |                         |       RM/RS/RC/RU         |                         |                |
+         |     RC/RU      |           (4)           |                           |           (4)           |        RS      |
+         |                | <---------------------- |                           | <---------------------- |                |
+         +----------------+                        +----------------------------+                         +----------------+
                      Figure 4:  4.3.1.3 SCIM  Flow and Entities map
    
    (1) Before creating an RO or update it or its RA the SCIM client will always do an HTTP GET to get an update from the SCIM Service Provider. 
@@ -243,6 +240,28 @@
    The center component as describe is the Server for the client on the left and will act as the Client for the server on the right. Typically the Server on the right is an application that wan tto consume RO and its RA.
 
 ##### 4.3.1.4 Resource Object creation from a Creation Entity and consumption from an Application when different Resource Attributes are generated in different entities                
+    In this model we will have a Client that is going to provide information about a RO and its RA to a Server, can also be called as Service Provider in [RFC 7643] and [RFC 7644], in this model the Client is just responsible for a limit set of attributes and do not do any management overall, the Resource management function resides on the Server, that is also a client to an server that is the final recipient of the information RO and its RA.
+         +----------------+                         +---------------------------+                         +----------------+
+         |                | ----------(1)---------> |                           | ----------(1)---------> |                |
+         |        Client  | <---------(2)---------- |Service Provider     Client| <---------(2)---------- |Service Provider|
+         |                | ----------(3)---------> |    / Server               | ----------(3)---------> |     / Server   |
+         |   (typically   | <---------(4)---------- |                           | <---------(4)---------- |                |
+         |      an HR     |                         |       (typically an       |                         | (typically an  |
+         |   Application) |                         |           IdM)            |                         |   Application) |
+         |     RC/RU/RS   | <---------(1)---------- |       RM/RS/RC/RU         | <---------(1)---------- |       RS       |
+         |                | ----------(2)---------> |                           | ----------(2)---------> |                |
+         |Service Provider| <---------(3)---------- |Client     Service Provider| <---------(3)---------- |  Client        |
+         |       / Server | ----------(4)---------> |                  / Server | ----------(4)---------> |                |
+         +----------------+                         +---------------------------+                         +----------------+
+                     Figure 4:  4.3.1.4 SCIM  Flow and Entities map
+   
+   (1) Before creating an RO or update it or its RA the SCIM client will always do an HTTP GET to get an update from the SCIM Service Provider. 
+   (2) Service Provider will provide it RO and RA for that resource asked by the SCIM Client. 
+   (3) Based on the RO and RA returned by the SP (Service Provider), there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve. 
+   (4) the Service Provider will return the RO and its RA with additional metadata information to allow for audit. 
+   In the use cases that we saw before, it is related to section 3.6, where the SCIM client on the top left will map to the RC/RU and the Server in the middle left will map into RM/RS, the SCIM client is also sometimes called as the "HR Application", because it responsibilities are only on be the creator and updater of the RO and specific number of its RA, the client in this case has no responsibilities in doing any management of the Resources, typically done by an IdM.
+   The center component as describe is the Server for the client on the left and will act as the Client for the server on the right. Typically the Server on the right is an application that wan tto consume RO and its RA.
+   In addition to the models before now the "HR Application also subscribe to RA that are created by the RS and reported by the RM, the Application will be the creator of specific attributes.
 
 #### 4.3.2 Client active Pull
 
@@ -282,8 +301,8 @@
 ## Authors' Addresses
    Paulo Jorge Correia  
    Cisco Systems  
-   Av. 31 Janeiro, 603  
-   4710-452 Braga    
+   Lagoas Park, Edificio 12 
+   2740-269 Porto Salvo    
    Portugal    
    Email: paucorre@cisco.com
 
