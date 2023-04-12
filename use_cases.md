@@ -275,6 +275,14 @@
 
 ##### 4.3.2.2 Resource Object creation and consumption from Client and Server
 
+#### 4.3.3 Client active Pull and Push
+
+##### 4.3.3.1 bla bla
+
+##### 4.3.3.2 bla bla bla
+
+##### 4.3.3.2 bla bla
+
 ## 5.  Security Considerations
    Authentication and authorization must be guaranteed for the SCIM operations to ensure that only authenticated entities can perform the SCIM requests and the requested SCIM operations are authorized. 
    SCIM resources (e.g., Users and Groups) can contain sensitive information.  Thus, data confidentiality MUST be guaranteed at the transport layer.
