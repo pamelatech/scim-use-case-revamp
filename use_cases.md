@@ -268,6 +268,7 @@
    In addition to the models before now the "HR Application also subscribe to RA that are created by the RS and reported by the RM, the Application will be the creator of specific attributes.
 
 #### 4.3.2 Client active Pull
+In a client active pull scenario, the SCIM Server is the RU, and one or more SCIM Clients are performing HTTP GET operations to learn of new updates, each acting as an RS.  The HTTP GET from client to server may happen as a result of a trigger (such as receiving a federated assertion for a given user identity) or it may happen as a polling activity, where the client checks back for changes periodically. 
 
 ##### 4.3.2.1 Resource Object creation from Server to Client
 
