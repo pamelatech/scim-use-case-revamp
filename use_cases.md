@@ -267,8 +267,22 @@
    The center component as describe is the Server for the client on the left and will act as the Client for the server on the right. Typically the Server on the right is an application that wan tto consume RO and its RA.  
    In addition to the models before now the "HR Application also subscribe to RA that are created by the RS and reported by the RM, the Application will be the creator of specific attributes.
 
-#### 4.3.2 Client active Pull
-In a client active pull scenario, the SCIM Server is the RU, and one or more SCIM Clients are performing HTTP GET operations to learn of new updates, each acting as an RS.  The HTTP GET from client to server may happen as a result of a trigger (such as receiving a federated assertion for a given user identity) or it may happen as a polling activity, where the client checks back for changes periodically. 
+#### 4.3.2 Client Active Pull
+In a client active pull scenario, the primary flow of data moves from the SCIM Server as the RU to one or many SCIM clients acting as RS.  Clients may be triggered to perform an HTTP GET on the server (for example becuase a user SSO event has occured at the client and the client needs to fetch additional data for that user).  Clients may also be configured to periodically to poll objects to check for changes.  This scenario often happens in use cases where a client needs to maintain a synchronized understanding of either specific objects or a set of objects, such as a device list or user address book. In cases where the client also needs to push information to the SCIM Server (for example to update its own device object in a device list) the client would perform an HTTP POST to the server.  
+
+         +----------------+                         +---------------------------+
+         |                | <---------(1)---------- |                           | 
+         |      SCIM      | <---------(2)---------- |        SCIM Client        | 
+         |     Server     | <---------(3)---------- |       HTTP GET /users     | 
+         |                | <---------(4)---------- |          every hour       | 
+         |    (eg an      |                         +---------------------------+                        
+         |  address book) |                          
+         |                |                         +---------------------------+ 
+         |     RC/RU      |                         |        SCIM Client        | 
+         |                | <---------(1)---------- | 1)HTTP GET on SSO trigger |
+         |                | <---------(2)---------- | 2)HTTP GET on SSO trigger | 
+         +----------------+                         +---------------------------+
+                     Figure 4.3.2:  Client Active Pull 
 
 ##### 4.3.2.1 Resource Object creation from Server to Client
 
