@@ -268,7 +268,7 @@
    In addition to the models before now the "HR Application also subscribe to RA that are created by the RS and reported by the RM, the Application will be the creator of specific attributes.
 
 #### 4.3.2 Client Active Pull
-In a client active pull scenario, the primary flow of data moves from the SCIM Server as the RU to one or many SCIM clients acting as RS.  Clients may be triggered to perform an HTTP GET on the server (for example becuase a user SSO event has occured at the client and the client needs to fetch additional data for that user).  Clients may also be configured to periodically to poll objects to check for changes.  This scenario often happens in use cases where a client needs to maintain a synchronized understanding of either specific objects or a set of objects, such as a device list or user address book. In cases where the client also needs to push information to the SCIM Server (for example to update its own device object in a device list) the client would perform an HTTP POST to the server.  
+In a client active pull scenario, the primary flow of data moves from the SCIM Server in the role of RU to one or many SCIM clients acting primarily in the RS role.  Clients chose when and how often to make HTTP GET calls to the server, based on the size of the object population the client is tracking, the frequency of the data change, and the use case, for example the synchronization of a registry of objects vs. point updates when an event takes place. These factors may result in clients periodically polling a large set of SCIM Server objects to check for changes. The Client active pull can be the best implementation choice when working with resource subscribers that are unable to deploy a SCIM server. Examples of cases where the client active pull is used include situations where a client needs to maintain a synchronized large body of objects, such as a device list or user address book. 
 
          +----------------+                         +---------------------------+
          |                | <---------(1)---------- |                           | 
@@ -285,18 +285,16 @@ In a client active pull scenario, the primary flow of data moves from the SCIM S
                      Figure 4.3.2:  Client Active Pull 
 
 ##### 4.3.2.1 Resource Object creation from Server to Client
+In this scenario, creation of a new resource object at the SCIM server would result in a new object available via a SCIM call from the client.  The client may discover the newly created object by a GET on the resource endpoint (eg /users), thereby discovering the new object, or some kind of trigger event might occur that prompts the SCIM client to perform an explicit HTTP GET (either through a specific query or through communication of the object's identifier).  
 
 ##### 4.3.2.2 Resource Object Server consumption from Client
+Consumption of objects occur via API calls to the SCIM Server.  The SCIM client could choose to poll the SCIM Server regularly in order to consume information or the SCIM client could be triggered to make a more specific call. One example of a triggered SCIM Client call could be an SSO trigger, where a user has just performed a federated login to the client domain, and the client is looking for updated information about that user.
 
-##### 4.3.2.2 Resource Object creation and consumption from Client and Server
+##### 4.3.2.2 Resource Object creation or update from Client to Server
+When a client needs to update an object at the SCIM server, the client sends an HTTP POST to the SCIM Server.  This could happen for example when a given client "owns" a specific device record that is part of a central device repository at the SCIM server.  
 
 #### 4.3.3 Client active Pull and Push
 
-##### 4.3.3.1 bla bla
-
-##### 4.3.3.2 bla bla bla
-
-##### 4.3.3.2 bla bla
 
 ## 5.  Security Considerations
    Authentication and authorization must be guaranteed for the SCIM operations to ensure that only authenticated entities can perform the SCIM requests and the requested SCIM operations are authorized. 
