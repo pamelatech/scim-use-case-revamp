@@ -93,8 +93,7 @@
    When different components exist that have bi-direction connection, where they can update each other in different RA (Resource Attributes), there can only be on readWrite for a specific RA, so that we don't enter loops.
 
 #### 2.2.3.  Triggers
-   Quite simply, triggers are actions or activities that start SCIM flows.
-   Triggers may not be relevant at the protocol level or the schema level; they really serve to help identify the type or activity that resulted in a SCIM protocol exchange. 
+   Triggers are actions or activities that may cause a SCIM interaction to occur at a specific time.  Triggers can occur as a result of business processes like a corporate hiring event, can be scheduled events such as a unix bash script running as a chron job, or can be just-in-time events such as SAML assertion arriving at a federated relying party that identifies a not-seen-before user. Triggers can also be standardized events, such as those in the OpenID Shared Signals Framework.  
    Triggers used to allow CRUD (Create, Read, Update, Delete) operations as it is designed to capture a class of use case that makes sense to the actor requesting it rather than to describe a protocol operation.
    - **Instruction to Create SCIM Resource -** Service On-boarding Trigger: This is a service for the on-boarding activity in which a business action such as a new hire or new service subscription is initiated.
    An example of this could be the RC (Resource Creator) pushes the RO (Resource Object) to the RM (Resource Manager).
