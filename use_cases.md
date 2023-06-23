@@ -362,8 +362,88 @@ In this model we will bring together 4.3.2.1 and 4.3.2.2 where a typically a dev
   With the pull base delivering model using events we can also address the use case where the SCIM Server is behind a private network where the SCIM clients can't reach.
 
 ##### 4.3.3.1 Resource Object Creation or Update using events with Push Based Delivering
+  This models allow Event Receiver's to "subscribe" to specific event types or events about specific resources, if no option is offered, it is assumed the client will receive all events about all resources. The event publisher will notify the Receiver on the CRUD actions for the RO (Resource Objects), it is the responsibility of the receiver to decide when and how it is going to integrate those changes, with the need to notify the Publisher for its actions.
+
+         +----------------+                                   +----------------+
+         |                |                                   |                |
+         |                |                                   |                |
+         |                |                                   |                |
+         |    Publisher   |                (1)                |     Receiver   |
+         |                | <-------------------------------- |                |
+         |   (typically   |                                   |  (typically a  |
+         |    an IDM)     |                (2)                |      SaaS      |
+         |                | --------------------------------> |  Application)  |   
+         |    RC/RU/RM    |                                   |                |
+         |                |                                   |        RS      |
+         |                |                                   |                |
+         +----------------+                                   +----------------+
+                     Figure 9:  4.3.3.1 SCIM  Flow and Entities map for Domain Replication Mode
+   
+   (1) Allows the Receiver to subscribe to the feed on types or resources.
+   (2) Uses HTTP POST to execute the CRUD actions for the Domain Replication Mode and allows for the events with the types urn:ietf:params:event:SCIM:prov:create, urn:ietf:params:event:SCIM:prov:patch, urn:ietf:params:event:SCIM:prov:put, urn:ietf:params:event:SCIM:prov:delete, urn:ietf:params:event:SCIM:prov:activate, urn:ietf:params:event:SCIM:prov:deactivate, and specify the RO (Resource Object) and its RA (Resource Attributes) that are changing.
+   The objective of "Domain Based Replication" events (DBR) is to synchronize resource changes between SCIM entities in a common administrative domain. In this mode, complete information about changes for resources are shared between replicas for immediate processing.
+
+         +----------------+                                   +----------------+
+         |                |                                   |                |
+         |                |                (1)                |                |
+         |                | <-------------------------------- |                |
+         |    Publisher   |                                   |     Receiver   |
+         |                |                (1)                |                |
+         |   (typically   | --------------------------------> |  (typically a  |
+         |    an IDM)     |                                   |      SaaS      |
+         |                |                (3)                |  Application)  |   
+         |    RC/RU/RM    | <-------------------------------- |                |
+         |                |                                   |       RS       |
+         |                |                                   |                |
+         +----------------+                                   +----------------+
+                     Figure 10:  4.3.3.1 SCIM  Flow and Entities map for Co-ordinated Provisioning
+   
+   (1) Allows the Receiver to subscribe to the feed on types or resources.
+   (2) Uses HTTP POST to execute the CRUD actions and allows for the events with the types urn:ietf:params:event:SCIM:prov:create, urn:ietf:params:event:SCIM:prov:patch, urn:ietf:params:event:SCIM:prov:put, urn:ietf:params:event:SCIM:prov:delete, urn:ietf:params:event:SCIM:prov:activate, urn:ietf:params:event:SCIM:prov:deactivate, and specify the RO (Resource Object) and its RA (Resource Attributes) that are changing, the flow only mention the RA (Resource Attributes) names, and doesn't include their values.
+   (3) Allows the Receiver to request the value of the RA (Resource Attribtues) specified in the flow before.
+   In "Co-ordinated Provisioning" (CP), SCIM resource change events perform the function of change notification without the need to provide raw data. In any Event Publisher and Receiver relationship, the set of SCIM resources (e.g. Users) that are linked or coordinated is managed within the context of a an event feed and which MAY be a subset of the total set of resources on either side. For example, an event feed could be limited to users who have consented to the sharing of information between domains. To support capability, "feed" specific events are defined to indicate the addition and removal of SCIM resources from a feed. For example, when a user consents to the sharing of information between domains, events about the User MAY be added to the feed between the Event Publisher and Receiver.
 
 ##### 4.3.3.2 Resource Object Creation or Update using events with Pull Based Delivering
+  This models allow Event Receiver's to "subscribe" to specific event types or events about specific resources, if no option is offered, it is assumed the client will receive all events about all resources. The event publisher will notify the Receiver on the CRUD actions for the RO (Resource Objects), it is the responsibility of the receiver to decide when and how it is going to integrate those changes, with the need to notify the Publisher for its actions.
+
+         +----------------+                                   +----------------+
+         |                |                                   |                |
+         |                |                                   |                |
+         |                |                                   |                |
+         |    Publisher   |                (1)                |     Receiver   |
+         |                | <-------------------------------- |                |
+         |   (typically   |                                   |  (typically a  |
+         |    an IDM)     |                (2)                |      SaaS      |
+         |                | --------------------------------> |  Application)  |   
+         |    RC/RU/RM    |                                   |                |
+         |                |                                   |        RS      |
+         |                |                                   |                |
+         +----------------+                                   +----------------+
+                     Figure 9:  4.3.3.1 SCIM  Flow and Entities map for Domain Replication Mode
+   
+   (1) Allows the Receiver to subscribe to the feed on types or resources.
+   (2) Uses HTTP POST to execute the CRUD actions for the Domain Replication Mode and allows for the events with the types urn:ietf:params:event:SCIM:prov:create, urn:ietf:params:event:SCIM:prov:patch, urn:ietf:params:event:SCIM:prov:put, urn:ietf:params:event:SCIM:prov:delete, urn:ietf:params:event:SCIM:prov:activate, urn:ietf:params:event:SCIM:prov:deactivate, and specify the RO (Resource Object) and its RA (Resource Attributes) that are changing.
+   The objective of "Domain Based Replication" events (DBR) is to synchronize resource changes between SCIM entities in a common administrative domain. In this mode, complete information about changes for resources are shared between replicas for immediate processing.
+
+         +----------------+                                   +----------------+
+         |                |                                   |                |
+         |                |                (1)                |                |
+         |                | <-------------------------------- |                |
+         |    Publisher   |                                   |     Receiver   |
+         |                |                (1)                |                |
+         |   (typically   | --------------------------------> |  (typically a  |
+         |    an IDM)     |                                   |      SaaS      |
+         |                |                (3)                |  Application)  |   
+         |    RC/RU/RM    | <-------------------------------- |                |
+         |                |                                   |       RS       |
+         |                |                                   |                |
+         +----------------+                                   +----------------+
+                     Figure 10:  4.3.3.1 SCIM  Flow and Entities map for Co-ordinated Provisioning
+   
+   (1) Allows the Receiver to subscribe to the feed on types or resources.
+   (2) Uses HTTP POST to execute the CRUD actions and allows for the events with the types urn:ietf:params:event:SCIM:prov:create, urn:ietf:params:event:SCIM:prov:patch, urn:ietf:params:event:SCIM:prov:put, urn:ietf:params:event:SCIM:prov:delete, urn:ietf:params:event:SCIM:prov:activate, urn:ietf:params:event:SCIM:prov:deactivate, and specify the RO (Resource Object) and its RA (Resource Attributes) that are changing, the flow only mention the RA (Resource Attributes) names, and doesn't include their values.
+   (3) Allows the Receiver to request the value of the RA (Resource Attribtues) specified in the flow before.
+   In "Co-ordinated Provisioning" (CP), SCIM resource change events perform the function of change notification without the need to provide raw data. In any Event Publisher and Receiver relationship, the set of SCIM resources (e.g. Users) that are linked or coordinated is managed within the context of a an event feed and which MAY be a subset of the total set of resources on either side. For example, an event feed could be limited to users who have consented to the sharing of information between domains. To support capability, "feed" specific events are defined to indicate the addition and removal of SCIM resources from a feed. For example, when a user consents to the sharing of information between domains, events about the User MAY be added to the feed between the Event Publisher and Receiver.
 
 #### 4.3.4 SSO (Single Sign-On)
 
