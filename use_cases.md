@@ -40,8 +40,17 @@
    The SCIM scenarios are overviews of user stories designed to help clarify the intended scope of the SCIM effort.
 
 ### 2.2.  Implementation Concepts
-#### 2.2.1.  Roles/Constructs
-   Constructs are the operating parties that take part in both sides of a SCIM protocol exchange and help identify the source of a given Trigger. 
+#### 2.2.1. Basic Elements
+##### 2.2.1.1. SCIM Server or Service Provider
+   An HTTP web application that provides identity information via the SCIM protocol.
+   A SCIM Server is a RESTful API endpoint offering access to a data model that can be used to push or pull data between two parties. SCIM servers have additional responsibilities such as API Security, managing client identifiers & keys as well as performance management such as API throttling.
+
+##### 2.2.1.2. SCIM Client
+   A website or application that uses the SCIM protocol to manage identity data maintained by the service provider.  The client initiates SCIM HTTP requests to a target service provider. 
+   A SCIM Client is active software that can call one or more SCIM servers in order to push or pull data between two parties. 
+
+#### 2.2.2.  Roles/Constructs
+   Constructs are the operating parties that take part in both sides of a SCIM protocol exchange and have specific functions in the protocol. 
    A specific element can have one or more constructs roles, depending on the type of services that is delivering in the SCIM architecture.
    So far, we have identified the following SCIM constructs:
    - **Resource Object (RO):** Is and object that is going to be manipulated (CRUD) by the different SCIM players, and in the end the ultimate goal to be pass across different systems and to make sure that consistent information is exchange. The Resource Object have attributes that are define by Schemas, an example of that is the SCIM Core Schema defines in [RFC 7643].
@@ -87,37 +96,200 @@
          +-------------+ +-------------+   +-------------+ +-------------+
                                     Figure 1: SCIM Roles Constructs
 
-#### 2.2.2.  Mechanics behind Resource Object (RO) and/or Resource Attributes (RA)
+#### 2.2.3.  Mechanics behind Resource Object (RO) and/or Resource Attributes (RA)
    Cover in the previous section it was stated that the RC/RU were authoritative over the RO/RA, that could be achieved using the mutability, concept introduced in [RFC 7644], where they would have readWrite/readOnly capabilities over them and this information would be pass to the RM. 
    In more complex scenarios where the SCIM element doesn't has direct contact with the RC/RU that create/update a specific RO/RA, then the RM that received the original information will have the ReadWrite capabilities in the mutability field. this can be pass from RM to RM, with this mechanism we can prevent loops. 
    When different components exist that have bi-direction connection, where they can update each other in different RA (Resource Attributes), there can only be on readWrite for a specific RA, so that we don't enter loops.
 
-#### 2.2.3.  Triggers
-   Triggers are actions or activities that may cause a SCIM interaction to occur at a specific time.  Triggers can occur as a result of business processes like a corporate hiring event, can be scheduled events such as a unix bash script running as a chron job, or can be just-in-time events such as SAML assertion arriving at a federated relying party that identifies a not-seen-before user. Triggers can also be standardized events, such as those in the OpenID Shared Signals Framework.  
-   Triggers used to allow CRUD (Create, Read, Update, Delete) operations as it is designed to capture a class of use case that makes sense to the actor requesting it rather than to describe a protocol operation.
-   - **Instruction to Create SCIM Resource using push event -** Service On-boarding Trigger: This is a service for the on-boarding activity in which a business action such as a new hire or new service subscription is initiated.
-   An example of this could be the RC (Resource Creator) pushes the RO (Resource Object) to the RM (Resource Manager) or RS (Resource Subscriber).
-   - **Instruction to Update SCIM Resource using push event -** Service Change Trigger: An "update SCIM resource" trigger is a service change activity as a result of a resource moving or changing its service level.
-   An example of this could be the RC (Resource Creator) or RU (Resource Updater) pushes the update of RO (Resource Object) or its RA (Resource Attributes) to the RM (Resource Manager) or RS (Resource Subscriber).
-   - **Instruct to Delete SCIM Resource using push event -** Service Termination Trigger: A "delete SCIM resource" trigger represents a specific and deliberate action to remove a resource from a given SCIM service point.
-   An Example of this could be the RC (Resource Creator) or RU (Resource Updater) pushes the delete operation to the RM (Resource Manager) or RS (Resource Subscriber).
-   - **Notification of Creation of a SCIM Resource –** Service Notification of creation Trigger: This is a service for the on-boarding activity in which a business action such as a new hire or new service subscription is initiated. 
-   An example of this could be the RC (Resource Creator) send an event to RM (Resource Manager) or RS (Resource Subscriber) notifying him that an resource has been created. This trigger can send the information of the RO (Resource Object) was created and provide its RA (Resource Attributes) or can just provide the information on the it was created and expect that the RM or RS pull the RO/RA from the RC. 
-   - **Notification of Update SCIM Resource -** Service Notification of Change Trigger: An "update SCIM resource" trigger is a service change activity as a result of a resource moving or changing its service level.
-   An example of this could be the RC (Resource Creator) or RU (Resource Updater) sends an event to RM (Resource Manager) or RS (Resource Subscriber) notifying him that RO (Resource Object) or RA (Resource Attributes) has been updated. This trigger can send the information of the RO updated and provide its RA or can just provide the information on the it was updated and expect that the RM or RS pull the RO/RA from the RC or RU. 
-   - **Notification of Deletion of a SCIM Resource –** Service Notification of termination Trigger: A "delete SCIM resource" trigger represents a specific and deliberate action to remove a resource from a given SCIM service point.
-   An example of this could be the RC (Resource Creator) or RU (Resource Updater) to send an event to the RM (Resource Manager) or RS (Resource Subscriber) notifying him that a resource has been deleted. This trigger can send the information of the RO (Resource Object) was deleted.
-   - **Instruction to Create SCIM Resource using pull event -** Service On-boarding Trigger: This is a service for the on-boarding activity in which a business action such as a new hire or new service subscription is initiated.
-   An example of this could be the RM (Resource Manager) or RS (Resource Subscriber) pull the RO (Resource Object) from the RC (Resource Creator).
-   Another example could be RM (Resource Manager) or RC (Resource Creator) pull the RO (Resource Object) from the RS (Resource Subscriber).
-   - **Instruction to Update SCIM Resource using pull event -** Service Change Trigger: An "update SCIM resource" trigger is a service change activity as a result of a resource moving or changing its service level.
-   An example of this could be the RM (Resource Manager) or RS (Resource Subscriber) pulls the update of the RO (Resource Object) or its RA (Resource Attributes) from RC (Resource Creator) or RU (Resource Updater).
-   Another example could be RM (Resource Manager), RC (Resource Creator) or RU ( Resource Updater) pulls the update of the RO (Resource Object) or its RA (Resource Attributes) from the RS (Resource Subscriber).
-   - **Instruct to Delete SCIM Resource using pull event -** Service Termination Trigger: A "delete SCIM resource" trigger represents a specific and deliberate action to remove a resource from a given SCIM service point.
-   An Example of this could be the RM (Resource Manager) or RS (Resource Subscriber) pulls the delete operation from the RC (Resource Creator) or RU (Resource Updater).
-   Another example could be RM (Resource Manager), RC (Resource Creator) or RU ( Resource Updater) pulls the delete operation from the RS (Resource Subscriber).
-   - **Instruct to update SCIM Resource after a SSO event -** Service Change Trigger: An "update SCIM resource" trigger is a service change activity as a result of a resource moving or changing its service level.
-   An example of this could be the RC (Resource Creator), RU (Resource Updater) or RM (Resource Manager) pushes the update of RO (Resource Object) or its RA (Resource Attributes) to the RS (Resource Subscriber), after the user successfully authenticate using Single Sign-On.
+#### 2.2.4.  Triggers
+   Triggers are actions or activities that may cause a SCIM interaction to occur.  Triggers can occur as a result of business processes like a corporate hiring event, can be scheduled events such as a unix bash script running as a chron job, or can be just-in-time events such as SAML assertion arriving at a federated relying party that identifies a not-seen-before user. Triggers can also be standardized events, such as those in the OpenID Shared Signals Framework.  
+   Triggers used to allow CRUD (Create, Read, Update, Delete) using SCIM Actions or Operations as it is designed to capture a class of use case that makes sense to the actor requesting it rather than to describe a protocol operation.
+
+##### 2.2.4.1. Periodic Interval Triggers
+
+##### 2.2.4.2. Events Triggers
+
+##### 2.2.4.3. Application Triggers
+
+##### 2.2.4.4. SSO (Single Sign-On) Triggers
+
+#### 2.2.5. SCIM Actions
+   The SCIM protocol defines interactions between two standardized parties that conform to HTTP RESTful conventions. The protocol enables CRUD activities by corresponding those activities to HTTP verbs such as POST, GET, DELETE etc.  The protocol itself doesn't assume a direction of data flow, and use cases discussed in section 3 can be accomplished by entities in either protocol role.
+
+##### 2.2.5.1. Client active Push
+   Client will use HTTP PUSH to create a RO and will use HTTP PATCH/PUT to update its RA. In this section we will cover the basic constructs and will not detail the most complex use case describe before, since they would be just adding new elements to basic constructs describe bellow.
+   
+###### 2.2.5.1.1. Resource Object creation from Client to Server
+   In this model we will have a Client that is going to provide information about a RO and its RA to a Server, that can also be called as Service Provider in [RFC 7643] and [RFC 7644].
+
+         +----------------+                                   +----------------+
+         |                |                (1)                |                |
+         |                | --------------------------------> |                |
+         |                |                                   |                |
+         |                |                (2)                |Service Provider|
+         |     Client     | <-------------------------------- |      Server    |
+         |   (typically   |                                   |  (typically a  |
+         |    an IdM)     |                (3)                |   Application) |
+         |                | --------------------------------> |                |   
+         |     RM/RC/RU   |                                   |        RS      |
+         |                |                (4)                |                |
+         |                | <-------------------------------- |                |
+         +----------------+                                   +----------------+
+                     Figure 2: 4.3.1.1 SCIM  Flow and Entities map
+   
+   (1) Before creating an RO or update it or its RA the SCIM client will always do an HTTP GET to get an update from the SCIM Service Provider.   
+   (2) Service Provider will provide it RO and RA for that resource asked by the SCIM Client.   
+   (3) Based on the RO and RA returned by the SP (Service Provider), there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve.   
+   (4) the Service Provider will return the RO and its RA with additional metadata information to allow for audit.   
+   In the use cases that we saw before,it is related to section 3.1, where the SCIM client will map to the RM/RC/RU and the Server will map into RS.   
+
+###### 2.2.5.1.2. Resource Object creation from a Creation Entity 
+   In this model we will have a Client that is going to provide information about a RO and its RA to a Server, can also be called as Service Provider in [RFC 7643] and [RFC 7644], in this model the Client is just responsible for a limit set of attributes and do not do any management overall, and the Resource management function resides on the Server.
+
+         +----------------+                                   +----------------+
+         |                |                (1)                |                |
+         |                | --------------------------------> |                |
+         |                |                                   |                |
+         |                |                (2)                |Service Provider|
+         |     Client     | <-------------------------------- |     / Server   |
+         |   (typically   |                                   |  (typically an |
+         |    an HR       |                (3)                |       IdM)     |
+         |   Application) | --------------------------------> |                |   
+         |                |                                   |      RM/RS     |
+         |     RC/RU      |                (4)                |                |
+         |                | <-------------------------------- |                |
+         +----------------+                                   +----------------+
+                     Figure 3:  4.3.1.2 SCIM  Flow and Entities map
+   
+   (1) Before creating an RO or update it or its RA the SCIM client will always do an HTTP GET to get an update from the SCIM Service Provider.   
+   (2) Service Provider will provide it RO and RA for that resource asked by the SCIM Client.   
+   (3) Based on the RO and RA returned by the SP (Service Provider), there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve.   
+   (4) the Service Provider will return the RO and its RA with additional metadata information to allow for audit.   
+   In the use cases that we saw before, it is related to part of section 3.3, where the SCIM client will map to the RC/RU and the Server will map into RM/RS, the SCIM client is also sometimes called as the "HR Application", because it responsibilities are only on be the creator and updater of the RO and specific number of its RA, the client in this case has no responsibilities in doing any management of the Resources, typically done by an IdM.  
+
+###### 2.2.5.1.3. Resource Object creation from a Creation Entity and consumption from an Application
+   In this model we will have a Client that is going to provide information about a RO and its RA to a Server, can also be called as Service Provider in [RFC 7643] and [RFC 7644], in this model the Client is just responsible for a limit set of attributes and do not do any management overall, the Resource management function resides on the Server, that is also a client to an server that is the final recipient of the information RO and its RA.
+
+         +----------------+                         +---------------------------+                         +----------------+
+         |                |           (1)           |                           |           (1)           |                |
+         |                | ----------------------> |                           | ----------------------> |                |
+         |                |                         |                           |                         |                |
+         |                |           (2)           |Service Provider           |           (2)           |Service Provider|
+         |     Client     | <---------------------- |     / Server        Client| <---------------------- |     / Server   |
+         |   (typically   |                         |       (typically an       |                         |   (typically   |
+         |    an HR       |           (3)           |           IdM)            |           (3)           |        an      |
+         |   Application) | ----------------------> |                           | ----------------------> |   Application) |
+         |                |                         |       RM/RS/RC/RU         |                         |                |
+         |     RC/RU      |           (4)           |                           |           (4)           |        RS      |
+         |                | <---------------------- |                           | <---------------------- |                |
+         +----------------+                        +----------------------------+                         +----------------+
+                     Figure 4:  4.3.1.3 SCIM  Flow and Entities map
+   
+   (1) Before creating an RO or update it or its RA the SCIM client will always do an HTTP GET to get an update from the SCIM Service Provider.   
+   (2) Service Provider will provide it RO and RA for that resource asked by the SCIM Client.   
+   (3) Based on the RO and RA returned by the SP (Service Provider), there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve.   
+   (4) the Service Provider will return the RO and its RA with additional metadata information to allow for audit.   
+   In the use cases that we saw before, it is related to section 3.3, where the SCIM client on the left will map to the RC/RU and the Server in the middle will map into RM/RS, the SCIM client is also sometimes called as the "HR Application", because it responsibilities are only on be the creator and updater of the RO and specific number of its RA, the client in this case has no responsibilities in doing any management of the Resources, typically done by an IdM.   
+   The center component as describe is the Server for the client on the left and will act as the Client for the server on the right. Typically the Server on the right is an application that wan tto consume RO and its RA.   
+
+###### 2.2.5.1.4. Resource Object creation from a Creation Entity and consumption from an Application when different Resource Attributes are generated in different entities                
+   In this model we will have a Client that is going to provide information about a RO and its RA to a Server, can also be called as Service Provider in [RFC 7643] and [RFC 7644], in this model the Client is just responsible for a limit set of attributes and do not do any management overall, the Resource management function resides on the Server, that is also a client to an server that is the final recipient of the information RO and its RA.
+
+         +----------------+                         +---------------------------+                         +----------------+
+         |                | ----------(1)---------> |                           | ----------(1)---------> |                |
+         |        Client  | <---------(2)---------- |Service Provider     Client| <---------(2)---------- |Service Provider|
+         |                | ----------(3)---------> |    / Server               | ----------(3)---------> |     / Server   |
+         |   (typically   | <---------(4)---------- |                           | <---------(4)---------- |                |
+         |      an HR     |                         |       (typically an       |                         | (typically an  |
+         |   Application) |                         |           IdM)            |                         |   Application) |
+         |     RC/RU/RS   | <---------(1)---------- |       RM/RS/RC/RU         | <---------(1)---------- |       RS       |
+         |                | ----------(2)---------> |                           | ----------(2)---------> |                |
+         |Service Provider| <---------(3)---------- |Client     Service Provider| <---------(3)---------- |  Client        |
+         |       / Server | ----------(4)---------> |                  / Server | ----------(4)---------> |                |
+         +----------------+                         +---------------------------+                         +----------------+
+                     Figure 5:  4.3.1.4 SCIM  Flow and Entities map
+   
+   (1) Before creating an RO or update it or its RA the SCIM client will always do an HTTP GET to get an update from the SCIM Service Provider.   
+   (2) Service Provider will provide it RO and RA for that resource asked by the SCIM Client.   
+   (3) Based on the RO and RA returned by the SP (Service Provider), there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve.   
+   (4) the Service Provider will return the RO and its RA with additional metadata information to allow for audit.   
+   In the use cases that we saw before, it is related to section 3.6, where the SCIM client on the top left will map to the RC/RU and the Server in the middle left will map into RM/RS, the SCIM client is also sometimes called as the "HR Application", because it responsibilities are only on be the creator and updater of the RO and specific number of its RA, the client in this case has no responsibilities in doing any management of the Resources, typically done by an IdM.   
+   The center component as describe is the Server for the client on the left and will act as the Client for the server on the right. Typically the Server on the right is an application that wan tto consume RO and its RA.  
+   In addition to the models before now the "HR Application also subscribe to RA that are created by the RS and reported by the RM, the Application will be the creator of specific attributes.
+
+##### 2.2.5.2. Client Active Pull
+This model of the trigger is created for those scenarios where there is no status database in the client, and where the Clients choose when and how often to make HTTP GET calls to the server, based on the size of the object population the client is tracking, the frequency of the data change, and the use case, for example the synchronization of a registry of objects vs. point updates when an event takes place.These factors may result in clients periodically polling a large set of SCIM Server objects to check for changes.
+Examples of cases where the client active pull is used include situations where a client needs to maintain a synchronized large body of objects, such as a device list or user address book. Another use case would be a client that needs to have details of a specific device that was onboard for example by a mobile application.
+
+###### 2.2.5.2.1. Resource Object Creation or Update
+In this model we will have a Client that is going to pull information about a RO and its RA from a Server, can also be called as Service Provider in [RFC 7643] and [RFC 7644]. In this model the Client is going to management all the RO (Resource Objects) and its RA (Resource Attributes), that are provided by the Server, and the RM (Resource Management) function resides on the Client.
+
+         +----------------+                                   +----------------+
+         |                |                                   |                |
+         |                |                                   |                |
+         |                |                                   |                |
+         |                |                (1)                |Service Provider|
+         |     Client     | --------------------------------> |     / Server   |
+         |   (typically   |                                   |  (typically a  |
+         |    an IDM)     |                (2)                |    Device)     |
+         |                | <-------------------------------- |                |   
+         |     RS/RM      |                                   |      RC/RU     |
+         |                |                                   |                |
+         |                |                                   |                |
+         +----------------+                                   +----------------+
+                     Figure 6:  4.3.2.1 SCIM  Flow and Entities map
+   
+   (1) The SCIM client will do an HTTP GET to obtain the details of the device its attributes, the RO and its RA.
+   (2) The SCIM Service Provider will return the RO and its RA with additional metadata information to allow for audit.  
+   A typical example of this use case is a device that is going to use a mobile or browser base enrollment and gathers its attributes, after that process that is outside the scope of the SCIM protocol, the Device (or Server on their behalf) is ready for the IDM platform to get its details and do all the management roles necessary for all the domain devices.
+
+###### 2.2.5.2.2. Resources Subscription
+In this model we will have the Client that is going to pull information about a RO and its RA from the Server, can also be called as Service Provider in [RFC 7643] and [RFC 7644]. In this model in the Client there is no status database in the client, and it gets a list of all the RO (Resource Objects) or a subset of it based on filters, so there will be a full update every synchronization cycle.
+
+         +----------------+                                   +----------------+
+         |                |                                   |                |
+         |                |                                   |                |
+         |                |                                   |                |
+         |Service Provider|                (1)                |                |
+         |     / Server   | <-------------------------------- |     Client     |
+         |   (typically   |                                   |  (typically a  |
+         |    an IDM)     |                (2)                | SaaS Service)  |
+         |                | --------------------------------> |                |   
+         |    RC/RU/RM    |                                   |       RS       |
+         |                |                                   |                |
+         |                |                                   |                |
+         +----------------+                                   +----------------+
+                     Figure 7:  4.3.2.2 SCIM  Flow and Entities map
+   
+   (1) The SCIM client will do an HTTP GET to obtain the selected list of RO (Resource Object) and its RA (Resource Attributes).
+   (2) The SCIM Service Provider will return the RO and its RA with additional metadata information to allow for audit.  
+   A good example would be SaaS service that needs to consume a list of contacts or devices, this SaaS service will need to know the relevant Ro (Resource Objects) and its RA ( Resource Attributes), this operation will happen periodically and every time will get a full list of all the RO (Resource Objects).
+   
+###### 2.2.5.2.3. Resource Object Creation or Update and Subscription
+In this model we will bring together 4.3.2.1 and 4.3.2.2 where a typically a device can up be the creator or their own attributes and will allow an SaaS service to subscribe to all the different RO (Resource Objects) and deliver additional services for other devices. It isn't expected from any of the SCIM clients in the Active pull model to create any status database of attributes changes, so the clients will always do GET on one or many RO ( Resource Objects) periodically.
+
+         +----------------+                         +---------------------------+                         +----------------+
+         |                |                         |                           |                         |                |
+         |                |                         |                           |                         |                |
+         |                |                         |                           |                         |                |
+         |Service Provider|           (1)           |Client                     |           (3)           |                |
+         |    / Server    | <---------------------- |           Service Provider| <---------------------- |Client          |
+         |   (typically   |                         |       (typically an       |                         |   (typically   |
+         |        a       |           (2)           |           IdM)            |           (4)           |        an      |
+         |      Device)   | ----------------------> |                           | ----------------------> |  SaaS Service) |
+         |                |                         |       RM/RS/RC/RU         |                         |                |
+         |     RC/RU      |                         |                           |                         |        RS      |
+         |                |                         |                           |                         |                |
+         +----------------+                        +----------------------------+                         +----------------+
+                     Figure 8:  4.3.2.3 SCIM  Flow and Entities map
+   
+   (1) The SCIM client will do an HTTP GET to obtain the RO (Resource Object) and its RA (Resource Attributes) of the device.
+   (2) The SCIM Service Provider (Device) will return the RO and its RA with additional metadata information to allow for audit.  
+   (3) The SCIM client will do an HTTP GET to obtain the selected list of RO (Resource Object) and its RA (Resource Attributes).
+   (4) The SCIM Service Provider will return the RO and its RA with additional metadata information to allow for audit.  
+   A good example would be a device that is going to use a mobile or browser base enrollment to gather its attributes, after that process which is outside the scope of the SCIM protocol, the Device 
+   (or Server on their behalf) is ready for the IDM platform to get its details and do all the management roles necessary for all the domain devices. 
+   Also in the use case is the SaaS service that needs to consume a list of contacts or devices, this SaaS service will need to know the relevant Ro (Resource Objects) and its RA ( Resource Attributes), this operation will happen periodically and every time will get a full list of all the RO (Resource Objects).
 
 ## 3.  SCIM Use Cases
    This section we will describe the most common SCIM use cases, and will explain when, where, why and how we find them in the cross domain environment for resources managing. This list by no way tries to be exhaustive and complete, its ultimate goal is to guide developers for the possibility of such models and will try to explain their challenges and components.
@@ -166,309 +338,8 @@
    As in the previous 3 uses cases we need to have careful thoughts so that we avoid loops where specific Resource Attributes write over and over again by the ERC and RC/RU, having now extra consideration for the fact that now we can have multiple Resource Managers.
    Typically we will see this use case in large organization, or between organization that have their own business to business communication and have the need for exchange information about Resources. Many other good example can be provided like organizations that by merging or acquisition, arrive to a situation where multiple RM exist, and their IT departments have to merge Resource information. 
 
-## 4.  SCIM standardized Concepts
-   The SCIM protocol defines interactions between two standardized parties that conform to HTTP RESTful conventions. The protocol enables CRUD activities by corresponding those activities to HTTP verbs such as POST, GET, DELETE etc.  The protocol itself doesn't assume a direction of data flow, and use cases discussed in section 3 can be accomplished by entities in either protocol role.
 
-### 4.1 SCIM Server or Service Provider
-   An HTTP web application that provides identity information via the SCIM protocol.
-   A SCIM Server is a RESTful API endpoint offering access to a data model that can be used to push or pull data between two parties. SCIM servers have additional responsibilities such as API Security, managing client identifiers & keys as well as performance management such as API throttling.
-
-### 4.2 SCIM Client
-   A website or application that uses the SCIM protocol to manage identity data maintained by the service provider.  The client initiates SCIM HTTP requests to a target service provider. 
-   A SCIM Client is active software that can call one or more SCIM servers in order to push or pull data between two parties. 
-
-### 4.3 Type of triggers and how to map them to the use cases
-   We will understand how to use the triggers and how they can address the use cases described in the section 3, we will bring the concepts of RO (Resource Object), RA (Resource Attribute), RC (Resource Creator), RU (Resource Updater), RM (Resource Manager) and RS (Resource Subscriber) to the concepts of SCIM Client, Server, Resource and Attribute. 
-
-#### 4.3.1 Client active Push
-   Client will use HTTP PUSH to create a RO and will use HTTP PATCH/PUT to update its RA. In this section we will cover the basic constructs and will not detail the most complex use case describe before, since they would be just adding new elements to basic constructs describe bellow.
-   
-##### 4.3.1.1 Resource Object creation from Client to Server
-   In this model we will have a Client that is going to provide information about a RO and its RA to a Server, that can also be called as Service Provider in [RFC 7643] and [RFC 7644].
-
-         +----------------+                                   +----------------+
-         |                |                (1)                |                |
-         |                | --------------------------------> |                |
-         |                |                                   |                |
-         |                |                (2)                |Service Provider|
-         |     Client     | <-------------------------------- |      Server    |
-         |   (typically   |                                   |  (typically a  |
-         |    an IdM)     |                (3)                |   Application) |
-         |                | --------------------------------> |                |   
-         |     RM/RC/RU   |                                   |        RS      |
-         |                |                (4)                |                |
-         |                | <-------------------------------- |                |
-         +----------------+                                   +----------------+
-                     Figure 2: 4.3.1.1 SCIM  Flow and Entities map
-   
-   (1) Before creating an RO or update it or its RA the SCIM client will always do an HTTP GET to get an update from the SCIM Service Provider.   
-   (2) Service Provider will provide it RO and RA for that resource asked by the SCIM Client.   
-   (3) Based on the RO and RA returned by the SP (Service Provider), there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve.   
-   (4) the Service Provider will return the RO and its RA with additional metadata information to allow for audit.   
-   In the use cases that we saw before,it is related to section 3.1, where the SCIM client will map to the RM/RC/RU and the Server will map into RS.   
-
-##### 4.3.1.2 Resource Object creation from a Creation Entity 
-   In this model we will have a Client that is going to provide information about a RO and its RA to a Server, can also be called as Service Provider in [RFC 7643] and [RFC 7644], in this model the Client is just responsible for a limit set of attributes and do not do any management overall, and the Resource management function resides on the Server.
-
-         +----------------+                                   +----------------+
-         |                |                (1)                |                |
-         |                | --------------------------------> |                |
-         |                |                                   |                |
-         |                |                (2)                |Service Provider|
-         |     Client     | <-------------------------------- |     / Server   |
-         |   (typically   |                                   |  (typically an |
-         |    an HR       |                (3)                |       IdM)     |
-         |   Application) | --------------------------------> |                |   
-         |                |                                   |      RM/RS     |
-         |     RC/RU      |                (4)                |                |
-         |                | <-------------------------------- |                |
-         +----------------+                                   +----------------+
-                     Figure 3:  4.3.1.2 SCIM  Flow and Entities map
-   
-   (1) Before creating an RO or update it or its RA the SCIM client will always do an HTTP GET to get an update from the SCIM Service Provider.   
-   (2) Service Provider will provide it RO and RA for that resource asked by the SCIM Client.   
-   (3) Based on the RO and RA returned by the SP (Service Provider), there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve.   
-   (4) the Service Provider will return the RO and its RA with additional metadata information to allow for audit.   
-   In the use cases that we saw before, it is related to part of section 3.3, where the SCIM client will map to the RC/RU and the Server will map into RM/RS, the SCIM client is also sometimes called as the "HR Application", because it responsibilities are only on be the creator and updater of the RO and specific number of its RA, the client in this case has no responsibilities in doing any management of the Resources, typically done by an IdM.  
-
-##### 4.3.1.3 Resource Object creation from a Creation Entity and consumption from an Application
-   In this model we will have a Client that is going to provide information about a RO and its RA to a Server, can also be called as Service Provider in [RFC 7643] and [RFC 7644], in this model the Client is just responsible for a limit set of attributes and do not do any management overall, the Resource management function resides on the Server, that is also a client to an server that is the final recipient of the information RO and its RA.
-
-         +----------------+                         +---------------------------+                         +----------------+
-         |                |           (1)           |                           |           (1)           |                |
-         |                | ----------------------> |                           | ----------------------> |                |
-         |                |                         |                           |                         |                |
-         |                |           (2)           |Service Provider           |           (2)           |Service Provider|
-         |     Client     | <---------------------- |     / Server        Client| <---------------------- |     / Server   |
-         |   (typically   |                         |       (typically an       |                         |   (typically   |
-         |    an HR       |           (3)           |           IdM)            |           (3)           |        an      |
-         |   Application) | ----------------------> |                           | ----------------------> |   Application) |
-         |                |                         |       RM/RS/RC/RU         |                         |                |
-         |     RC/RU      |           (4)           |                           |           (4)           |        RS      |
-         |                | <---------------------- |                           | <---------------------- |                |
-         +----------------+                        +----------------------------+                         +----------------+
-                     Figure 4:  4.3.1.3 SCIM  Flow and Entities map
-   
-   (1) Before creating an RO or update it or its RA the SCIM client will always do an HTTP GET to get an update from the SCIM Service Provider.   
-   (2) Service Provider will provide it RO and RA for that resource asked by the SCIM Client.   
-   (3) Based on the RO and RA returned by the SP (Service Provider), there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve.   
-   (4) the Service Provider will return the RO and its RA with additional metadata information to allow for audit.   
-   In the use cases that we saw before, it is related to section 3.3, where the SCIM client on the left will map to the RC/RU and the Server in the middle will map into RM/RS, the SCIM client is also sometimes called as the "HR Application", because it responsibilities are only on be the creator and updater of the RO and specific number of its RA, the client in this case has no responsibilities in doing any management of the Resources, typically done by an IdM.   
-   The center component as describe is the Server for the client on the left and will act as the Client for the server on the right. Typically the Server on the right is an application that wan tto consume RO and its RA.   
-
-##### 4.3.1.4 Resource Object creation from a Creation Entity and consumption from an Application when different Resource Attributes are generated in different entities                
-   In this model we will have a Client that is going to provide information about a RO and its RA to a Server, can also be called as Service Provider in [RFC 7643] and [RFC 7644], in this model the Client is just responsible for a limit set of attributes and do not do any management overall, the Resource management function resides on the Server, that is also a client to an server that is the final recipient of the information RO and its RA.
-
-         +----------------+                         +---------------------------+                         +----------------+
-         |                | ----------(1)---------> |                           | ----------(1)---------> |                |
-         |        Client  | <---------(2)---------- |Service Provider     Client| <---------(2)---------- |Service Provider|
-         |                | ----------(3)---------> |    / Server               | ----------(3)---------> |     / Server   |
-         |   (typically   | <---------(4)---------- |                           | <---------(4)---------- |                |
-         |      an HR     |                         |       (typically an       |                         | (typically an  |
-         |   Application) |                         |           IdM)            |                         |   Application) |
-         |     RC/RU/RS   | <---------(1)---------- |       RM/RS/RC/RU         | <---------(1)---------- |       RS       |
-         |                | ----------(2)---------> |                           | ----------(2)---------> |                |
-         |Service Provider| <---------(3)---------- |Client     Service Provider| <---------(3)---------- |  Client        |
-         |       / Server | ----------(4)---------> |                  / Server | ----------(4)---------> |                |
-         +----------------+                         +---------------------------+                         +----------------+
-                     Figure 5:  4.3.1.4 SCIM  Flow and Entities map
-   
-   (1) Before creating an RO or update it or its RA the SCIM client will always do an HTTP GET to get an update from the SCIM Service Provider.   
-   (2) Service Provider will provide it RO and RA for that resource asked by the SCIM Client.   
-   (3) Based on the RO and RA returned by the SP (Service Provider), there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve.   
-   (4) the Service Provider will return the RO and its RA with additional metadata information to allow for audit.   
-   In the use cases that we saw before, it is related to section 3.6, where the SCIM client on the top left will map to the RC/RU and the Server in the middle left will map into RM/RS, the SCIM client is also sometimes called as the "HR Application", because it responsibilities are only on be the creator and updater of the RO and specific number of its RA, the client in this case has no responsibilities in doing any management of the Resources, typically done by an IdM.   
-   The center component as describe is the Server for the client on the left and will act as the Client for the server on the right. Typically the Server on the right is an application that wan tto consume RO and its RA.  
-   In addition to the models before now the "HR Application also subscribe to RA that are created by the RS and reported by the RM, the Application will be the creator of specific attributes.
-
-#### 4.3.2 Client Active Pull
-This model of the trigger is created for those scenarios where there is no status database in the client, and where the Clients choose when and how often to make HTTP GET calls to the server, based on the size of the object population the client is tracking, the frequency of the data change, and the use case, for example the synchronization of a registry of objects vs. point updates when an event takes place.These factors may result in clients periodically polling a large set of SCIM Server objects to check for changes.
-Examples of cases where the client active pull is used include situations where a client needs to maintain a synchronized large body of objects, such as a device list or user address book. Another use case would be a client that needs to have details of a specific device that was onboard for example by a mobile application.
-
-##### 4.3.2.1 Resource Object Creation or Update
-In this model we will have a Client that is going to pull information about a RO and its RA from a Server, can also be called as Service Provider in [RFC 7643] and [RFC 7644]. In this model the Client is going to management all the RO (Resource Objects) and its RA (Resource Attributes), that are provided by the Server, and the RM (Resource Management) function resides on the Client.
-
-         +----------------+                                   +----------------+
-         |                |                                   |                |
-         |                |                                   |                |
-         |                |                                   |                |
-         |                |                (1)                |Service Provider|
-         |     Client     | --------------------------------> |     / Server   |
-         |   (typically   |                                   |  (typically a  |
-         |    an IDM)     |                (2)                |    Device)     |
-         |                | <-------------------------------- |                |   
-         |     RS/RM      |                                   |      RC/RU     |
-         |                |                                   |                |
-         |                |                                   |                |
-         +----------------+                                   +----------------+
-                     Figure 6:  4.3.2.1 SCIM  Flow and Entities map
-   
-   (1) The SCIM client will do an HTTP GET to obtain the details of the device its attributes, the RO and its RA.
-   (2) The SCIM Service Provider will return the RO and its RA with additional metadata information to allow for audit.  
-   A typical example of this use case is a device that is going to use a mobile or browser base enrollment and gathers its attributes, after that process that is outside the scope of the SCIM protocol, the Device (or Server on their behalf) is ready for the IDM platform to get its details and do all the management roles necessary for all the domain devices.
-
-##### 4.3.2.2 Resources Subscription
-In this model we will have the Client that is going to pull information about a RO and its RA from the Server, can also be called as Service Provider in [RFC 7643] and [RFC 7644]. In this model in the Client there is no status database in the client, and it gets a list of all the RO (Resource Objects) or a subset of it based on filters, so there will be a full update every synchronization cycle.
-
-         +----------------+                                   +----------------+
-         |                |                                   |                |
-         |                |                                   |                |
-         |                |                                   |                |
-         |Service Provider|                (1)                |                |
-         |     / Server   | <-------------------------------- |     Client     |
-         |   (typically   |                                   |  (typically a  |
-         |    an IDM)     |                (2)                | SaaS Service)  |
-         |                | --------------------------------> |                |   
-         |    RC/RU/RM    |                                   |       RS       |
-         |                |                                   |                |
-         |                |                                   |                |
-         +----------------+                                   +----------------+
-                     Figure 7:  4.3.2.2 SCIM  Flow and Entities map
-   
-   (1) The SCIM client will do an HTTP GET to obtain the selected list of RO (Resource Object) and its RA (Resource Attributes).
-   (2) The SCIM Service Provider will return the RO and its RA with additional metadata information to allow for audit.  
-   A good example would be SaaS service that needs to consume a list of contacts or devices, this SaaS service will need to know the relevant Ro (Resource Objects) and its RA ( Resource Attributes), this operation will happen periodically and every time will get a full list of all the RO (Resource Objects).
-   
-##### 4.3.2.3 Resource Object Creation or Update and Subscription
-In this model we will bring together 4.3.2.1 and 4.3.2.2 where a typically a device can up be the creator or their own attributes and will allow an SaaS service to subscribe to all the different RO (Resource Objects) and deliver additional services for other devices. It isn't expected from any of the SCIM clients in the Active pull model to create any status database of attributes changes, so the clients will always do GET on one or many RO ( Resource Objects) periodically.
-
-         +----------------+                         +---------------------------+                         +----------------+
-         |                |                         |                           |                         |                |
-         |                |                         |                           |                         |                |
-         |                |                         |                           |                         |                |
-         |Service Provider|           (1)           |Client                     |           (3)           |                |
-         |    / Server    | <---------------------- |           Service Provider| <---------------------- |Client          |
-         |   (typically   |                         |       (typically an       |                         |   (typically   |
-         |        a       |           (2)           |           IdM)            |           (4)           |        an      |
-         |      Device)   | ----------------------> |                           | ----------------------> |  SaaS Service) |
-         |                |                         |       RM/RS/RC/RU         |                         |                |
-         |     RC/RU      |                         |                           |                         |        RS      |
-         |                |                         |                           |                         |                |
-         +----------------+                        +----------------------------+                         +----------------+
-                     Figure 8:  4.3.2.3 SCIM  Flow and Entities map
-   
-   (1) The SCIM client will do an HTTP GET to obtain the RO (Resource Object) and its RA (Resource Attributes) of the device.
-   (2) The SCIM Service Provider (Device) will return the RO and its RA with additional metadata information to allow for audit.  
-   (3) The SCIM client will do an HTTP GET to obtain the selected list of RO (Resource Object) and its RA (Resource Attributes).
-   (4) The SCIM Service Provider will return the RO and its RA with additional metadata information to allow for audit.  
-   A good example would be a device that is going to use a mobile or browser base enrollment to gather its attributes, after that process which is outside the scope of the SCIM protocol, the Device 
-   (or Server on their behalf) is ready for the IDM platform to get its details and do all the management roles necessary for all the domain devices. 
-   Also in the use case is the SaaS service that needs to consume a list of contacts or devices, this SaaS service will need to know the relevant Ro (Resource Objects) and its RA ( Resource Attributes), this operation will happen periodically and every time will get a full list of all the RO (Resource Objects).
-
-
-#### 4.3.3 Events
-  Using Security Events for SCIM service providers and receivers as specified by the Security Event Tokens (SET) [RFC8417] to create triggers for SCIM actions, details for SCIM profile for Security Event Tokens are vailable in [draft-ietf-scim-events]
-  SCIM Clients client may need to be informed of changes that occur over time. This may be achieved through the use of event messages or signals in the form of Security Event Tokens (SET). SET tokens convey information about changes that have occurred in a publishing domain that may be of interest to a receiving domain. Unlike SCIM Protocol requests, Security Events do not describe actions that a receiver must take, rather they are simple statements of fact about changes that have already occurred. The intent, is to allow the event receiver to determine the best follow-uip action to take within the context of the receiving domain.
-  With the pull base delivering model using events we can also address the use case where the SCIM Server is behind a private network where the SCIM clients can't reach.
-
-##### 4.3.3.1 Resource Object Creation or Update using events with Push Based Delivering
-  This models allow Event Receiver's to "subscribe" to specific event types or events about specific resources, if no option is offered, it is assumed the client will receive all events about all resources. The event publisher will notify the Receiver using HTTP Push on the CRUD actions for the RO (Resource Objects), it is the responsibility of the receiver to decide when and how it is going to integrate those changes, with there is no need to notify the Publisher on its actions.
-
-         +----------------+                                   +----------------+
-         |                |                                   |                |
-         |                |                                   |                |
-         |                |                                   |                |
-         |    Publisher   |                (1)                |     Receiver   |
-         |                | <-------------------------------- |                |
-         |   (typically   |                                   |  (typically a  |
-         |    an IDM)     |                (2)                |      SaaS      |
-         |                | --------------------------------> |  Application)  |   
-         |    RC/RU/RM    |                                   |                |
-         |                |                                   |        RS      |
-         |                |                                   |                |
-         +----------------+                                   +----------------+
-                     Figure 9:  4.3.3.1 SCIM  Flow and Entities map for Domain Replication Mode
-   
-   (1) Allows the Receiver to subscribe to the feed on types or resources.
-   (2) Uses HTTP POST to execute the CRUD actions for the Domain Replication Mode and allows for the events with the types urn:ietf:params:event:SCIM:prov:create, urn:ietf:params:event:SCIM:prov:patch, urn:ietf:params:event:SCIM:prov:put, urn:ietf:params:event:SCIM:prov:delete, urn:ietf:params:event:SCIM:prov:activate, urn:ietf:params:event:SCIM:prov:deactivate, and specify the RO (Resource Object) and its RA (Resource Attributes) that are changing.
-   The objective of "Domain Based Replication" events (DBR) is to synchronize resource changes between SCIM entities in a common administrative domain. In this mode, complete information about changes for resources are shared between replicas for immediate processing.
-
-         +----------------+                                   +----------------+
-         |                |                                   |                |
-         |                |                (1)                |                |
-         |                | <-------------------------------- |                |
-         |    Publisher   |                                   |     Receiver   |
-         |                |                (2)                |                |
-         |   (typically   | --------------------------------> |  (typically a  |
-         |    an IDM)     |                                   |      SaaS      |
-         |                |                (3)                |  Application)  |   
-         |    RC/RU/RM    | <-------------------------------- |                |
-         |                |                                   |       RS       |
-         |                |                                   |                |
-         +----------------+                                   +----------------+
-                     Figure 10:  4.3.3.1 SCIM  Flow and Entities map for Co-ordinated Provisioning
-   
-   (1) Allows the Receiver to subscribe to the feed on types or resources.
-   (2) Uses HTTP POST to execute the CRUD actions and allows for the events with the types urn:ietf:params:event:SCIM:prov:create, urn:ietf:params:event:SCIM:prov:patch, urn:ietf:params:event:SCIM:prov:put, urn:ietf:params:event:SCIM:prov:delete, urn:ietf:params:event:SCIM:prov:activate, urn:ietf:params:event:SCIM:prov:deactivate, and specify the RO (Resource Object) and its RA (Resource Attributes) that are changing, the flow only mention the RA (Resource Attributes) names, and doesn't include their values.
-   (3) Allows the Receiver to request the value of the RA (Resource Attributes) specified in the flow before.
-   In "Co-ordinated Provisioning" (CP), SCIM resource change events perform the function of change notification without the need to provide raw data. In any Event Publisher and Receiver relationship, the set of SCIM resources (e.g. Users) that are linked or coordinated is managed within the context of a an event feed and which MAY be a subset of the total set of resources on either side. For example, an event feed could be limited to users who have consented to the sharing of information between domains. To support capability, "feed" specific events are defined to indicate the addition and removal of SCIM resources from a feed. For example, when a user consents to the sharing of information between domains, events about the User MAY be added to the feed between the Event Publisher and Receiver.
-
-##### 4.3.3.2 Resource Object Creation or Update using events with Pull Based Delivering
-  This models allow Event Receiver's to "subscribe" to specific event types or events about specific resources, if no option is offered, it is assumed the client will receive all events about all resources. The event publisher will notify the Receiver using HTTP Get on the CRUD actions for the RO (Resource Objects), it is the responsibility of the receiver to decide when and how it is going to integrate those changes, with there is no need to notify the Publisher on its actions.
-  Using the Pull mechanism is specially relevant for scenarios where the 
-
-         +----------------+                                   +----------------+
-         |                |                                   |                |
-         |                |                                   |                |
-         |                |                                   |                |
-         |     Receiver   |               (1)                 |    Publisher   |
-         |                | <-------------------------------- |                |
-         |   (typically   |                                   |  (typically a  |
-         |    an IDM)     |                                   |      SaaS      |
-         |                |                                   |  Application)  |   
-         |    RC/RU/RM    |                                   |                |
-         |                |                                   |        RS      |
-         |                |                                   |                |
-         +----------------+                                   +----------------+
-                     Figure 11:  4.3.3.2 SCIM  Flow and Entities map for Domain Replication Mode
-   
-   (1) Uses HTTP GET to execute the CRUD actions for the Domain Replication Mode and allows for the events with the types urn:ietf:params:event:SCIM:prov:create, urn:ietf:params:event:SCIM:prov:patch, urn:ietf:params:event:SCIM:prov:put, urn:ietf:params:event:SCIM:prov:delete, urn:ietf:params:event:SCIM:prov:activate, urn:ietf:params:event:SCIM:prov:deactivate, and specify the RO (Resource Object) and its RA (Resource Attributes) that are changing.
-   The objective of "Domain Based Replication" events (DBR) is to synchronize resource changes between SCIM entities in a common administrative domain. In this mode, complete information about changes for resources are shared between replicas for immediate processing.
-
-
-         +----------------+                                   +----------------+
-         |                |                                   |                |
-         |                |                (1)                |                |
-         |                | <-------------------------------- |                |
-         |     Receiver   |                                   |    Publisher   |
-         |                |                (2)                |                |
-         |   (typically   | <-------------------------------- |  (typically a  |
-         |    an IDM)     |                                   |      SaaS      |
-         |                |                                   |  Application)  |   
-         |    RC/RU/RM    |                                   |                |
-         |                |                                   |       RS       |
-         |                |                                   |                |
-         +----------------+                                   +----------------+
-                     Figure 12:  4.3.3.2 SCIM  Flow and Entities map for Co-ordinated Provisioning
-   
-   (1) Uses HTTP GET to execute the CRUD actions and allows for the events with the types urn:ietf:params:event:SCIM:prov:create, urn:ietf:params:event:SCIM:prov:patch, urn:ietf:params:event:SCIM:prov:put, urn:ietf:params:event:SCIM:prov:delete, urn:ietf:params:event:SCIM:prov:activate, urn:ietf:params:event:SCIM:prov:deactivate, and specify the RO (Resource Object) and its RA (Resource Attributes) that are changing, the flow only mention the RA (Resource Attributes) names, and doesn't include their values.
-   (2) Allows the Receiver to request the value of the RA (Resource Attributes) specified in the flow before.
-   In "Co-ordinated Provisioning" (CP), SCIM resource change events perform the function of change notification without the need to provide raw data. In any Event Publisher and Receiver relationship, the set of SCIM resources (e.g. Users) that are linked or coordinated is managed within the context of a an event feed and which MAY be a subset of the total set of resources on either side. For example, an event feed could be limited to users who have consented to the sharing of information between domains. To support capability, "feed" specific events are defined to indicate the addition and removal of SCIM resources from a feed. For example, when a user consents to the sharing of information between domains, events about the User MAY be added to the feed between the Event Publisher and Receiver.
-
-#### 4.3.4 SSO (Single Sign-On)
-   This model of the trigger is created for those scenarios where a Single Sign-On flow happens, but for some reason is not able to bring all the RA (Resource Attributes) of a specific RO (Resource Object), so the IdM  (Identity Manager) will implement an HTTP Patch to deliver an update to the RO (Resource Object) with the additional RA (Resource Attributes).
-   
-         +----------------+                                   +----------------+
-         |                |                (1)                |                |
-         |                | <-------------------------------> |                |
-         |                |                                   |                |
-         |     Client     |                (2)                |Service Provider|
-         |                | --------------------------------> |     / Server   |
-         |   (typically   |                                   |  (typically an |
-         |    an IdM)     |                (3)                |       SaaS     |
-         |                | <-------------------------------- |  Application)  |   
-         |                |                                   |                |
-         |     RC/RU/RM   |                                   |       RS       |
-         |                |                                   |                |
-         +----------------+                                   +----------------+
-                     Figure 3:  4.3.1.2 SCIM  Flow and Entities map
-   
-   (1) SSO trigger that creates the user and might create a couple of most well know RA ( Resource Attributes) of a RO (Resource Objects)    
-   (2) An HTTP PUSH that will complement the attributes created before with an SSO JIT with additional RA (Resource Attributes) of the RO (Resource Objects) created before
-   (3) The SCIM Service Provider will return the RO and its RA with additional metadata information to allow for audit.     
-   This use case combines the SCIM protocol with other protocols used for Single Sign-On, specially in the use case of JIT (Just in time Provision), addressing the limitation of JIT.
-   
-## 5.  Security Considerations
+## 4.  Security Considerations
    Authentication and authorization must be guaranteed for the SCIM operations to ensure that only authenticated entities can perform the SCIM requests and the requested SCIM operations are authorized. 
    SCIM resources (e.g., Users and Groups) can contain sensitive information.  Thus, data confidentiality MUST be guaranteed at the transport layer.
    There can be privacy issues that go beyond transport security, e.g., moving personally identifying information (PII) offshore between different SCIM elements.
@@ -476,13 +347,13 @@ In this model we will bring together 4.3.2.1 and 4.3.2.2 where a typically a dev
    Additionally, privacy-sensitive data elements may be omitted or obscured in SCIM transactions or stored records to protect these data elements for a user. For instance, a role-based identifier might be used in place of an individual's name.
    Detailed security considerations are specified in Section 7 of the SCIM protocol [RFC7644] and Section 9 of the SCIM schema [RFC7643].
 
-## 6.  References
-### 6.1.  Normative References
+## 5.  References
+### 5.1.  Normative References
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
    Requirement Levels", BCP 14, RFC 2119,
    DOI 10.17487/RFC2119, March 1997,
    <http://www.rfc-editor.org/info/rfc2119>.
-### 6.2.  Informative References
+### 5.2.  Informative References
    [RFC7643]  Hunt, P., Ed., Grizzle, K., Wahlstroem, E., and
    C. Mortimore, "System for Cross-domain Identity
    Management: Core Schema", RFC 7643, DOI 10.17487/RFC7643,
