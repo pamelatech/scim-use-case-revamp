@@ -109,9 +109,9 @@
    SCIM client will execute SCIM actions configured at specific interval of time, the interval of time are configured by the client. It can use any of the SCIM actions defined in the next sections.
 
 ##### 2.2.4.2. Events Triggers
-   Using Security Events for SCIM service providers and receivers as specified by the Security Event Tokens (SET) [RFC8417] to create triggers for SCIM actions, details for SCIM profile for Security Event Tokens are available in [draft-ietf-scim-events]
-   SCIM Clients client may need to be informed of changes that occur over time. This may be achieved through the use of event messages or signals in the form of Security Event Tokens (SET). SET tokens convey information about changes that have occurred in a publishing domain that may be of interest to a receiving domain. Unlike SCIM Protocol requests, Security Events do not describe actions that a receiver must take, rather they are simple statements of fact about changes that have already occurred. The intent, is to allow the event receiver to determine the best follow-uip action to take within the context of the receiving domain.
-   With the pull base delivering model using events we can also address the use case where the SCIM Server is behind a private network where the SCIM clients can't reach.
+   Using Security Events for SCIM service providers and receivers as specified by the Security Event Tokens (SET) [RFC8417] to create triggers for SCIM actions, details for SCIM profile for Security Event Tokens are available in [draft-ietf-scim-events].
+   But the events triggers will not stop there, any kind of event can be a trigger, for example we could have an SaaS application that send an email to request an SCIM action, specially in the device space, the trigger for an get from the client can be anything and is not going to be exhausted numerated in this use case document.
+   SCIM Clients may need to be informed of changes that occur over time. This could be achieved through the use of event messages or signals in the form of Security Event Tokens (SET). SET tokens convey information about changes that have occurred in a publishing domain that may be of interest to a receiving domain. Unlike SCIM Protocol requests, Security Events do not describe actions that a receiver must take, rather they are simple statements of fact about changes that have already occurred. The intent, is to allow the event receiver to determine the best follow-uip action to take within the context of the receiving domain.
 
 ###### 2.2.4.2.1. Event Trigger with Push Based Delivering
    This models allow Event Receiver's to "subscribe" to specific event types or events about specific resources, if no option is offered, it is assumed the client will receive all events about all resources. The event publisher will notify the Receiver using HTTP Push on the CRUD actions for the RO (Resource Objects), it is the responsibility of the receiver to decide when and how it is going to integrate those changes, with there is no need to notify the Publisher on its actions.
@@ -417,16 +417,19 @@ In this model we will bring together 4.3.2.1 and 4.3.2.2 where a typically a dev
    As mention before SCIM is a protocol for cross domains where two entities exchange information about a resource, with the use cases we try to go further and explain on how the different components can interact to allow from simple to complex architectures for cross domain resource management.
    Typically each use case add something on top of the previous one, starting in the most simple one, and finishing in the most complex ones, to make it easier the explanation, assume that what was describe in the previous use case applies to the use cases that come after.
 
-### 3.1.  Get information about persona
+### 3.1.  CRUD operation on a single resource, associated to the AuthZ action. 
+   Get information about persona.
    A use case cover in [RFC7644] where a SCIM client can do CRUD operation on the entity of the user, in this use case the SCIM client that is the RM (Resource Manager), RC (Resource Creator) and RU (Resource Updater), will be able to read, create, update the RO (Resource Object) and its RA ( Resource Attributes) in the RS (Resource Subscriber). the RS will provide an /me URI to achieve this.
    Special consideration needs to happen from authorization perspective, unlike the other CRUD operation describe in this document the authorization for this use case only allows access to the RO (Resource Object) of the user that authenticate.
 
-### 3.2.  Single RM/RC/RU and multiple RS
-   This is very common and simple SCIM use case. We have the IdM/Device Managers/etc. do all CRUD operation with the resources, then using the trigger mechanisms the resource information reach the Resource Subscribers. 
-   The RS (Resource Subscriber) will take the decision on which RA (Resource Attributes) to consider and how the Resource Object will show in their resource database.
-   Typically we can find this kind of use case in small to mid size organization, where there is no structure method to handle the resources and typically in Organization that start with a blank sheet of paper or it is a greenfield Organization.
+### 3.2.  IdM doing CRUD operations on SaaS applications
+      Single RM/RC/RU and multiple RS.
+      This is very common and simple SCIM use case, we have the IdM/Device Managers/etc. do all CRUD operation with the resources, then using the trigger mechanisms the resource information reach the Resource Subscribers, also know as the SaaS Application.
+      The RS (Resource Subscriber) will take the decision on which RA (Resource Attributes) to consider and how the Resource Object will show in their resource database.
+      Typically we can find this kind of use case in small to mid size organization, where there is no structure method to handle the resources and typically in Organization that start with a blank sheet of paper or it is a greenfield Organization.
 
-### 3.3.  One or more ERC with single RM/RC/RU and multiple RS
+### 3.3.  IdM doing CRUD operations on SaaS applications, and Objects coming from external non SCIM source.
+   One or more ERC with single RM/RC/RU and multiple RS.
    This is the most common use case, because it allow the organization to adopt SCIM protocol for CRUD operations of their resources. In this use case the organization already have an existent database of resources that is going to be the source of truth for the Resource Manager. At no point in time the SCIM RM will provide SCIM operation with that External Resource Creator.
    Normally this ERC, specially if we are talking about user Identity, will have a User database that can be accessible using LDAP or can provide information of their user attributes by doing an SAML Single Sign-On using Just in time Provision. Most of the IDaaS also provide softwares that allow them to get resource information by using proprietary protocols. It is common to see HTTP REST to get the information from the ERC to the RM.
    Typically in this use case the RM will become the new source of truth for the resources of our Organization, will add extra Resource Attributes and ignore other RA that existed in the ERC.
@@ -434,27 +437,32 @@ In this model we will bring together 4.3.2.1 and 4.3.2.2 where a typically a dev
    The Resource Subscribers will consume all the resource information from the RM.
    Typically we will see this use case in small to mid size organization where resources were organized in a non standard and non open platform for Resources Management, where it isn't possible to cut/replace everything with a new system.
     
-### 3.4.  One or more RC/RU, with single RM/RC/RU/RS and multiple RS
+### 3.4.  IdM doing CRUD operations on SaaS applications, and Objects coming from external SCIM source.
+   One or more RC/RU, with single RM/RC/RU/RS and multiple RS.
    In this use case, the the CRUD operation for the RO (Resource Object) and its RA (Resource Attributes) does not belong to the RM (Resource Manager), this is done in a separate SCIM entity, the Resource Creator/Resource Updater. 
    A good example of this is use case on Users where Organization have their HR application, and the lifecycle of the resource (typically groups and Users) is done by that application.
    We could also have this use case where the RM is extended with the Roles of RC/RU for extra RA (Resources Attributes) that are not authoritative by the "HR System", but normally that bring more complexity to the authority models for the CRUD operation of the resources.  
    Typically we will see this use case in mid to large organization where no structure method to handle the resources and they start fresh or it is a greenfield.
 
 
-### 3.5.  One or more ERC, one or more RC/RU, with single RM/RC/RU/RS and multiple RS
+### 3.5.  IdM doing CRUD operations on SaaS applications, and Objects coming from external SCIM and non SCIM source including the IDM itself, where some object attributes come from SaaS application.
+   One or more ERC, one or more RC/RU, with single RM/RC/RU/RS and multiple RS.
    In this use case, the Resource information is in a ERC (External Resource Creator), and the entity that has the role of RC/RU (example given before the HR System) consumes information from the ERC. To avoid delays or loops the RM will also get original information from the ERC, just like the RC/RU. The RC/RU, either in the ERC or in the "HR application" can add extra Resource Attributes, so from a model perspective, the RM get its authoritative Information from both systems the RC/RU and from the ERC.
    In this model there need to be careful thoughts so that we avoid loops where specific Resource Attributes write over and over again by the ERC and RC/RU.
    Typically we will see this use case in mid to large organization where resources were organized in a non standard, non open platform for Resources Management and it isn't possible to cut/replace everything with a new system.
 
-### 3.6.  One or more ERC, one or more RC/RU, with single RM/RC/RU/RS and multiple RS/RU
+### 3.6.  IdM doing CRUD operations on SaaS applications, and Objects coming from external SCIM and non SCIM source including the IDM itself, where some object attributes come from SaaS application.
+   One or more ERC, one or more RC/RU, with single RM/RC/RU/RS and multiple RS/RU.
    In this use case we add the capability of the Resource Subscriber to be also an Resource Update, it is very common that an SaaS application can be authoritative for specific RA and add extra details to the RO.
    Typically we will see this use case in large organization where resources were organized in a non standard, non open platform for Resources Management and it isn't possible to cut/replace everything with a new system. Those organization start to adopt many application that brings attributes to the different resources that already exist in the system.
 
-### 3.7.  One or more ERC, one or more RC/RU/RS, with single RM/RC/RU/RS and multiple RS/RU
+### 3.7.  IdM doing CRUD operations on SaaS applications, and Objects coming from external SCIM and non SCIM sources including the IdM itself, where some object attributes come from SaaS application, and are updated in the SCIM object creator.
+   One or more ERC, one or more RC/RU/RS, with single RM/RC/RU/RS and multiple RS/RU.
    In this use case we introduce the possibility of the RC/RU (example given before the HR System) be interested in the attribute that was created updated by the RS/RU (also known as the SaaS application), an example could be adding the business email that was created by the mail service (that came from RS/RU) to the HR information service (the RC/RU/RS element)
    Typically we will see this use case in large organization where resources were organized in a non standard, non open platform for Resources Management and it isn't possible to cut/replace everything with a new system. hose organization start to adopt many application that brings attributes to the different resources that already exist in the system, but they need to have all the important attributes of Resources in a application in our examples "HR application"
 
-### 3.8.  One or more ERC, one or more RC/RU/RS, with one or more RM/RC/RU/RS and multiple RS/RU
+### 3.8.  Multiple IdM doing CRUD operations on SaaS applications, and Objects coming from external SCIM and non SCIM sources including the IdM itself, where some object attributes come from SaaS application, and are updated in the SCIM object creator.
+   One or more ERC, one or more RC/RU/RS, with one or more RM/RC/RU/RS and multiple RS/RU.
    In this use case we introduce the possibility of having multiple Resource Managers, where the information from  the RO/RA is consolidated across different domains/services.
    As in the previous 3 uses cases we need to have careful thoughts so that we avoid loops where specific Resource Attributes write over and over again by the ERC and RC/RU, having now extra consideration for the fact that now we can have multiple Resource Managers.
    Typically we will see this use case in large organization, or between organization that have their own business to business communication and have the need for exchange information about Resources. Many other good example can be provided like organizations that by merging or acquisition, arrive to a situation where multiple RM exist, and their IT departments have to merge Resource information. 
