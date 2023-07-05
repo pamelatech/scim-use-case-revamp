@@ -423,10 +423,10 @@ In this model we will bring together 4.3.2.1 and 4.3.2.2 where a typically a dev
    Special consideration needs to happen from authorization perspective, unlike the other CRUD operation describe in this document the authorization for this use case only allows access to the RO (Resource Object) of the user that authenticate.
 
 ### 3.2.  IdM doing CRUD operations on SaaS applications
-      Single RM/RC/RU and multiple RS.
-      This is very common and simple SCIM use case, we have the IdM/Device Managers/etc. do all CRUD operation with the resources, then using the trigger mechanisms the resource information reach the Resource Subscribers, also know as the SaaS Application.
-      The RS (Resource Subscriber) will take the decision on which RA (Resource Attributes) to consider and how the Resource Object will show in their resource database.
-      Typically we can find this kind of use case in small to mid size organization, where there is no structure method to handle the resources and typically in Organization that start with a blank sheet of paper or it is a greenfield Organization.
+   Single RM/RC/RU and multiple RS. 
+   This is very common and simple SCIM use case, we have the IdM/Device Managers/etc. do all CRUD operation with the resources, then using the trigger mechanisms the resource information reach the Resource Subscribers, also know as the SaaS Application. 
+   The RS (Resource Subscriber) will take the decision on which RA (Resource Attributes) to consider and how the Resource Object will show in their resource database. 
+   Typically we can find this kind of use case in small to mid size organization, where there is no structure method to handle the resources and typically in Organization that start with a blank sheet of paper or it is a greenfield Organization.  
 
 ### 3.3.  IdM doing CRUD operations on SaaS applications, and Objects coming from external non SCIM source.
    One or more ERC with single RM/RC/RU and multiple RS.
