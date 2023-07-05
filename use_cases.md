@@ -352,6 +352,7 @@ In this model we will have a Client that is going to pull information about a RO
                      Figure 6:  4.3.2.1 SCIM  Flow and Entities map
    
    (1) The SCIM client will do an HTTP GET to obtain the details of the device its attributes, the RO and its RA.
+   
    (2) The SCIM Service Provider will return the RO and its RA with additional metadata information to allow for audit.
    A typical example of this use case is a device that is going to use a mobile or browser base enrollment and gathers its attributes, after that process that is outside the scope of the SCIM protocol, the Device (or Server on their behalf) is ready for the IDM platform to get its details and do all the management roles necessary for all the domain devices.
 
