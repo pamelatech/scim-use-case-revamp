@@ -106,15 +106,127 @@
    Triggers used to allow CRUD (Create, Read, Update, Delete) using SCIM Actions or Operations as it is designed to capture a class of use case that makes sense to the actor requesting it rather than to describe a protocol operation.
 
 ##### 2.2.4.1. Periodic Interval Triggers
+   SCIM client will execute SCIM actions configured at specific interval of time, the interval of time are configured by the client. It can use any of the SCIM actions defined in the next sections.
 
 ##### 2.2.4.2. Events Triggers
+   Using Security Events for SCIM service providers and receivers as specified by the Security Event Tokens (SET) [RFC8417] to create triggers for SCIM actions, details for SCIM profile for Security Event Tokens are available in [draft-ietf-scim-events]
+   SCIM Clients client may need to be informed of changes that occur over time. This may be achieved through the use of event messages or signals in the form of Security Event Tokens (SET). SET tokens convey information about changes that have occurred in a publishing domain that may be of interest to a receiving domain. Unlike SCIM Protocol requests, Security Events do not describe actions that a receiver must take, rather they are simple statements of fact about changes that have already occurred. The intent, is to allow the event receiver to determine the best follow-uip action to take within the context of the receiving domain.
+   With the pull base delivering model using events we can also address the use case where the SCIM Server is behind a private network where the SCIM clients can't reach.
+
+###### 2.2.4.2.1. Event Trigger with Push Based Delivering
+   This models allow Event Receiver's to "subscribe" to specific event types or events about specific resources, if no option is offered, it is assumed the client will receive all events about all resources. The event publisher will notify the Receiver using HTTP Push on the CRUD actions for the RO (Resource Objects), it is the responsibility of the receiver to decide when and how it is going to integrate those changes, with there is no need to notify the Publisher on its actions.
+
+         +----------------+                                   +----------------+
+         |                |                                   |                |
+         |                |                                   |                |
+         |                |                                   |                |
+         |    Publisher   |                (1)                |     Receiver   |
+         |                | <-------------------------------- |                |
+         |   (typically   |                                   |  (typically a  |
+         |    an IDM)     |                (2)                |      SaaS      |
+         |                | --------------------------------> |  Application)  |   
+         |    RC/RU/RM    |                                   |                |
+         |                |                                   |        RS      |
+         |                |                                   |                |
+         +----------------+                                   +----------------+
+                     Figure 9:  4.3.3.1 SCIM  Flow and Entities map for Domain Replication Mode
+   
+   (1) Allows the Receiver to subscribe to the feed on types or resources.
+   (2) Uses HTTP POST to execute the CRUD actions for the Domain Replication Mode and allows for the events with the types urn:ietf:params:event:SCIM:prov:create, urn:ietf:params:event:SCIM:prov:patch, urn:ietf:params:event:SCIM:prov:put, urn:ietf:params:event:SCIM:prov:delete, urn:ietf:params:event:SCIM:prov:activate, urn:ietf:params:event:SCIM:prov:deactivate, and specify the RO (Resource Object) and its RA (Resource Attributes) that are changing.
+   The objective of "Domain Based Replication" events (DBR) is to synchronize resource changes between SCIM entities in a common administrative domain. In this mode, complete information about changes for resources are shared between replicas for immediate processing.
+
+         +----------------+                                   +----------------+
+         |                |                                   |                |
+         |                |                (1)                |                |
+         |                | <-------------------------------- |                |
+         |    Publisher   |                                   |     Receiver   |
+         |                |                (2)                |                |
+         |   (typically   | --------------------------------> |  (typically a  |
+         |    an IDM)     |                                   |      SaaS      |
+         |                |                (3)                |  Application)  |   
+         |    RC/RU/RM    | <-------------------------------- |                |
+         |                |                                   |       RS       |
+         |                |                                   |                |
+         +----------------+                                   +----------------+
+                     Figure 10:  4.3.3.1 SCIM  Flow and Entities map for Co-ordinated Provisioning
+   
+   (1) Allows the Receiver to subscribe to the feed on types or resources.
+   (2) Uses HTTP POST to execute the CRUD actions and allows for the events with the types urn:ietf:params:event:SCIM:prov:create, urn:ietf:params:event:SCIM:prov:patch, urn:ietf:params:event:SCIM:prov:put, urn:ietf:params:event:SCIM:prov:delete, urn:ietf:params:event:SCIM:prov:activate, urn:ietf:params:event:SCIM:prov:deactivate, and specify the RO (Resource Object) and its RA (Resource Attributes) that are changing, the flow only mention the RA (Resource Attributes) names, and doesn't include their values.
+   (3) Allows the Receiver to request the value of the RA (Resource Attributes) specified in the flow before.
+   In "Co-ordinated Provisioning" (CP), SCIM resource change events perform the function of change notification without the need to provide raw data. In any Event Publisher and Receiver relationship, the set of SCIM resources (e.g. Users) that are linked or coordinated is managed within the context of a an event feed and which MAY be a subset of the total set of resources on either side. For example, an event feed could be limited to users who have consented to the sharing of information between domains. To support capability, "feed" specific events are defined to indicate the addition and removal of SCIM resources from a feed. For example, when a user consents to the sharing of information between domains, events about the User MAY be added to the feed between the Event Publisher and Receiver.
+
+###### 2.2.4.2.2. Event Trigger with Pull Based Delivering
+   This models allow Event Receiver's to "subscribe" to specific event types or events about specific resources, if no option is offered, it is assumed the client will receive all events about all resources. The event publisher will notify the Receiver using HTTP Get on the CRUD actions for the RO (Resource Objects), it is the responsibility of the receiver to decide when and how it is going to integrate those changes, with there is no need to notify the Publisher on its actions.
+   Using the Pull mechanism is specially relevant for scenarios where the 
+
+         +----------------+                                   +----------------+
+         |                |                                   |                |
+         |                |                                   |                |
+         |                |                                   |                |
+         |     Receiver   |               (1)                 |    Publisher   |
+         |                | <-------------------------------- |                |
+         |   (typically   |                                   |  (typically a  |
+         |    an IDM)     |                                   |      SaaS      |
+         |                |                                   |  Application)  |   
+         |    RC/RU/RM    |                                   |                |
+         |                |                                   |        RS      |
+         |                |                                   |                |
+         +----------------+                                   +----------------+
+                     Figure 11:  4.3.3.2 SCIM  Flow and Entities map for Domain Replication Mode
+   
+   (1) Uses HTTP GET to execute the CRUD actions for the Domain Replication Mode and allows for the events with the types urn:ietf:params:event:SCIM:prov:create, urn:ietf:params:event:SCIM:prov:patch, urn:ietf:params:event:SCIM:prov:put, urn:ietf:params:event:SCIM:prov:delete, urn:ietf:params:event:SCIM:prov:activate, urn:ietf:params:event:SCIM:prov:deactivate, and specify the RO (Resource Object) and its RA (Resource Attributes) that are changing.
+   The objective of "Domain Based Replication" events (DBR) is to synchronize resource changes between SCIM entities in a common administrative domain. In this mode, complete information about changes for resources are shared between replicas for immediate processing.
+
+
+         +----------------+                                   +----------------+
+         |                |                                   |                |
+         |                |                (1)                |                |
+         |                | <-------------------------------- |                |
+         |     Receiver   |                                   |    Publisher   |
+         |                |                (2)                |                |
+         |   (typically   | <-------------------------------- |  (typically a  |
+         |    an IDM)     |                                   |      SaaS      |
+         |                |                                   |  Application)  |   
+         |    RC/RU/RM    |                                   |                |
+         |                |                                   |       RS       |
+         |                |                                   |                |
+         +----------------+                                   +----------------+
+                     Figure 12:  4.3.3.2 SCIM  Flow and Entities map for Co-ordinated Provisioning
+   
+   (1) Uses HTTP GET to execute the CRUD actions and allows for the events with the types urn:ietf:params:event:SCIM:prov:create, urn:ietf:params:event:SCIM:prov:patch, urn:ietf:params:event:SCIM:prov:put, urn:ietf:params:event:SCIM:prov:delete, urn:ietf:params:event:SCIM:prov:activate, urn:ietf:params:event:SCIM:prov:deactivate, and specify the RO (Resource Object) and its RA (Resource Attributes) that are changing, the flow only mention the RA (Resource Attributes) names, and doesn't include their values.
+   (2) Allows the Receiver to request the value of the RA (Resource Attributes) specified in the flow before.
+   In "Co-ordinated Provisioning" (CP), SCIM resource change events perform the function of change notification without the need to provide raw data. In any Event Publisher and Receiver relationship, the set of SCIM resources (e.g. Users) that are linked or coordinated is managed within the context of a an event feed and which MAY be a subset of the total set of resources on either side. For example, an event feed could be limited to users who have consented to the sharing of information between domains. To support capability, "feed" specific events are defined to indicate the addition and removal of SCIM resources from a feed. For example, when a user consents to the sharing of information between domains, events about the User MAY be added to the feed between the Event Publisher and Receiver.
+
 
 ##### 2.2.4.3. Application Triggers
+   Applications triggers are very specific of the different applications that implement SCIM protocol and can be initiated by the administration interfaces or by the end-user interface.
+   Typically they can be done in the administration consoles of the RM (Resource Managers), RC (Resource Creators) or RU (Resource Updaters) when there is a need for a fast update that can't wait for the next schedule cycle.
+   It is also possible in some use case where the clients of the applications that implement SCIM can generate an update because RA (Resource Attributes) of a Specific RO (Resource Object) changed, this is a typical example of an device that have some attribute changed and where the device managed applications orders the client to do an update just for that specific device.
 
 ##### 2.2.4.4. SSO (Single Sign-On) Triggers
+   This model of the trigger is created for those scenarios where a Single Sign-On flow happens, but for some reason is not able to bring all the RA (Resource Attributes) of a specific RO (Resource Object), so the IdM  (Identity Manager) will implement an HTTP Patch to deliver an update to the RO (Resource Object) with the additional RA (Resource Attributes).
+   
+         +----------------+                                   +----------------+
+         |                |                                   |                |
+         |                |                                   |                |
+         |                |                                   |                |
+         |     Client     |                (1)                |Service Provider|
+         |                | <-------------------------------> |     / Server   |
+         |   (typically   |                                   |  (typically an |
+         |    an IdM)     |                (2)                |       SaaS     |
+         |                | <-------------------------------- |  Application)  |   
+         |                |                                   |                |
+         |     RC/RU/RM   |                                   |       RS       |
+         |                |                                   |                |
+         +----------------+                                   +----------------+
+                     Figure 3:  4.3.1.2 SCIM  Flow and Entities map
+   
+   (1) SSO trigger that creates the user and might create a couple of most well know RA ( Resource Attributes) of a RO (Resource Objects)    
+   (2) SCIM actions that will complement the attributes created before with an SSO JIT with additional RA (Resource Attributes) of the RO (Resource Objects) created before
+   This use case combines the SCIM protocol with other protocols used for Single Sign-On, specially in the use case of JIT (Just in time Provision), addressing the limitation of JIT.
 
 #### 2.2.5. SCIM Actions
-   The SCIM protocol defines interactions between two standardized parties that conform to HTTP RESTful conventions. The protocol enables CRUD activities by corresponding those activities to HTTP verbs such as POST, GET, DELETE etc.  The protocol itself doesn't assume a direction of data flow, and use cases discussed in section 3 can be accomplished by entities in either protocol role.
+   The SCIM protocol defines interactions between two standardized parties that conform to HTTP RESTful conventions. The protocol enables CRUD operations by corresponding those activities to HTTP verbs such as POST, PUT, GET, DELETE etc.  The protocol itself doesn't assume a direction of data flow, and use cases discussed in section 3 can be accomplished by entities in either protocol role.
 
 ##### 2.2.5.1. Client active Push
    Client will use HTTP PUSH to create a RO and will use HTTP PATCH/PUT to update its RA. In this section we will cover the basic constructs and will not detail the most complex use case describe before, since they would be just adding new elements to basic constructs describe bellow.
