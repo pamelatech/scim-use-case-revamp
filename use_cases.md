@@ -130,7 +130,7 @@
          |                |                                   |                |
          +----------------+                                   +----------------+
                      Figure 9:  4.3.3.1 SCIM  Flow and Entities map for Domain Replication Mode
-   
+ 
    (1) Allows the Receiver to subscribe to the feed on types or resources.
    (2) Uses HTTP POST to execute the CRUD actions for the Domain Replication Mode and allows for the events with the types urn:ietf:params:event:SCIM:prov:create, urn:ietf:params:event:SCIM:prov:patch, urn:ietf:params:event:SCIM:prov:put, urn:ietf:params:event:SCIM:prov:delete, urn:ietf:params:event:SCIM:prov:activate, urn:ietf:params:event:SCIM:prov:deactivate, and specify the RO (Resource Object) and its RA (Resource Attributes) that are changing.
    The objective of "Domain Based Replication" events (DBR) is to synchronize resource changes between SCIM entities in a common administrative domain. In this mode, complete information about changes for resources are shared between replicas for immediate processing.
