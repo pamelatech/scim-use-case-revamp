@@ -497,7 +497,7 @@ Internet-Draft  System for Cross-domain Identity Managem       July 2023
 
    In this model we will have a Client that is going to provide
    information about a RO and its RA to a Server, that can also be
-   called as Service Provider in [RFC 7643] and [RFC 7644].
+   called as SCIM Server in [RFC 7643] and [RFC 7644].
 
 
 
