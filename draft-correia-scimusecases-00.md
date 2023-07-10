@@ -201,7 +201,7 @@ In this model we will have a Client that is going to provide information about a
               Figure 3: SCIM  Flow and Orchestrator roles maps
 ~~~~~~~~
 
-1. Before creating/updating a RO/RA the SCIM client will always do an HTTP GET to get current information from the SCIM Server.   
+1. Before creating/updating a RO/RA the SCIM client will always do a HTTP GET to get current information from the SCIM Server.   
 2. SCIM Server will provide the current information on the resources asked by the SCIM Client.   
 3. Based on the RO and RA returned by the Server, there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve.   
 4. The Service Provider will return the RO/RA with additional metadata information to allow for audit.   
@@ -228,7 +228,7 @@ In this model we will have a Client that is going to provide information about a
              Figure 4:  SCIM  Flow and Orchestrator roles maps
    
 ~~~~~~~~
-1. Before creating/updating a RO/RA the SCIM client will always do an HTTP GET to get current information from the SCIM Server.   
+1. Before creating/updating a RO/RA the SCIM client will always do a HTTP GET to get current information from the SCIM Server.   
 2. SCIM Server will provide the current information on the resources asked by the SCIM Client.   
 3. Based on the RO and RA returned by the Server, there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve.  
 4. The Service Provider will return the RO/RA with additional metadata information to allow for audit. 
@@ -254,7 +254,7 @@ In this model we will have a Client that is going to provide information about a
 +--------+                +---------------+                 +---------+
                      Figure 5:  SCIM  Flow and Orchestrator roles maps
 ~~~~~~~~
-1. Before creating/updating a RO/RA the SCIM client will always do an HTTP GET to get current information from the SCIM Server.   
+1. Before creating/updating a RO/RA the SCIM client will always do a HTTP GET to get current information from the SCIM Server.   
 2. SCIM Server will provide the current information on the resources asked by the SCIM Client.   
 3. Based on the RO and RA returned by the Server, there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve.  
 4. The Service Provider will return the RO/RA with additional metadata information to allow for audit. 
@@ -282,7 +282,7 @@ Now the right SCIM element will have it own RA that needs to be updated in the R
                  Figure 6:  SCIM  Flow and Orchestrator roles maps
    
 ~~~~~~~~
-1. Before creating/updating a RO/RA the SCIM client will always do an HTTP GET to get current information from the SCIM Server.   
+1. Before creating/updating a RO/RA the SCIM client will always do a HTTP GET to get current information from the SCIM Server.   
 2. SCIM Server will provide the current information on the resources asked by the SCIM Client.   
 3. Based on the RO and RA returned by the Server, there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve.  
 4. The Service Provider will return the RO/RA with additional metadata information to allow for audit. 
@@ -293,11 +293,12 @@ In addition to the models seen before now the "HR Application" also subscribe to
 So we will see that the 3 SCIM elements will be RC/RU/RS for each RO/RA.   
 
 #### Client Active Pull
-This model of the trigger is created for those scenarios where there is no status database in the client, and where the Clients choose when and how often to make HTTP GET calls to the server, based on the size of the object population the client is tracking, the frequency of the data change, and the use case, for example the synchronization of a registry of objects vs. point updates when an event takes place.These factors may result in clients periodically polling a large set of SCIM Server objects to check for changes.  
-   Examples of cases where the client active pull is used include situations where a client needs to maintain a synchronized large body of objects, such as a device list or user address book. Another use case would be a client that needs to have details of a specific device that was onboard for example by a mobile application.  
+This model of the trigger is created for those scenarios where there is no status database in the client, and where the Clients choose when and how often the pull the Server for RO/RA information, there are many consideration that can be taken based on the size of the object population the client is tracking, the frequency of the data change.
+Client active pull could be use in situations where a client needs to maintain a synchronized large body of objects, such as a device list or user address book, but where there isn't any need to track individual RO/RA. 
+Another use case would be a client that needs to have details of a specific device that was onboard by a mobile application and that need to provide the RO/RA information on the behalf of the device.
 
 ##### Resource Object Creation or Update
-In this model we will have a Client that is going to pull information about a RO and its RA from a Server, can also be called as Service Provider in [RFC 7643] and [RFC 7644]. In this model the Client is going to management all the RO (Resource Objects) and its RA (Resource Attributes), that are provided by the Server, and the RM (Resource Management) function resides on the Client.
+In this model we will have a Client that is going to pull information about a RO/RA from a Server. In this model the Client is going to management all the RO (Resource Objects) and its RA (Resource Attributes), that are provided by the Server, and the RM (Resource Management) function resides on the Client.
 
 ~~~~~~~~
 +----------+                                   +----------+
@@ -313,15 +314,16 @@ In this model we will have a Client that is going to pull information about a RO
 |          |                                   |          |
 |          |                                   |          |
 +----------+                                   +----------+
-        Figure 6:  4.3.2.1 SCIM  Flow and Entities map
+        Figure 7:  SCIM  Flow and Orchestrator roles maps
 ~~~~~~~~
    
-1. The SCIM client will do an HTTP GET to obtain the details of the device its attributes, the RO and its RA.  
-2. The SCIM Service Provider will return the RO and its RA with additional metadata information to allow for audit.  
-A typical example of this use case is a device that is going to use a mobile or browser base enrollment and gathers its attributes, after that process that is outside the scope of the SCIM protocol, the Device (or Server on their behalf) is ready for the IDM platform to get its details and do all the management roles necessary for all the domain devices.  
+1. The SCIM client will do an HTTP GET to obtain the RO/RA that will be available in the Server.   
+2. The SCIM Server will return the RO/RA with additional metadata information to allow for audit.  
+
+A typical example of this use case is a device that is going to use a mobile application or browser base to enroll devices and gathers its attributes, that mobile application or browser after enrollment process is finish will do a trigger to notify the client that is ready to provide the RO/RA of the device. It is the SCIM client that will do al the Resource management for all the devices.   
 
 ##### Resources Subscription
-In this model we will have the Client that is going to pull information about a RO and its RA from the Server, can also be called as Service Provider in [RFC 7643] and [RFC 7644]. In this model in the Client there is no status database in the client, and it gets a list of all the RO (Resource Objects) or a subset of it based on filters, so there will be a full update every synchronization cycle.  
+In this model we will have the Client that is going to pull information about a RO/RA from the Server. In this model in the Client there is no status/change database, and it gets a list of all the RO/RA based on filters provided by the client, so there will be a full update every synchronization cycle.  
 
 ~~~~~~~~
 +----------+                                   +----------+
@@ -337,15 +339,16 @@ In this model we will have the Client that is going to pull information about a 
 |          |                                   |          |
 |          |                                   |          |
 +----------+                                   +----------+
-         Figure 7:  SCIM  Flow and Entities map
+         Figure 8:  SCIM  Flow and Orchestrator roles maps
 ~~~~~~~~
    
 1. The SCIM client will do an HTTP GET to obtain the selected list of RO (Resource Object) and its RA (Resource Attributes).  
 2. The SCIM Service Provider will return the RO and its RA with additional metadata information to allow for audit.  
-   A good example would be SaaS service that needs to consume a list of contacts or devices, this SaaS service will need to know the relevant Ro (Resource Objects) and its RA ( Resource Attributes), this operation will happen periodically and every time will get a full list of all the RO (Resource Objects).   
+
+A good example would be SaaS service that needs to consume a list of contacts or devices, this SaaS service will need to know the relevant RO/RA, this operation will happen periodically and every time will get a full list of all the RO (Resource Objects).   
    
 ##### Resource Object Creation or Update and Subscription
-In this model we will bring together 4.3.2.1 and 4.3.2.2 where a typically a device can up be the creator or their own attributes and will allow an SaaS service to subscribe to all the different RO (Resource Objects) and deliver additional services for other devices. It isn't expected from any of the SCIM clients in the Active pull model to create any status database of attributes changes, so the clients will always do GET on one or many RO ( Resource Objects) periodically.
+In this model we will bring together both of the two previous SCIM actions for pull information, where a typically a device can be the creator or their own attributes and will allow an SaaS service to subscribe to all the different RO/RA and deliver additional services for itself and other devices. It isn't expected from any of the SCIM clients in the Active pull model to create any status database of attributes changes, so the clients will always do a pull on one or many RO (Resource Objects) based on triggers.
 
 ~~~~~~~~
 +----------+                 +---------------+               +--------+
@@ -361,16 +364,15 @@ In this model we will bring together 4.3.2.1 and 4.3.2.2 where a typically a dev
 |   RC/RU  |                 |               |               |   RS   |
 |          |                 |               |               |        |
 +----------+                 +---------------+               +--------+
-                    Figure 8:  4.3.2.3 SCIM  Flow and Entities map
+                    Figure 9:  SCIM  Flow and Orchestrator roles maps
 ~~~~~~~~
-1. The SCIM client will do an HTTP GET to obtain the RO (Resource Object) and its RA (Resource Attributes) of the device.  
-2. SCIM Service Provider (Device) will return the RO and its RA with additional metadata information to allow for audit.   
-3. SCIM client will do an HTTP GET to obtain the selected list of RO (Resource Object) and its RA (Resource Attributes).  
-4. SCIM Service Provider will return the RO and its RA with additional metadata information to allow for audit.  
+1. The SCIM client will do an HTTP GET to obtain the RO/RA that will be available in the Server.   
+2. The SCIM Server will return the RO/RA with additional metadata information to allow for audit.  
+3. The SCIM client will do an HTTP GET to obtain the selected list of RO (Resource Object) and its RA (Resource Attributes).  
+2. The SCIM Service Provider will return the RO and its RA with additional metadata information to allow for audit.  
 
-A good example would be a device that is going to use a mobile or browser base enrollment to gather its attributes, after that process which is outside the scope of the SCIM protocol, the Device 
-   (or Server on their behalf) is ready for the IDM platform to get its details and do all the management roles necessary for all the domain devices.  
-Also in the use case is the SaaS service that needs to consume a list of contacts or devices, this SaaS service will need to know the relevant Ro (Resource Objects) and its RA ( Resource Attributes), this operation will happen periodically and every time will get a full list of all the RO (Resource Objects).  
+A typical example of this use case is a device that is going to use a mobile application or browser base to enroll devices and gathers its attributes, that mobile application or browser after enrollment process is finish will do a trigger to notify the client that is ready to provide the RO/RA of the device. It is the SCIM client that will do all the Resource management for all the devices.  
+This SCIM element in the center will also provide list list of contacts or devices, that can be consume by different SCIM entities, this operation will happen when a specific trigger will be execute by the client on the right, to get a list RO (Resource Objects) and RA (Resource Attributes) that will be defined by the filter on the client in the right.
 
 # SCIM Use Cases
    This section we will describe the most common SCIM use cases, and will explain when, where, why and how we find them in the cross domain environment for resources managing. This list by no way tries to be exhaustive and complete, its ultimate goal is to guide developers for the possibility of such models and will try to explain their challenges and components.
