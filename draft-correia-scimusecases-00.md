@@ -369,35 +369,35 @@ In this model we will bring together both of the two previous SCIM actions for p
 1. The SCIM client will do an HTTP GET to obtain the RO/RA that will be available in the Server.   
 2. The SCIM Server will return the RO/RA with additional metadata information to allow for audit.  
 3. The SCIM client will do an HTTP GET to obtain the selected list of RO (Resource Object) and its RA (Resource Attributes).  
-2. The SCIM Service Provider will return the RO and its RA with additional metadata information to allow for audit.  
+4. The SCIM Service Provider will return the RO and its RA with additional metadata information to allow for audit.  
 
 A typical example of this use case is a device that is going to use a mobile application or browser base to enroll devices and gathers its attributes, that mobile application or browser after enrollment process is finish will do a trigger to notify the client that is ready to provide the RO/RA of the device. It is the SCIM client that will do all the Resource management for all the devices.  
 This SCIM element in the center will also provide list list of contacts or devices, that can be consume by different SCIM entities, this operation will happen when a specific trigger will be execute by the client on the right, to get a list RO (Resource Objects) and RA (Resource Attributes) that will be defined by the filter on the client in the right.
 
 # SCIM Use Cases
-   This section we will describe the most common SCIM use cases, and will explain when, where, why and how we find them in the cross domain environment for resources managing. This list by no way tries to be exhaustive and complete, its ultimate goal is to guide developers for the possibility of such models and will try to explain their challenges and components.
-   As mention before SCIM is a protocol for cross domains where two entities exchange information about a resource, with the use cases we try to go further and explain on how the different components can interact to allow from simple to complex architectures for cross domain resource management.
-   Typically each use case add something on top of the previous one, starting in the most simple one, and finishing in the most complex ones, to make it easier the explanation, assume that what was describe in the previous use case applies to the use cases that come after.
+This section we will describe the most common SCIM use cases, and will explain when, where, why and how we find them in the cross domain environment for resources managing. This list by no way tries to be exhaustive, the ultimate goal is to guide developers for the possibility of such models and will try to explain their challenges and components.
+As mention before SCIM is a protocol for cross domains where two entities exchange information about resources, with the use cases we try to go further and explain on how the different components can interact to allow from simple to complex architectures for cross domain resource management, we will bring the orchestrators roles and will map them to the use cases to make more simple the task of explain the multiple functions of the SCIM elements.
+Typically each use case add something on top of the previous one, starting in the most simple one, and finishing in the most complex ones. To make it easier the explanation, and to avoid repetitions of the same content we assume that what was describe in the previous use case applies to the use cases that come after, and something will be added on top.
 
 ## CRUD operation on a single resource, associated to the AuthZ action. 
-   Get information about persona.  
-   A use case cover in [RFC7644] where a SCIM client can do CRUD operation on the entity of the user, in this use case the SCIM client that is the RM (Resource Manager), RC (Resource Creator) and RU (Resource Updater), will be able to read, create, update the RO (Resource Object) and its RA ( Resource Attributes) in the RS (Resource Subscriber). the RS will provide an /me URI to achieve this.  
-   Special consideration needs to happen from authorization perspective, unlike the other CRUD operation describe in this document the authorization for this use case only allows access to the RO (Resource Object) of the user that authenticate.  
+Get information about persona /me endpoint.  
+A use case cover in [RFC7644] where a SCIM client can do CRUD operation on the entity of the user, in this use case the SCIM client that is the RM (Resource Manager), RC (Resource Creator) and RU (Resource Updater), will be able to read, create, update the RO (Resource Object) and its RA (Resource Attributes) in the RS (Resource Subscriber). the RS will provide an /me URI to achieve this.  
+Special consideration needs to happen from authorization perspective, unlike the other CRUD use case bellow, the authorization for this use case only allows access to the RO (Resource Object) of the user that authenticate.  
 
 ## IdM doing CRUD operations on SaaS applications
 Single RM/RC/RU and multiple RS.  
-This is very common and simple SCIM use case, we have the IdM/Device Managers/etc. do all CRUD operation with the resources, then using the trigger mechanisms the resource information reach the Resource Subscribers, also know as the SaaS Application.  
-The RS (Resource Subscriber) will take the decision on which RA (Resource Attributes) to consider and how the Resource Object will show in their resource database.  
-Typically we can find this kind of use case in small to mid size organization, where there is no structure method to handle the resources and typically in Organization that start with a blank sheet of paper or it is a greenfield Organization.   
+This is very common and simple SCIM use case, we have the IdM/Device Managers/etc. do all CRUD operation with the resources, then after the trigger mechanisms the resources information RO/RA reach the RS (Resource Subscribers), also know as the SaaS Application.  
+The RS (Resource Subscriber) will take the decision on which RA (Resource Attributes) to consider and how the RO (Resource Object) will show in its resource database.  
+Typically we will find this kind of use case in small to mid size organization, where there is no structure method to handle the resources and typically in Organization that start with a blank sheet of paper in a  greenfield deployment.
 
 ## IdM doing CRUD operations on SaaS applications, and Objects coming from external non SCIM source.
 One or more ERC with single RM/RC/RU and multiple RS.  
-This is the most common use case, because it allow the organization to adopt SCIM protocol for CRUD operations of their resources. In this use case the organization already have an existent database of resources that is going to be the source of truth for the Resource Manager. At no point in time the SCIM RM will provide SCIM operation with that External Resource Creator.  
-Normally this ERC, specially if we are talking about user Identity, will have a User database that can be accessible using LDAP or can provide information of their user attributes by doing an SAML Single Sign-On using Just in time Provision. Most of the IDaaS also provide softwares that allow them to get resource information by using proprietary protocols. It is common to see HTTP REST to get the information from the ERC to the RM.  
-Typically in this use case the RM will become the new source of truth for the resources of our Organization, will add extra Resource Attributes and ignore other RA that existed in the ERC.  
-Some organization that already realize that going forward the RM will be the authority answer for the Resources Object and Attributes, will start create new Resource Objects in this service.  
-The Resource Subscribers will consume all the resource information from the RM.  
-Typically we will see this use case in small to mid size organization where resources were organized in a non standard and non open platform for Resources Management, where it isn't possible to cut/replace everything with a new system.    
+This is another common use case, because it allow the organization to adopt SCIM protocol for CRUD operations of their resources. In this use case the organization already have an existent database of resources that is going to be the source of truth for the Resource Manager.   
+Normally this ERC, specially if we are talking about user Identity, will have a User database that can be accessible using LDAP, some times the ERC can provide RO/RA using SAML Single Sign-On using Just in time Provision. We also see some IDaaS providing softwares that allow them to exchange resource information by using proprietary protocols, very common using HTTP REST to get the information from the ERC to the RM.  
+Typically in this use case the RM will become the new source of truth for the resources of our Organization, will add extra RA (Resource Attributes) and ignore other RA that existed in the ERC.  
+Some organization that already realize that going forward in the SCIM path, the RM will be the authority answer for the RO/RA, will start create new RO in the RM.  
+The Resource Subscribers will consume all or a subset of the RO/RA from the RM.  
+Typically we will see this use case in small to mid size organization where resources were organized in a non standardize platform for Resources Management, where it isn't possible to cut/replace everything with a new system.    
     
 ## IdM doing CRUD operations on SaaS applications, and Objects coming from external SCIM source.
 One or more RC/RU, with single RM/RC/RU/RS and multiple RS.  
