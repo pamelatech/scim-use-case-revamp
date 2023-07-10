@@ -127,38 +127,40 @@ So far, we have identified the following SCIM orchestrators roles:
 ~~~~~~~~
 
 #### Mechanics behind Resource Object (RO) and/or Resource Attributes (RA)
-   Cover in the previous section it was stated that the RC/RU were authoritative over the RO/RA, that could be achieved using the mutability, concept introduced in [RFC 7644], where they would have readWrite/readOnly capabilities over them and this information would be pass to the RM.   
-   In more complex scenarios where the SCIM element doesn't has direct contact with the RC/RU that create/update a specific RO/RA, then the RM that received the original information will have the ReadWrite capabilities in the mutability field. this can be pass from RM to RM, with this mechanism we can prevent loops.   
-   When different components exist that have bi-direction connection, where they can update each other in different RA (Resource Attributes), there can only be on readWrite for a specific RA, so that we don't enter loops.  
+Cover in the previous section it was stated that the RC/RU were authoritative over the RO/RA, that could be achieved using the mutability, concept introduced in [RFC 7644], where they would have readWrite/readOnly capabilities over them and this information would be pass to the RM.   
+In more complex scenarios where the SCIM element doesn't has direct contact with the RC/RU that create/update a specific RO/RA, then the RM that received the original information will have the ReadWrite capabilities in the mutability field. this can be pass from RM to RM, with this mechanism we can prevent loops.   
+When different components exist that have bi-direction connection, where they can update each other in different RA (Resource Attributes), there can only be on readWrite for a specific RA, so that we don't enter loops.  
+This document is not going to give implementation recommendation how the different orchestrators roles should be developed to avoid such loops, but for sure each SCIM services needs to implement the right mechanisms to be prepare for complex scenarios where the RC/RU is not direct connector to the SCIM service. 
 
 ### Triggers
-Triggers are actions or activities that may cause a SCIM interaction to occur.  Triggers can occur as a result of business processes like a corporate hiring event, can be scheduled events such as a unix bash script running as a chron job, or can be just-in-time events such as SAML assertion arriving at a federated relying party that identifies a not-seen-before user. Triggers can also be standardized events, such as those in the OpenID Shared Signals Framework. Triggers used to allow CRUD (Create, Read, Update, Delete) using SCIM Actions or Operations as it is designed to capture a class of use case that makes sense to the actor requesting it rather than to describe a protocol operation.  
+Triggers are actions or activities that may cause a SCIM interaction to occur.  Triggers can occur as a result of business processes like a corporate hiring event, but can also be scheduled events such as a unix bash script running as a chron job, or can be just-in-time events such as SAML assertion arriving at a federated relying party that identifies a not-seen-before user. Triggers can also be standardized events, such as those in the OpenID Shared Signals Framework. Triggers used to allow CRUD (Create, Read, Update, Delete) using SCIM Actions or Operations as it is designed to capture a class of use case that makes sense to the actor requesting it rather than to describe a protocol operation.  
 
 #### Periodic Interval Triggers
 SCIM client will execute SCIM actions configured at specific interval of time, the interval of time are configured by the client. It can use any of the SCIM actions defined in the next sections.
 
 #### Event Triggers
-Events triggers can take many formats, for example we could have an SaaS application that send an email to request an SCIM action. Another example in the device space, the trigger can be an message from a mobile device to request an SCIM action from the Client to the device that will be the Server. In fact triggers can be anything and is not going to be exhausted numerated in this use case document.  
-Event Trigger by nature are asynchronous, and start an SCIM action unlike other triggers that have synchronous behaviors.
+Events triggers can take many formats, for example we could have an SaaS application that send an email to request an SCIM action. Another example could be a device where the trigger can be a message from a mobile application that request a SCIM action from the Client (Device management platform) to the Server (Mobile Application) that impersonates the target device. In fact triggers can be anything and is not going to be exhausted numerated in this use case document.  
+Event Trigger by nature are asynchronous, and start a SCIM action unlike other triggers that have synchronous behavior.
 A recommended implementation of event trigger is using Security Events for SCIM service providers and receivers as specified by the Security Event Tokens (SET) [RFC8417] to create triggers for SCIM actions, details for SCIM profile for Security Event Tokens are available in [draft-ietf-scim-events].  
-In this specification SCIM Clients may need to be informed of changes that occur over time. This could be achieved through the use of event messages or signals in the form of Security Event Tokens (SET). SET tokens convey information about changes that have occurred in a publishing domain that may be of interest to a receiving domain. Unlike SCIM Protocol requests, Security Events do not describe actions that a receiver must take, rather they are simple statements of fact about changes that have already occurred. 
-   The intent, is to allow the event receiver to determine the best follow-up action to take within the context of the receiving domain.  
+In this specification SCIM Clients may need to be informed of changes that occur over time. This could be achieved through the use of event messages or signals in the form of Security Event Tokens (SET). 
+SET tokens convey information about changes that have occurred in a publishing domain that may be of interest to a receiving domain. Unlike SCIM Protocol requests, Security Events do not describe actions that a receiver must take, rather they are simple statements of fact about changes that have already occurred. 
+The intent, is to allow the event receiver to determine the best follow-up action to take within the context of the receiving domain.  
 
 #### Application Triggers
-Applications triggers are very specific of the different applications that implement SCIM protocol and can be initiated by the administration interfaces or by the end-user interface.  
+Applications triggers are very specific of the different applications that implement SCIM protocol and can be initiated by the administration interfaces or by the end-user interfaces.  
 Typically they can be done in the administration consoles of the RM (Resource Managers), RC (Resource Creators) or RU (Resource Updaters) when there is a need for a fast update that can't wait for the next schedule cycle.  
-It is also possible in some use case where the clients of the applications that implement SCIM can generate an update because RA (Resource Attributes) of a Specific RO (Resource Object) changed, this is a typical example of an device that have some attribute changed and where the device managed applications orders the client to do an update just for that specific device.  
+An example of the end-user interface to trigger and SCIM action, can be a device and the mobile application that manages it, and where it is his responsibilities to notify the SCIM client (typically an Resource Manager) that the resources attributes of that device have changed, and that the RM need to get the new attributes.
 
 #### SSO (Single Sign-On) Triggers
-This model of the trigger is created for those scenarios where a Single Sign-On flow happens, but for some reason is not able to bring all the RA (Resource Attributes) of a specific RO (Resource Object), so the IdM  (Identity Manager) will implement an HTTP Patch to deliver an update to the RO (Resource Object) with the additional RA (Resource Attributes).  
+This model of the trigger is created for those scenarios where a Single Sign-On flow happens, but for some reason is not able to bring all the RA (Resource Attributes) of a specific RO (Resource Object), so the IdM  (Identity Manager) will implement an update to deliver the additional attributes RA to the RO.  
 
 ~~~~~~~~
 +---------------+                                   +---------------+
 |               |                                   |               |
 |               |                                   |               |
-|               |                                   |               |
-|    Client     |                (1)                |     SCIM      | 
-|               | <-------------------------------> |    Server     |
+|               |                                   |     SCIM      |
+|    Client     |                (1)                |    Server     | 
+|               | <-------------------------------> |               |
 |  (typically   |                                   | (typically an |
 |   an IdM)     |                (2)                |      SaaS     |
 |               | <-------------------------------> | Application)  |   
@@ -166,12 +168,12 @@ This model of the trigger is created for those scenarios where a Single Sign-On 
 |    RC/RU/RM   |                                   |      RS       |
 |               |                                   |               |
 +---------------+                                   +---------------+
-          Figure 3:  SCIM  Flow and Entities map
+          Figure 2:  SCIM  Flow and Entities map
 ~~~~~~~~
 
- 1. SSO trigger that creates the user and might create a couple of most well know RA ( Resource Attributes) of a RO (Resource Objects)       
+ 1. SSO trigger that creates the user and might create some RA (Resource Attributes) of a RO (Resource Object)       
  1. SCIM actions that will complement the attributes created before with an SSO JIT with additional RA (Resource Attributes) of the RO (Resource Objects) created before.   
-This use case combines the SCIM protocol with other protocols used for Single Sign-On, specially in the use case of JIT (Just in time Provision), addressing the limitation of JIT.  
+This use case combines the SCIM protocol with other protocols used for Single Sign-On, specially in the use case of JIT (Just in time Provision), specially useful with protocols like SAML that is limit by the number of characters in the URL.
 
 ### SCIM Actions
 The SCIM protocol defines interactions between two standardized parties that conform to HTTP RESTful conventions. The protocol enables CRUD operations by corresponding those activities to HTTP verbs such as POST, PUT, GET, DELETE etc.  The protocol itself doesn't assume a direction of data flow, and use cases discussed in section 3 can be accomplished by entities in either protocol role.
