@@ -445,7 +445,8 @@ Detailed security considerations are specified in Section 7 of the SCIM protocol
    Requirement Levels", BCP 14, RFC 2119,
    DOI 10.17487/RFC2119, March 1997,
    <http://www.rfc-editor.org/info/rfc2119>.
-## 5.2.  Informative References
+
+## Informative References
    [RFC7643]  Hunt, P., Ed., Grizzle, K., Wahlstroem, E., and
    C. Mortimore, "System for Cross-domain Identity
    Management: Core Schema", RFC 7643, DOI 10.17487/RFC7643,
@@ -456,7 +457,17 @@ Detailed security considerations are specified in Section 7 of the SCIM protocol
    Management: Protocol", RFC 7644, DOI 10.17487/RFC7644,
    September 2015, <http://www.rfc-editor.org/info/rfc7644>.
 
-   [Device Schema Extensions to the SCIM model] 
+   [RFC7642] K. LI, P. Hunt, B. Khasnabish, A. Nadalin and Z. Zeltsan,
+   "System for Cross-domain Identity Management: Definitions, Overview, Concepts, and Requirements", 
+   RFC 7642, September 2015, <http://www.rfc-editor.org/info/rfc7642>.
 
-   [SCIM Profile for Security Event Tokens] 
+   [Device Schema Extensions to the SCIM model] M. Shahzad, H. Iqbal and E. Lear
+   July 2023, <https://datatracker.ietf.org/doc/draft-shahzad-scim-device-model>.
+
+   [SCIM Profile for Security Event Tokens] P. Hunt, N. Cam-Winget and M. Kiser
+   July 2023, <https://datatracker.ietf.org/doc/draft-ietf-scim-events>.
+
+## Acknowledgements
+
+
 --- back
