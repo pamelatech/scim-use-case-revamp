@@ -1,3 +1,4 @@
+## Warning: this document is deprecated as of  15 July 2023 in favor of https://github.com/pamelatech/scim-use-case-revamp/blob/main/draft-correia-scimusecases-00.txt
 #               System for Cross-domain Identity Management:
 #           Definitions, Overview, Concepts, and Requirements
 
