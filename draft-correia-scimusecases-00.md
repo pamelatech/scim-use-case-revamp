@@ -1,5 +1,6 @@
 ---
 stand_alone: true
+docname: draft-correia-scimusecases-00
 ipr: trust200902
 submissiontype: IETF
 keyword: [Internet-Draft, SCIM]
@@ -437,6 +438,9 @@ There can be privacy issues that go beyond transport security, e.g., moving pers
 Regulatory requirements shall be met when migrating identity information between jurisdictional regions (e.g., countries and states may have differing regulations on privacy).
 Additionally, privacy-sensitive data elements may be omitted or obscured in SCIM transactions or stored records to protect these data elements for a user. For instance, a role-based identifier might be used in place of an individual's name.
 Detailed security considerations are specified in Section 7 of the SCIM protocol [RFC7644] and Section 9 of the SCIM schema [RFC7643].
+
+# IANA Considerations
+
 
 # References
 
