@@ -10,7 +10,7 @@ Expires: 1 February 2024                           Microsoft Corporation
 
 
                              SCIM Use Cases
-                     draft-correia-scimusecases-00
+                     draft-correia-scimusecases-01
 
 Abstract
 
@@ -64,42 +64,42 @@ Table of Contents
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
    3.  SCIM Components and Architecture  . . . . . . . . . . . . . .   4
      3.1.  Implementation Concepts . . . . . . . . . . . . . . . . .   4
-       3.1.1.  HTTP Client-Server Roles  . . . . . . . . . . . . . .   4
-       3.1.2.  Orchestrators Roles . . . . . . . . . . . . . . . . .   5
-       3.1.3.  Triggers  . . . . . . . . . . . . . . . . . . . . . .   8
-       3.1.4.  SCIM Actions  . . . . . . . . . . . . . . . . . . . .  10
-   4.  SCIM Use Cases  . . . . . . . . . . . . . . . . . . . . . . .  18
+       3.1.1.  Data Model  . . . . . . . . . . . . . . . . . . . . .   4
+       3.1.2.  HTTP Client-Server Roles  . . . . . . . . . . . . . .   5
+       3.1.3.  Orchestrator Roles  . . . . . . . . . . . . . . . . .   5
+       3.1.4.  Triggers  . . . . . . . . . . . . . . . . . . . . . .   7
+       3.1.5.  SCIM Actions  . . . . . . . . . . . . . . . . . . . .   9
+   4.  SCIM Use Cases  . . . . . . . . . . . . . . . . . . . . . . .  17
      4.1.  CRUD operation on a single resource, associated to the
-           AuthZ action. . . . . . . . . . . . . . . . . . . . . . .  18
-     4.2.  IdM doing CRUD operations on SaaS applications  . . . . .  19
+           AuthZ action. . . . . . . . . . . . . . . . . . . . . . .  17
+     4.2.  IdM doing CRUD operations on SaaS applications  . . . . .  18
      4.3.  IdM doing CRUD operations on SaaS applications, and Objects
-           coming from external non SCIM source. . . . . . . . . . .  19
+           coming from external non SCIM source. . . . . . . . . . .  18
      4.4.  IdM doing CRUD operations on SaaS applications, and Objects
-           coming from external SCIM source. . . . . . . . . . . . .  20
+           coming from external SCIM source. . . . . . . . . . . . .  19
      4.5.  IdM doing CRUD operations on SaaS applications, and Objects
            coming from external SCIM and non SCIM source including the
-           IDM itself. . . . . . . . . . . . . . . . . . . . . . . .  20
+           IDM itself. . . . . . . . . . . . . . . . . . . . . . . .  19
      4.6.  IdM doing CRUD operations on SaaS applications, and Objects
            coming from external SCIM and non SCIM source including the
            IDM itself, where some Resource Attributes come from SaaS
-           application.  . . . . . . . . . . . . . . . . . . . . . .  21
+           application.  . . . . . . . . . . . . . . . . . . . . . .  20
      4.7.  IdM doing CRUD operations on SaaS applications, and Objects
            coming from external SCIM and non SCIM sources including the
            IdM itself, where some Resource Attributes come from SaaS
-           application, and are updated in the SCIM object creator.   21
+           application, and are updated in the SCIM object creator.   20
      4.8.  Multiple IdM doing CRUD operations on SaaS applications,
            and Objects coming from external SCIM and non SCIM sources
            including the IdM itself, where some Resource Attributes come
            from SaaS application, and are updated in the SCIM object
-           creator.  . . . . . . . . . . . . . . . . . . . . . . . .  22
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  22
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  22
-   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  22
-     7.1.  Normative References  . . . . . . . . . . . . . . . . . .  23
-     7.2.  Informative References  . . . . . . . . . . . . . . . . .  23
-     7.3.  Acknowledgements  . . . . . . . . . . . . . . . . . . . .  23
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  23
-
+           creator.  . . . . . . . . . . . . . . . . . . . . . . . .  21
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  21
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  21
+   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  21
+     7.1.  Normative References  . . . . . . . . . . . . . . . . . .  22
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .  22
+     7.3.  Acknowledgements  . . . . . . . . . . . . . . . . . . . .  22
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  22
 
 
 
@@ -116,23 +116,21 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 1.  Introduction
 
-   This document provides the SCIM definitions, overview, concepts,
-   flows, scenarios, and use cases.  It also provides a list of the
-   requirements derived from the use cases.  The document's objective
-   helps understanding the design and applicability of the SCIM schema
-   [RFC7643] and SCIM protocol [RFC7644].
-   Unlike the practice of some protocols like Application Bridging for
-   Federated Access Beyond web (ABFAB) and SAML2 WebSSO, SCIM provides
-   provisioning and de-provisioning of resources in a separate context
-   from authentication (aka just-in-time provisioning).
-   This document will describe the different construct that we have in
-   the SCIM protocol and will describe the most typical use case that we
-   will find in the implementation, will also help identify the
-   interactions between the different orchestrators roles and guide on
-   how each other define the SCIM protocol.
-   SCIM is a protocol where it relies on one-to-one interaction, in a
-   HTTP client-server model.  Any interaction is based on a trigger that
-   will start a CRUD action on one or many resources.
+   This document provides definitions, overview, concepts, flows,
+   scenarios, and use cases implementers may need to understand the
+   design and applicability of the SCIM schema [RFC7643] and SCIM
+   protocol [RFC7644].  Unlike the practice of some protocols like
+   Application Bridging for Federated Access Beyond web (ABFAB) and
+   SAML2 WebSSO, SCIM provides provisioning and de-provisioning of
+   resources in a separate context from authentication.  This document
+   will describe the different construct that we have in the SCIM
+   protocol and will describe the most typical use case that we will
+   find in the implementation, will also help identify the interactions
+   between the different orchestrators roles and guide on how each other
+   define the SCIM protocol.
+   SCIM is a protocol that relies on one-to-one interaction, in a HTTP
+   client-server model.  Any interaction is based on a trigger that will
+   start a CRUD action on one or many resources.
 
 2.  Terminology
 
@@ -163,6 +161,8 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
    *  JIT: Just In Time
 
+   *  PaaS: Platform as a Service
+
 
 
 Correia & Dingle         Expires 1 February 2024                [Page 3]
@@ -170,11 +170,9 @@ Correia & Dingle         Expires 1 February 2024                [Page 3]
 Internet-Draft               SCIM Use Cases                    July 2023
 
 
-   *  PaaS: Platform as a Service
-
    *  SaaS: Software as a Service
 
-   *  IDaaS: ID as a Service
+   *  IDaaS: Identity as a Service
 
    *  IdM: Identity Manager
 
@@ -211,11 +209,13 @@ Internet-Draft               SCIM Use Cases                    July 2023
    different orchestrators roles, how we start the SCIM interaction and
    what methods we have to execute the actions.
 
-3.1.1.  HTTP Client-Server Roles
+3.1.1.  Data Model
 
-   HTTP client and server roles are defined in [RFC 9110] and [RFC
-   9112]- any SCIM interaction requires each participant to play a
-   complementary role.
+   SCIM defines two types of data entities: resources and attributes.
+
+
+
+
 
 
 
@@ -226,7 +226,28 @@ Correia & Dingle         Expires 1 February 2024                [Page 4]
 Internet-Draft               SCIM Use Cases                    July 2023
 
 
-3.1.1.1.  SCIM Server (also known as a SCIM Service Provider)
+3.1.1.1.  Resource Object (RO)
+
+   A JSON object representing a user, group (or extension object) to be
+   manipulated through the SCIM protocol.  The Resource Object contains
+   attributes defined by schemas such as those defined in [RFC 7643] and
+   can be acted on via the endpoints and parameters defined in
+   [RFC7644].
+
+3.1.1.2.  Resource Attribute (RA)
+
+   A named element of a Resource Object.  Attributes are defined in
+   section 2 of [RFC7643] and include characteristics like cardinality
+   (single or multiple values), data types (string, boolean, binary etc)
+   and characteristics (required, unique etc).
+
+3.1.2.  HTTP Client-Server Roles
+
+   HTTP client and server roles are defined in [RFC 9110] and [RFC
+   9112].  Any SCIM interaction requires one participant to be a SCIM
+   server and the other to be a SCIM client.
+
+3.1.2.1.  SCIM Server (also known as a SCIM Service Provider)
 
    An HTTP web application that provides identity information via the
    SCIM protocol.
@@ -236,42 +257,21 @@ Internet-Draft               SCIM Use Cases                    July 2023
    managing client identifiers & keys as well as performance management
    such as API throttling.
 
-3.1.1.2.  SCIM Client
+3.1.2.2.  SCIM Client
 
    A website or application that uses the SCIM protocol to manage
    identity data maintained by the service provider.  The client
-   initiates SCIM HTTP requests to a target SCIM Server.
-   A SCIM Client is active software that can call one or more SCIM
-   servers in order to push or pull data between two parties.
+   initiates SCIM HTTP requests to a target SCIM Server.  A SCIM Client
+   is active software that can push or pull data between two parties.
 
-3.1.2.  Orchestrators Roles
+3.1.3.  Orchestrator Roles
 
-   Orchestrators are the operating parties that take part in both sides
-   of a SCIM protocol exchange and have specific roles in the protocol.
-   A specific element can have one or more orchestrators roles,
-   depending on the type of roles that is delivering in the SCIM
-   architecture.
-   So far, we have identified the following SCIM orchestrators roles:
+   Orchestrators are the operating parties that take part in a SCIM
+   protocol exchange and ensure data is moving in the correct flows.  An
+   entity can have one or more orchestrators roles, depending on the
+   overall provisioning architecture.
 
-   *  Resource Object (RO): Is and object that is going to be
-      manipulated (CRUD) by the different SCIM players, and in the end
-      the ultimate goal to be pass across different systems and to make
-      sure that consistent information is exchange.  The Resource Object
-      have attributes that are define by Schemas, an example of that is
-      the SCIM Core Schema defines in [RFC 7643].
 
-   *  Resource Attributes (RA): Is one element of the Resource Object
-      (RO), it can have a single value or contain multiple values to
-      describe a specific resource and its characteristics, an example
-      of this can be the different attributes for user and/or groups
-      under the SCIM Core Schema defined in [RFC 7643].
-
-   *  Resource Creator (RC): Is an entity operating in a given service,
-      is responsible of creating the Resource Object (RO) with is
-      Resource Attributes (RA), typically we can see this role in HR or
-      Resource Management applications (like IdM) that are responsible
-      to create resources and be authorities for some or all its
-      attributes.
 
 
 
@@ -282,40 +282,40 @@ Correia & Dingle         Expires 1 February 2024                [Page 5]
 Internet-Draft               SCIM Use Cases                    July 2023
 
 
-   *  Resource Updater (RU): Is an entity that is responsible for update
-      specific attributes (RA) of a Resource Object (RO) or the RO
-      itself.  Typically, this role is use in conjunction with other
-      SCIM roles that allow this SCIM entity to manage a specific
-      Resource Attribute (RA).
+3.1.3.1.  Resource Creator (RC)
 
-   *  Resource Manager (RM): Is an entity that consolidated the resource
-      Objects (RO) from the Resource Creators/Updaters (RC/RU) and make
-      it available for the Resource Subscribers (RS), typically this
-      entity/role is handle by the IDaaS.
+   An entity responsible for creating the Resource Object (RO).
+   Typically we can see this role in HR or resource management
+   applications that are responsible for creating resources and
+   authorities for some or all of its attributes.
 
-   *  Resource Subscriber (RS): Is an entity that consumes Resource
-      Objects (RO) but that is not authoritative to create them or any
-      of its Resource Attribute (RA), normally this entity is only
-      interested in part of the Resource Objects available in the
-      Resource Manager (RM), typically it is an application that
-      requires information on resources that it operates.
+3.1.3.2.  Resource Updater (RU)
 
-   *  External Resource Creator (ERC): Is an entity that has information
-      about resources and its attributes, but that doesn't understand
-      SCIM, typically it is going to provide the information on the
-      resources to the Resources Manager, using non SCIM protocols/
-      mechanisms, an example of this would be a services that gets
-      information about users from an LDAP server and provide it to an
-      IDaaS using some kind of proprietary REST APIs.
+   An entity responsible for updating specific attributes of a Resource
+   Object (RO) or the RO itself.  Typically, this role is used in
+   conjunction with other SCIM roles that allow this SCIM entity to
+   manage a specific Resource Attribute (RA).
 
+3.1.3.3.  Resource Manager (RM)
 
+   An entity that aggregates or transforms resource objects from
+   resource creators/updaters (RC/RU) and make them available for
+   resource subscribers (RS) using multiple SCIM interactions, an
+   example of this role could be an Identity-as-a-Service (IDaaS) cloud
+   platform.
 
+3.1.3.4.  Resource Subscriber (RS)
 
+   An entity that consumes information in resource objects (RO) but is
+   not authoritative to create new objects or attributes.  An example of
+   entities that play this role include SaaS applications relying on an
+   IDaaS cloud platform.
 
+3.1.3.5.  External Resource Creator (ERC)
 
-
-
-
+   An entity that has information about resources and its attributes,
+   but does not participate in SCIM flows, examples include databases or
+   internally-facing applications.
 
 
 
@@ -373,42 +373,11 @@ Internet-Draft               SCIM Use Cases                    July 2023
     +-------------+ +-------------+   +-------------+ +-------------+
                          Figure 1: SCIM Orchestrators Roles
 
-3.1.2.1.  Mechanics behind Resource Object (RO) and/or Resource
-          Attributes (RA)
+3.1.4.  Triggers
 
-   Cover in the previous section it was stated that the RC/RU were
-   authoritative over the RO/RA, that could be achieved using the
-   mutability, concept introduced in [RFC 7644], where they would have
-   readWrite/readOnly capabilities over them and this information would
-   be pass to the RM.
-   In more complex scenarios where the SCIM element doesn't has direct
-   contact with the RC/RU that create/update a specific RO/RA, then the
-   RM that received the original information will have the ReadWrite
-   capabilities in the mutability field. this can be pass from RM to RM,
-   with this mechanism we can prevent loops.
-
-
-
-Correia & Dingle         Expires 1 February 2024                [Page 7]
-
-Internet-Draft               SCIM Use Cases                    July 2023
-
-
-   When different components exist that have bi-direction connection,
-   where they can update each other in different RA (Resource
-   Attributes), there can only be on readWrite for a specific RA, so
-   that we don't enter loops.
-   This document is not going to give implementation recommendation how
-   the different orchestrators roles should be developed to avoid such
-   loops, but for sure each SCIM services needs to implement the right
-   mechanisms to be prepare for complex scenarios where the RC/RU is not
-   direct connector to the SCIM service.
-
-3.1.3.  Triggers
-
-   Triggers are actions or activities that may cause a SCIM interaction
-   to occur.  Triggers can occur as a result of business processes like
-   a corporate hiring event, but can also be scheduled events such as a
+   Triggers are actions or activities that may cause a SCIM action to
+   occur.  Triggers can occur as a result of business processes like a
+   corporate hiring event, but can also be scheduled events such as a
    unix bash script running as a chron job, or can be just-in-time
    events such as SAML assertion arriving at a federated relying party
    that identifies a not-seen-before user.  Triggers can also be
@@ -418,30 +387,61 @@ Internet-Draft               SCIM Use Cases                    July 2023
    a class of use case that makes sense to the actor requesting it
    rather than to describe a protocol operation.
 
-3.1.3.1.  Periodic Interval Triggers
 
-   SCIM client will execute SCIM actions configured at specific interval
-   of time, the interval of time are configured by the client.  It can
-   use any of the SCIM actions defined in the next sections.
 
-3.1.3.2.  Event Triggers
+Correia & Dingle         Expires 1 February 2024                [Page 7]
+
+Internet-Draft               SCIM Use Cases                    July 2023
 
-   Events triggers can take many formats, for example we could have an
-   SaaS application that send an email to request an SCIM action.
-   Another example could be a device where the trigger can be a message
-   from a mobile application that request a SCIM action from the Client
-   (Device management platform) to the Server (Mobile Application) that
-   impersonates the target device.  In fact triggers can be anything and
-   is not going to be exhausted numerated in this use case document.
-   Event Trigger by nature are asynchronous, and start a SCIM action
-   unlike other triggers that have synchronous behavior.  A recommended
-   implementation of event trigger is using Security Events for SCIM
-   service providers and receivers as specified by the Security Event
-   Tokens (SET) [RFC8417] to create triggers for SCIM actions, details
-   for SCIM profile for Security Event Tokens are available in [draft-
-   ietf-scim-events].
-   In this specification SCIM Clients may need to be informed of changes
-   that occur over time.  This could be achieved through the use of
+
+3.1.4.1.  Periodic Intervals
+
+   A periodic interval trigger is a configured-in-advance agreement
+   where a SCIM client performs an action at a specific time.  This
+   trigger is often recurring, and in that case the combination of
+   trigger and action together may be referred to as "polling" the SCIM
+   server.  An example of a periodic interval trigger could be a UNIX
+   chron job calling a script.
+
+3.1.4.2.  Events
+
+   Event triggers are activities, contexts or notifications that could
+   happen at any time.  A SCIM client may be configured to perform a
+   given SCIM action in response to a specific event occuring such as a
+   specific entry written into an audit log, a signal of a corporate
+   workflow completion, or a device management platform notification.  A
+   SCIM action could also be triggered by a Security Event Token (SET)
+   as described in [RFC8417] or a SCIM event corresponding to [draft-
+   ietf-scim-events]; for example an application acting as a resource
+   subscriber and SCIM client could receive a SCIM event denoting
+   creation of a new user object, triggering a SCIM action to fetch all
+   the attributes for that user.
+
+3.1.4.3.  Application Triggers
+
+   Application triggers occur when administrative or end-user interfaces
+   are manipulated.  An example of an application trigger might be a
+   user modifying their profile information, resulting in a SCIM client
+   performing an HTTP POST to update the user's resource object at the
+   SCIM server.
+
+3.1.4.4.  SSO (Single Sign-on)
+
+   Single Sign-on triggers occur when a user authenticates via federated
+   protocols such as SAML 2.0 or OpenID Connect.  If a federated
+   assertion arrives for a user who has not yet been provisioned into
+   the destination application, the application may be triggered to
+   perform just-in-time (JIT) provisioning.  This trigger occurs in
+   scenarios where a Single Sign-On flow happens, but not all the
+   resource attributes for the user object are passed in the federated
+   assertion, resulting in a SCIM action to push or pull remaining
+   needed attributes.
+
+
+
+
+
+
 
 
 
@@ -449,38 +449,6 @@ Correia & Dingle         Expires 1 February 2024                [Page 8]
 
 Internet-Draft               SCIM Use Cases                    July 2023
 
-
-   event messages or signals in the form of Security Event Tokens (SET).
-   SET tokens convey information about changes that have occurred in a
-   publishing domain that may be of interest to a receiving domain.
-   Unlike SCIM Protocol requests, Security Events do not describe
-   actions that a receiver must take, rather they are simple statements
-   of fact about changes that have already occurred.  The intent, is to
-   allow the event receiver to determine the best follow-up action to
-   take within the context of the receiving domain.
-
-3.1.3.3.  Application Triggers
-
-   Applications triggers are very specific of the different applications
-   that implement SCIM protocol and can be initiated by the
-   administration interfaces or by the end-user interfaces.
-   Typically they can be done in the administration consoles of the RM
-   (Resource Managers), RC (Resource Creators) or RU (Resource Updaters)
-   when there is a need for a fast update that can't wait for the next
-   schedule cycle.
-   An example of the end-user interface to trigger and SCIM action, can
-   be a device and the mobile application that manages it, and where it
-   is his responsibilities to notify the SCIM client (typically an
-   Resource Manager) that the resources attributes of that device have
-   changed, and that the RM need to get the new attributes.
-
-3.1.3.4.  SSO (Single Sign-On) Triggers
-
-   This model of the trigger is created for those scenarios where a
-   Single Sign-On flow happens, but for some reason is not able to bring
-   all the RA (Resource Attributes) of a specific RO (Resource Object),
-   so the IdM (Identity Manager) will implement an update to deliver the
-   additional attributes RA to the RO.
 
    +---------------+                                   +---------------+
    |               |                                   |               |
@@ -497,15 +465,6 @@ Internet-Draft               SCIM Use Cases                    July 2023
    +---------------+                                   +---------------+
              Figure 2:  SCIM  Flow and Entities map
 
-
-
-
-
-Correia & Dingle         Expires 1 February 2024                [Page 9]
-
-Internet-Draft               SCIM Use Cases                    July 2023
-
-
    1.  SSO trigger that creates the user and might create some RA
        (Resource Attributes) of a RO (Resource Object)
 
@@ -517,7 +476,7 @@ Internet-Draft               SCIM Use Cases                    July 2023
        in time Provision), specially useful with protocols like SAML
        that is limit by the number of characters in the URL.
 
-3.1.4.  SCIM Actions
+3.1.5.  SCIM Actions
 
    The SCIM protocol defines interactions between two standardized
    parties that conform to HTTP RESTful conventions.  The protocol
@@ -528,15 +487,13 @@ Internet-Draft               SCIM Use Cases                    July 2023
    can have multiple roles, depending on the objective of the use case
    that we are describing.
 
-3.1.4.1.  Client active Push
+3.1.5.1.  Client active Push
 
-   Client will use HTTP PUSH to create a RO and will use HTTP PATCH/PUT
-   to update its RA.  In this section we will cover the basic constructs
-   and will not detail the most complex use case describe in section 4,
-   since they would be just adding new elements to basic constructs
-   describe bellow.
+   A SCIM client uses HTTP verbs to create or update objects and/or
+   attributes at a SCIM server.  HTTP actions involved include HTTP
+   POST, PUT or PATCH.
 
-3.1.4.1.1.  Resource Object creation/update from Client to Server
+3.1.5.1.1.  Resource Object creation/update from Client to Server
 
    In this model we will have a Client that is going to provide
    information about a RO and its RA to a Server, that can also be
@@ -544,20 +501,7 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-Correia & Dingle         Expires 1 February 2024               [Page 10]
+Correia & Dingle         Expires 1 February 2024                [Page 9]
 
 Internet-Draft               SCIM Use Cases                    July 2023
 
@@ -593,7 +537,7 @@ Internet-Draft               SCIM Use Cases                    July 2023
    The SCIM client will map to the RM/RC/RU and the Server will map into
    RS.
 
-3.1.4.1.2.  Resource Object creation from a Creation Entity
+3.1.5.1.2.  Resource Object creation from a Creation Entity
 
    In this model we will have a Client that is going to provide
    information about a RO and its RA to a Server, can also be called as
@@ -613,7 +557,7 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 11]
+Correia & Dingle         Expires 1 February 2024               [Page 10]
 
 Internet-Draft               SCIM Use Cases                    July 2023
 
@@ -653,7 +597,7 @@ Internet-Draft               SCIM Use Cases                    July 2023
    responsibilities on the management of Resources, typically done by an
    IdM.
 
-3.1.4.1.3.  Resource Object creation from a Creation Entity and
+3.1.5.1.3.  Resource Object creation from a Creation Entity and
             consumption from an Application
 
    In this model we will have a Client that is going to provide
@@ -669,7 +613,7 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 12]
+Correia & Dingle         Expires 1 February 2024               [Page 11]
 
 Internet-Draft               SCIM Use Cases                    July 2023
 
@@ -725,12 +669,12 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 13]
+Correia & Dingle         Expires 1 February 2024               [Page 12]
 
 Internet-Draft               SCIM Use Cases                    July 2023
 
 
-3.1.4.1.4.  Resource Object creation from a Creation Entity and
+3.1.5.1.4.  Resource Object creation from a Creation Entity and
             consumption from an Application when different Resource
             Attributes are generated in different entities
 
@@ -781,7 +725,7 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 14]
+Correia & Dingle         Expires 1 February 2024               [Page 13]
 
 Internet-Draft               SCIM Use Cases                    July 2023
 
@@ -795,7 +739,7 @@ Internet-Draft               SCIM Use Cases                    July 2023
    So we will see that the 3 SCIM elements will be RC/RU/RS for each RO/
    RA.
 
-3.1.4.2.  Client Active Pull
+3.1.5.2.  Client Active Pull
 
    This model of the trigger is created for those scenarios where there
    is no status database in the client, and where the Clients choose
@@ -810,7 +754,7 @@ Internet-Draft               SCIM Use Cases                    July 2023
    mobile application and that need to provide the RO/RA information on
    the behalf of the device.
 
-3.1.4.2.1.  Resource Object Creation or Update
+3.1.5.2.1.  Resource Object Creation or Update
 
    In this model we will have a Client that is going to pull information
    about a RO/RA from a Server.  In this model the Client is going to
@@ -837,7 +781,7 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 15]
+Correia & Dingle         Expires 1 February 2024               [Page 14]
 
 Internet-Draft               SCIM Use Cases                    July 2023
 
@@ -855,7 +799,7 @@ Internet-Draft               SCIM Use Cases                    July 2023
    ready to provide the RO/RA of the device.  It is the SCIM client that
    will do al the Resource management for all the devices.
 
-3.1.4.2.2.  Resources Subscription
+3.1.5.2.2.  Resources Subscription
 
    In this model we will have the Client that is going to pull
    information about a RO/RA from the Server.  In this model in the
@@ -893,12 +837,12 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 16]
+Correia & Dingle         Expires 1 February 2024               [Page 15]
 
 Internet-Draft               SCIM Use Cases                    July 2023
 
 
-3.1.4.2.3.  Resource Object Creation or Update and Subscription
+3.1.5.2.3.  Resource Object Creation or Update and Subscription
 
    In this model we will bring together both of the two previous SCIM
    actions for pull information, where a typically a device can be the
@@ -949,7 +893,7 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 17]
+Correia & Dingle         Expires 1 February 2024               [Page 16]
 
 Internet-Draft               SCIM Use Cases                    July 2023
 
@@ -1005,7 +949,7 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 18]
+Correia & Dingle         Expires 1 February 2024               [Page 17]
 
 Internet-Draft               SCIM Use Cases                    July 2023
 
@@ -1061,7 +1005,7 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 19]
+Correia & Dingle         Expires 1 February 2024               [Page 18]
 
 Internet-Draft               SCIM Use Cases                    July 2023
 
@@ -1117,7 +1061,7 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 20]
+Correia & Dingle         Expires 1 February 2024               [Page 19]
 
 Internet-Draft               SCIM Use Cases                    July 2023
 
@@ -1173,7 +1117,7 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 21]
+Correia & Dingle         Expires 1 February 2024               [Page 20]
 
 Internet-Draft               SCIM Use Cases                    July 2023
 
@@ -1229,7 +1173,7 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 22]
+Correia & Dingle         Expires 1 February 2024               [Page 21]
 
 Internet-Draft               SCIM Use Cases                    July 2023
 
@@ -1285,4 +1229,4 @@ Authors' Addresses
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 23]
+Correia & Dingle         Expires 1 February 2024               [Page 22]
