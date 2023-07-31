@@ -6,7 +6,7 @@ keyword: [Internet-Draft, SCIM]
 workgroup: SCIM
 
 cat: info
-title: 'System for Cross-domain Identity Management: Definitions, Use Cases and Concepts'
+title: 'SCIM Use Cases'
 author:
 - name: Paulo Jorge Correia
   org: Cisco Systems
@@ -60,7 +60,7 @@ The SCIM scenarios are overviews of user stories designed to help clarify the in
 To understand the use cases we need to understand 4 different concepts of the protocol, that will describe underlying protocol, the different orchestrators roles, how we start the SCIM interaction and what methods we have to execute the actions.
 
 ### HTTP Client-Server Roles
-HTTP client and server roles are defined in [RFC 7230] - any SCIM interaction requires each participant to play a complementary role. 
+HTTP client and server roles are defined in [RFC 9110] and [RFC 9112]- any SCIM interaction requires each participant to play a complementary role. 
 
 ####  SCIM Server (also known as a SCIM Service Provider)
 An HTTP web application that provides identity information via the SCIM protocol.  
