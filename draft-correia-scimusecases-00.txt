@@ -5,8 +5,8 @@
 SCIM                                                       P. J. Correia
 Internet-Draft                                             Cisco Systems
 Intended status: Informational                                 P. Dingle
-Expires: 1 February 2024                           Microsoft Corporation
-                                                            31 July 2023
+Expires: 2 February 2024                           Microsoft Corporation
+                                                           1 August 2023
 
 
                              SCIM Use Cases
@@ -16,8 +16,8 @@ Abstract
 
    This document provides definitions, overview and selected use cases
    of the System for Cross-domain Identity Management (SCIM).  It lays
-   out the system's concepts, models, and flows, and it includes user
-   scenarios, use cases, and requirements.
+   out the system's concepts, models, and flows, and it includes use
+   cases, and implementation considerations.
 
 Status of This Memo
 
@@ -34,7 +34,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 February 2024.
+   This Internet-Draft will expire on 2 February 2024.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Correia & Dingle         Expires 1 February 2024                [Page 1]
+Correia & Dingle         Expires 2 February 2024                [Page 1]
 
-Internet-Draft               SCIM Use Cases                    July 2023
+Internet-Draft               SCIM Use Cases                  August 2023
 
 
 Table of Contents
@@ -63,10 +63,10 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
    3.  SCIM Components and Architecture  . . . . . . . . . . . . . .   4
-     3.1.  Implementation Concepts . . . . . . . . . . . . . . . . .   4
-       3.1.1.  Data Model  . . . . . . . . . . . . . . . . . . . . .   4
+     3.1.  Implementation Concepts . . . . . . . . . . . . . . . . .   5
+       3.1.1.  Data Model  . . . . . . . . . . . . . . . . . . . . .   5
        3.1.2.  HTTP Client-Server Roles  . . . . . . . . . . . . . .   5
-       3.1.3.  Orchestrator Roles  . . . . . . . . . . . . . . . . .   5
+       3.1.3.  Orchestrator Roles  . . . . . . . . . . . . . . . . .   6
        3.1.4.  Triggers  . . . . . . . . . . . . . . . . . . . . . .   7
        3.1.5.  SCIM Actions  . . . . . . . . . . . . . . . . . . . .   9
    4.  SCIM Use Cases  . . . . . . . . . . . . . . . . . . . . . . .  17
@@ -109,28 +109,40 @@ Table of Contents
 
 
 
-Correia & Dingle         Expires 1 February 2024                [Page 2]
+Correia & Dingle         Expires 2 February 2024                [Page 2]
 
-Internet-Draft               SCIM Use Cases                    July 2023
+Internet-Draft               SCIM Use Cases                  August 2023
 
 
 1.  Introduction
 
-   This document provides definitions, overview, concepts, flows,
-   scenarios, and use cases implementers may need to understand the
-   design and applicability of the SCIM schema [RFC7643] and SCIM
-   protocol [RFC7644].  Unlike the practice of some protocols like
-   Application Bridging for Federated Access Beyond web (ABFAB) and
-   SAML2 WebSSO, SCIM provides provisioning and de-provisioning of
-   resources in a separate context from authentication.  This document
-   will describe the different construct that we have in the SCIM
-   protocol and will describe the most typical use case that we will
-   find in the implementation, will also help identify the interactions
-   between the different orchestrators roles and guide on how each other
-   define the SCIM protocol.
-   SCIM is a protocol that relies on one-to-one interaction, in a HTTP
-   client-server model.  Any interaction is based on a trigger that will
-   start a CRUD action on one or many resources.
+   The System for Cross-domain Identity Management (SCIM) family of
+   specifications are designed to manage resources used in the practice
+   of identity management that are often communicated across internet
+   domains and services, with users and groups as the default resources
+   supported and an extensibility model compatible with adding
+   additional resources.  The specifications have two primary goals: 1)
+   A common representation of a resource object and its attributes, and
+   2) Standardized patterns for how those resources can be operated on,
+   including "CRUD" operations that create, read, update or delete
+   resource objects and more advanced goals such as search filters,
+   synchronization of large resource populations, etc.  These goals are
+   codified as a data model in [RFC7643] defining resources, attributes
+   and default schema, as well as a protocol definition built on HTTP in
+   [RFC7644].  By standardizing the data model and protocol for resource
+   management, entire ecosystems can achieve better interoperability,
+   security, and scalability.
+
+   This document provides definitions, overview, concepts, flows, and
+   use cases implementers may need to understand the design and
+   applicability of the SCIM schema [RFC7643] and SCIM protocol
+   [RFC7644].  Unlike the practice of some protocols like Application
+   Bridging for Federated Access Beyond web (ABFAB) and SAML2 WebSSO,
+   SCIM provides provisioning and de-provisioning of resources in a
+   separate context from authentication.  While SCIM is a protocol that
+   standardizes movement of data only between two parties in a HTTP
+   client-server model, implementation patterns are discussed in this
+   document that surround the SCIM actions and are mport
 
 2.  Terminology
 
@@ -151,6 +163,13 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
    *  RS: Resource Subscriber
 
+
+
+Correia & Dingle         Expires 2 February 2024                [Page 3]
+
+Internet-Draft               SCIM Use Cases                  August 2023
+
+
    *  RO: Resource Object
 
    *  RA: Resource Attribute
@@ -162,13 +181,6 @@ Internet-Draft               SCIM Use Cases                    July 2023
    *  JIT: Just In Time
 
    *  PaaS: Platform as a Service
-
-
-
-Correia & Dingle         Expires 1 February 2024                [Page 3]
-
-Internet-Draft               SCIM Use Cases                    July 2023
-
 
    *  SaaS: Software as a Service
 
@@ -184,10 +196,11 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 3.  SCIM Components and Architecture
 
-   The System for Cross-domain Identity Management (SCIM) specification
-   is designed to manage resources and services in applications using
+   The System for Cross-domain Identity Management (SCIM) family of
+   specifications are designed to manage resources and services using
    standards to enable better interoperability, security, and
-   scalability.
+   scalability.  When every separate domain manages profiles of users,
+   groups, devices and other
 
    The specification suite seeks to build upon experience with existing
    schemas and deployments, placing specific emphasis on simplicity of
@@ -202,6 +215,17 @@ Internet-Draft               SCIM Use Cases                    July 2023
    The SCIM scenarios are overviews of user stories designed to help
    clarify the intended scope of the SCIM effort.
 
+
+
+
+
+
+
+Correia & Dingle         Expires 2 February 2024                [Page 4]
+
+Internet-Draft               SCIM Use Cases                  August 2023
+
+
 3.1.  Implementation Concepts
 
    To understand the use cases we need to understand 4 different
@@ -212,19 +236,6 @@ Internet-Draft               SCIM Use Cases                    July 2023
 3.1.1.  Data Model
 
    SCIM defines two types of data entities: resources and attributes.
-
-
-
-
-
-
-
-
-
-Correia & Dingle         Expires 1 February 2024                [Page 4]
-
-Internet-Draft               SCIM Use Cases                    July 2023
-
 
 3.1.1.1.  Resource Object (RO)
 
@@ -264,23 +275,19 @@ Internet-Draft               SCIM Use Cases                    July 2023
    initiates SCIM HTTP requests to a target SCIM Server.  A SCIM Client
    is active software that can push or pull data between two parties.
 
+
+
+Correia & Dingle         Expires 2 February 2024                [Page 5]
+
+Internet-Draft               SCIM Use Cases                  August 2023
+
+
 3.1.3.  Orchestrator Roles
 
    Orchestrators are the operating parties that take part in a SCIM
    protocol exchange and ensure data is moving in the correct flows.  An
    entity can have one or more orchestrators roles, depending on the
    overall provisioning architecture.
-
-
-
-
-
-
-
-Correia & Dingle         Expires 1 February 2024                [Page 5]
-
-Internet-Draft               SCIM Use Cases                    July 2023
-
 
 3.1.3.1.  Resource Creator (RC)
 
@@ -326,16 +333,9 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-
-
-
-
-
-
-
-Correia & Dingle         Expires 1 February 2024                [Page 6]
+Correia & Dingle         Expires 2 February 2024                [Page 6]
 
-Internet-Draft               SCIM Use Cases                    July 2023
+Internet-Draft               SCIM Use Cases                  August 2023
 
 
       +-------------+ +-------------+   +-------------+ +-------------+
@@ -389,9 +389,9 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024                [Page 7]
+Correia & Dingle         Expires 2 February 2024                [Page 7]
 
-Internet-Draft               SCIM Use Cases                    July 2023
+Internet-Draft               SCIM Use Cases                  August 2023
 
 
 3.1.4.1.  Periodic Intervals
@@ -445,9 +445,9 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024                [Page 8]
+Correia & Dingle         Expires 2 February 2024                [Page 8]
 
-Internet-Draft               SCIM Use Cases                    July 2023
+Internet-Draft               SCIM Use Cases                  August 2023
 
 
    +---------------+                                   +---------------+
@@ -501,9 +501,9 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024                [Page 9]
+Correia & Dingle         Expires 2 February 2024                [Page 9]
 
-Internet-Draft               SCIM Use Cases                    July 2023
+Internet-Draft               SCIM Use Cases                  August 2023
 
 
 3.1.5.1.1.  Resource Object creation/update from Client to Server
@@ -557,9 +557,9 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 10]
+Correia & Dingle         Expires 2 February 2024               [Page 10]
 
-Internet-Draft               SCIM Use Cases                    July 2023
+Internet-Draft               SCIM Use Cases                  August 2023
 
 
    +--------------+                                   +---------------+
@@ -613,9 +613,9 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 11]
+Correia & Dingle         Expires 2 February 2024               [Page 11]
 
-Internet-Draft               SCIM Use Cases                    July 2023
+Internet-Draft               SCIM Use Cases                  August 2023
 
 
  +--------+                +---------------+                 +---------+
@@ -669,9 +669,9 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 12]
+Correia & Dingle         Expires 2 February 2024               [Page 12]
 
-Internet-Draft               SCIM Use Cases                    July 2023
+Internet-Draft               SCIM Use Cases                  August 2023
 
 
 3.1.5.1.4.  Resource Object creation from a Creation Entity and
@@ -725,9 +725,9 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 13]
+Correia & Dingle         Expires 2 February 2024               [Page 13]
 
-Internet-Draft               SCIM Use Cases                    July 2023
+Internet-Draft               SCIM Use Cases                  August 2023
 
 
    left, will act as the Client for the server on the right, which
@@ -781,9 +781,9 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 14]
+Correia & Dingle         Expires 2 February 2024               [Page 14]
 
-Internet-Draft               SCIM Use Cases                    July 2023
+Internet-Draft               SCIM Use Cases                  August 2023
 
 
    1.  The SCIM client will do an HTTP GET to obtain the RO/RA that will
@@ -837,9 +837,9 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 15]
+Correia & Dingle         Expires 2 February 2024               [Page 15]
 
-Internet-Draft               SCIM Use Cases                    July 2023
+Internet-Draft               SCIM Use Cases                  August 2023
 
 
 3.1.5.2.3.  Resource Object Creation or Update and Subscription
@@ -893,9 +893,9 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 16]
+Correia & Dingle         Expires 2 February 2024               [Page 16]
 
-Internet-Draft               SCIM Use Cases                    July 2023
+Internet-Draft               SCIM Use Cases                  August 2023
 
 
    A typical example of this use case is a device that is going to use a
@@ -949,9 +949,9 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 17]
+Correia & Dingle         Expires 2 February 2024               [Page 17]
 
-Internet-Draft               SCIM Use Cases                    July 2023
+Internet-Draft               SCIM Use Cases                  August 2023
 
 
 4.2.  IdM doing CRUD operations on SaaS applications
@@ -1005,9 +1005,9 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 18]
+Correia & Dingle         Expires 2 February 2024               [Page 18]
 
-Internet-Draft               SCIM Use Cases                    July 2023
+Internet-Draft               SCIM Use Cases                  August 2023
 
 
 4.4.  IdM doing CRUD operations on SaaS applications, and Objects coming
@@ -1061,9 +1061,9 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 19]
+Correia & Dingle         Expires 2 February 2024               [Page 19]
 
-Internet-Draft               SCIM Use Cases                    July 2023
+Internet-Draft               SCIM Use Cases                  August 2023
 
 
    Typically we will see this use case in large organization where
@@ -1117,9 +1117,9 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 20]
+Correia & Dingle         Expires 2 February 2024               [Page 20]
 
-Internet-Draft               SCIM Use Cases                    July 2023
+Internet-Draft               SCIM Use Cases                  August 2023
 
 
 5.  Security Considerations
@@ -1173,9 +1173,9 @@ Internet-Draft               SCIM Use Cases                    July 2023
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 21]
+Correia & Dingle         Expires 2 February 2024               [Page 21]
 
-Internet-Draft               SCIM Use Cases                    July 2023
+Internet-Draft               SCIM Use Cases                  August 2023
 
 
    [RFC7642] K.  LI, P.  Hunt, B.  Khasnabish, A.  Nadalin and Z.
@@ -1229,4 +1229,4 @@ Authors' Addresses
 
 
 
-Correia & Dingle         Expires 1 February 2024               [Page 22]
+Correia & Dingle         Expires 2 February 2024               [Page 22]
