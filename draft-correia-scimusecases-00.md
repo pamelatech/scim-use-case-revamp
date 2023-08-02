@@ -85,8 +85,8 @@ SCIM architecture is a client-server model centered on a concept of a "resource"
 
 ~~~
 +---------+                       +--------+
-|  SCIM   | 			             |        | 
-| Server  | 			             |  SCIM  | 
+|  SCIM   |                       |        | 
+| Server  |                       |  SCIM  | 
 |         | <--- SCIM Action ---> | Client |
 | /Users  |                       |        |
 | /Groups |                       |        |
