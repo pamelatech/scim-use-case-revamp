@@ -7,13 +7,44 @@ keyword: [Internet-Draft, SCIM]
 workgroup: SCIM
 
 cat: info
-title: 'SCIM Use Cases'
+title: 'System for Cross-domain Identity Management: Definitions, Overview, Concepts, and Requirements'
+abbrev: 'SCIM Use Cases'
+Lang: en
 author:
 - name: Paulo Jorge Correia
   org: Cisco Systems
+  email: paucorre@cisco.com
 
 - name: Pamela Dingle
   org: Microsoft Corporation
+  email: 'pamela.dingle@microsoft.com'
+
+normative:
+  RFC2119:
+
+informative:
+  RFC7643:
+  RFC7644:
+  RFC7642:
+  RFC9110:
+  RFC9112:
+  RFC8417:
+  Device Schema Extensions to the SCIM model:
+     target: https://datatracker.ietf.org/doc/draft-shahzad-scim-device-model
+     title: Device Schema Extensions to the SCIM model
+     author:
+     - name: M. Shahzad
+     - name: H. Iqbal
+     - name: E. Lear
+     date: 2023-07 
+  SCIM Profile for Security Event Tokens:
+     target: https://datatracker.ietf.org/doc/draft-ietf-scim-events
+     title: Device Schema Extensions to the SCIM model
+     author:
+     - name: P. Hunt
+     - name: N. Cam-Winget
+     - name: M. Kiser
+     date: 2023-07 
 
 --- abstract
 
@@ -50,12 +81,12 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 
 # SCIM Components and Architecture
-SCIM architecture is a client-server model centered on a concept of a "resource". Resources have types (such as a user or a group) and each unique instance of a resource type is represented by a JSON object, actively accessed via a standardized REST API.  Each resource object can be managed individually or managed in bulk using actions that by default are specified in [RFC 9110] (HTTP GET, PUT, POST etc), but that may expand to concepts in extension documents, for example security event tokens (SETs). SCIM actions result in resource objects and attributes "moving" between the client and server, as clients actively push and pull information that reflects change over time.
+SCIM architecture is a client-server model centered on a concept of a "resource". Resources have types (such as a user or a group) and each unique instance of a resource type is represented by a JSON object, actively accessed via a standardized REST API.  Each resource object can be managed individually or managed in bulk using actions that by default are specified in [RFC9110] (HTTP GET, PUT, POST etc), but that may expand to concepts in extension documents, for example security event tokens (SETs). SCIM actions result in resource objects and attributes "moving" between the client and server, as clients actively push and pull information that reflects change over time.
 
 ~~~
 +---------+                       +--------+
-|  SCIM   | 			  |        | 
-| Server  | 			  |  SCIM  | 
+|  SCIM   | 			             |        | 
+| Server  | 			             |  SCIM  | 
 |         | <--- SCIM Action ---> | Client |
 | /Users  |                       |        |
 | /Groups |                       |        |
@@ -74,13 +105,13 @@ To understand the use cases we need to understand 4 different concepts of the pr
 SCIM defines two types of data entities: resources and attributes.
 
 #### Resource Object (RO)
-A JSON object representing a user, group (or extension object) to be manipulated through the SCIM protocol. The Resource Object contains attributes defined by schemas such as those defined in [RFC 7643] and can be acted on via the endpoints and parameters defined in [RFC7644].  
+A JSON object representing a user, group (or extension object) to be manipulated through the SCIM protocol. The Resource Object contains attributes defined by schemas such as those defined in [RFC7643] and can be acted on via the endpoints and parameters defined in [RFC7644].  
 
 #### Resource Attribute (RA)
 A named element of a Resource Object. Attributes are defined in section 2 of [RFC7643] and include characteristics like cardinality (single or multiple values), data types (string, boolean, binary etc) and characteristics (required, unique etc). 
 
 ### HTTP Client-Server Roles
-HTTP client and server roles are defined in [RFC 9110] and [RFC 9112]. Any SCIM interaction requires one participant to be a SCIM server and the other to be a SCIM client. 
+HTTP client and server roles are defined in [RFC9110] and [RFC9112]. Any SCIM interaction requires one participant to be a SCIM server and the other to be a SCIM client. 
 
 #### SCIM Server (also known as a SCIM Service Provider)
 An HTTP web application that provides identity information via the SCIM protocol.  
@@ -94,7 +125,7 @@ Orchestrators are the operating parties that take part in a SCIM protocol exchan
 An entity can have one or more orchestrators roles, depending on the overall provisioning architecture.  
 
 #### Resource Creator (RC)
-An entity responsible for creating the Resource Object (RO). Typically we can see this role in HR or resource management applications that are responsible for creating resources and authorities for some or all of its attributes.  
+An entity responsible for creating the Resource Object (RO). Typically we can see this role in HR or resource management applications that are responsible for creating resources and some of its attributes.  
 
 #### Resource Updater (RU)
 An entity responsible for updating specific attributes of a Resource Object (RO) or the RO itself. Typically, this role is used in conjunction with other SCIM roles that allow this SCIM entity to manage a specific Resource Attribute (RA).  
@@ -103,7 +134,7 @@ An entity responsible for updating specific attributes of a Resource Object (RO)
 An entity that aggregates or transforms resource objects from resource creators/updaters (RC/RU) and make them available for resource subscribers (RS) using multiple SCIM interactions, an example of this role could be an Identity-as-a-Service (IDaaS) cloud platform.  
 
 #### Resource Subscriber (RS)
-An entity that consumes information in resource objects (RO) but is not authoritative to create new objects or attributes. An example of entities that play this role include SaaS applications relying on an IDaaS cloud platform. 
+An entity that consumes information in resource objects (RO) and typically don't create new objects or attributes. An example of entities that play this role include SaaS applications relying on an IDaaS cloud platform. 
 
 #### External Resource Creator (ERC)
 An entity that has information about resources and its attributes, but does not participate in SCIM flows, examples include databases or internally-facing applications.
@@ -185,10 +216,10 @@ This use case combines the SCIM protocol with other protocols used for Single Si
 The SCIM protocol defines interactions between two standardized parties that conform to HTTP RESTful conventions. The protocol enables CRUD operations by corresponding those activities to HTTP verbs such as POST, PUT, GET, DELETE etc.  The protocol itself doesn't assume a direction of data flow, and use cases discussed in section 4 are created using the orchestrator roles and an SCIM entity can have multiple roles, depending on the objective of the use case that we are describing.
 
 #### Client active Push
-A SCIM client uses HTTP verbs POST, PUT or PATCH to create or update objects and/or attributes at a SCIM server. The SCIM client is actively "pushing" the data to the endpoint. This SCIM action can occur when the SCIM client is the primary resource creator/updater, or when the SCIM client is primarly a resource subscriber but is authoritative over only a subset of attributes.
+A SCIM client uses HTTP verbs POST, PUT or PATCH to create or update objects and/or attributes at a SCIM server. The SCIM client is actively "pushing" the data to the endpoint. This SCIM action can occur when the SCIM client is the primary resource creator/updater.
    
 ##### Resource Object creation/update from Client to Server
-In this model we will have a Client that is going to provide information about a RO and its RA to a Server, that can also be called as SCIM Server in [RFC 7643] and [RFC 7644].
+In this model we will have a Client that is going to provide information about a RO and its RA to a Server, that can also be called as SCIM Server in [RFC7643] and [RFC7644].
 
 ~~~~~~~~
 +----------------+                                   +----------------+
@@ -215,7 +246,7 @@ In this model we will have a Client that is going to provide information about a
 The SCIM client will map to the RM/RC/RU and the Server will map into RS.   
 
 ##### Resource Object creation from a Creation Entity 
-In this model we will have a Client that is going to provide information about a RO and its RA to a Server, can also be called as Service Provider in [RFC 7643] and [RFC 7644], in this model the Client is just responsible for a limit set of attributes and do not do any management overall, and the Resource management function resides on the Server.
+In this model we will have a Client that is going to provide information about a RO and its RA to a Server, can also be called as Service Provider in [RFC7643] and [RFC7644], in this model the Client is just responsible for a limit set of attributes and do not do any management overall, and the Resource management function resides on the Server.
 
 ~~~~~~~~
 +--------------+                                   +---------------+
@@ -386,7 +417,7 @@ Because SCIM is a protocol where two entities exchange information about resourc
 ## Self-Referential SCIM Actions (/me)
 Get information about persona /me endpoint.  
 A use case cover in [RFC7644] where a SCIM client can do CRUD operation on the entity of the user, in this use case the SCIM client that is the RM (Resource Manager), RC (Resource Creator) and RU (Resource Updater), will be able to read, create, update the RO (Resource Object) and its RA (Resource Attributes) in the RS (Resource Subscriber). the RS will provide an /me URI to achieve this.  
-Special considerations exist from authorization perspective; unlike other listed CRUD use cases, the authorization for this use case only allows access to the RO (Resource Object) of the user that authenticates.  
+Special considerations exist from authorization perspective; unlike other listed CRUD use cases, the authorization for this use case only allows access to the RO (Resource Object) of the resource owner.  
 
 ## IdM doing CRUD operations on SaaS applications
 Single RM/RC/RU and multiple RS.  
@@ -399,7 +430,7 @@ One or more ERC with single RM/RC/RU and multiple RS.
 This is another common use case, because it allow the organization to adopt SCIM protocol for CRUD operations of their resources. In this use case the organization already have an existent database of resources that is going to be the source of truth for the Resource Manager.   
 Normally this ERC, specially if we are talking about user Identity, will have a User database that can be accessible using LDAP, some times the ERC can provide RO/RA using SAML Single Sign-On using Just in time Provision. We also see some IDaaS providing softwares that allow them to exchange resource information by using proprietary protocols, very common using HTTP REST to get the information from the ERC to the RM.  
 Typically in this use case the RM will become the new source of truth for the resources of our Organization, will add extra RA (Resource Attributes) and ignore other RA that existed in the ERC.  
-Some organization that already realize that going forward in the SCIM path, the RM will be the authority answer for the RO/RA, will start create new RO in the RM.  
+Some organization that already realize that going forward in the SCIM path, the RM will manage the RO/RA, will also start create new RO in the RM.  
 The Resource Subscribers will consume all or a subset of the RO/RA from the RM.  
 Typically we will see this use case in small to mid size organization where resources were organized in a non standardize platform for Resources Management, where it isn't possible to cut/replace everything with a new system.    
     
@@ -408,13 +439,13 @@ One or more RC/RU, with single RM/RC/RU/RS and multiple RS.
 In this use case, the the CRUD operation for the RO (Resource Object) and its RA (Resource Attributes) does not belong to the RM (Resource Manager), this is done in a separate SCIM entity, the Resource Creator/Resource Updater.   
 A good example of this is use case are Organization that have their HR application, and the lifecycle of the resource (typically groups and Users) is done by that application.  
 We could also have devices where the creation and update operations are always done by the device  itself or by a mobile application/web server on their behalf, in this use case the roles of RC/RU moves away from the RM.
-We could also have this use case where the RM is extended with the Roles of RC/RU for extra RA (Resources Attributes) that are not authoritative by the "HR System"/device, but normally that bring more complexity to the authority models for the CRUD operation of the resources.    
+We could also have this use case where the RM is extended with the Roles of RC/RU for extra RA (Resources Attributes), but the RO (Resource Object) is typically created by the "HR System"/device.   
 Typically we will see this use case in mid to large organization where no structure method to handle the resources start with a blank sheet of paper in a  greenfield deployment. 
 
 ## IdM doing CRUD operations on SaaS applications, and Objects coming from external SCIM and non SCIM source including the IDM itself.
 One or more ERC, one or more RC/RU, with single RM/RC/RU/RS and multiple RS.  
 In this use case, one source of the Resource information is an ERC (External Resource Creator), or the entity that has the role of RC/RU (such as an HR System). In some cases the HR system can also consume information from the ERC and complement it. 
-This doesn't mean that the RM will not need to consolidate RO/RA from the SCIM and non SCIM entities and consolidate and aggregate RO/RAs for those multiple sources. The RM gets its authoritative Information from both systems the RC/RU and from the ERC, and need to define rules which ones to take and to ignore.
+This doesn't mean that the RM will not need to consolidate RO/RA from the SCIM and non SCIM entities and consolidate and aggregate RO/RAs for those multiple sources. The RM gets its RO (Resource Object) from both systems the RC/RU and from the ERC, and need to define rules which ones to take and to ignore.
 
 ## IdM doing CRUD operations on SaaS applications, and Objects coming from external SCIM and non SCIM source including the IDM itself, where some Resource Attributes come from SaaS application.
 One or more ERC, one or more RC/RU, with single RM/RC/RU/RS and multiple RS/RU.  
@@ -465,10 +496,24 @@ Detailed security considerations are specified in Section 7 of the SCIM protocol
    "System for Cross-domain Identity Management: Definitions, Overview, Concepts, and Requirements", 
    RFC 7642, September 2015, <http://www.rfc-editor.org/info/rfc7642>.
 
-   [Device Schema Extensions to the SCIM model] M. Shahzad, H. Iqbal and E. Lear
+   [RFC9110] R. Fielding, M. Nottingham, J. Reschke,
+   "HTTP Semantics"
+   RFC 9110, June 2022, <http://www.rfc-editor.org/info/rfc9110>.
+   
+   [RFC9112]  R. Fielding, M. Nottingham, J. Reschke,
+   "HTTP/1.1",
+   RFC 9112, June 2022, <http://www.rfc-editor.org/info/rfc9112>.
+
+   [RFC8417] P. Hunt, M. Jones, W. Denniss, M. Ansari
+   "Security Event Token (SET)",
+   RFC 8417, July 2018, <http://www.rfc-editor.org/info/rfc8417>.
+
+   [Device Schema Extensions to the SCIM model] M. Shahzad, H. Iqbal and E. Lear,
+   "Device Schema Extensions to the SCIM model",
    July 2023, <https://datatracker.ietf.org/doc/draft-shahzad-scim-device-model>.
 
-   [SCIM Profile for Security Event Tokens] P. Hunt, N. Cam-Winget and M. Kiser
+   [SCIM Profile for Security Event Tokens] P. Hunt, N. Cam-Winget and M. Kiser,
+   "SCIM Profile for Security Event Tokens",
    July 2023, <https://datatracker.ietf.org/doc/draft-ietf-scim-events>.
 
 ## Acknowledgements
