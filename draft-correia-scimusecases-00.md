@@ -50,7 +50,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 
 # SCIM Components and Architecture
-SCIM architecture is a client-server model centered on a concept of a "resource". Resources have types (such as a user or a group) and each unique instance of a resource type is represented by a JSON object, and actively accessed via a standardized REST API.  Each resource object can be managed individually or can be listed/updated in bulk, these operations are generally called SCIM actions. SCIM actions result in resource objects and attributes "moving" between the client and server. 
+SCIM architecture is a client-server model centered on a concept of a "resource". Resources have types (such as a user or a group) and each unique instance of a resource type is represented by a JSON object, actively accessed via a standardized REST API.  Each resource object can be managed individually or managed in bulk using actions that by default are specified in [RFC 9110] (HTTP GET, PUT, POST etc), but that may expand to concepts in extension documents, for example security event tokens (SETs). SCIM actions result in resource objects and attributes "moving" between the client and server, as clients actively push and pull information that reflects change over time.
 
 ~~~
 +---------+                       +--------+
