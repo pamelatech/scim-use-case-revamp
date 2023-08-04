@@ -67,31 +67,28 @@ Table of Contents
        3.1.1.  Data Model  . . . . . . . . . . . . . . . . . . . . .   5
        3.1.2.  HTTP Client-Server Roles  . . . . . . . . . . . . . .   5
        3.1.3.  Orchestrator Roles  . . . . . . . . . . . . . . . . .   6
-       3.1.4.  Triggers  . . . . . . . . . . . . . . . . . . . . . .   8
+       3.1.4.  Triggers  . . . . . . . . . . . . . . . . . . . . . .   7
        3.1.5.  SCIM Actions  . . . . . . . . . . . . . . . . . . . .   9
    4.  SCIM Use Cases  . . . . . . . . . . . . . . . . . . . . . . .  17
-     4.1.  Self-Referential Resource Updates via /me . . . . . . . .  18
+     4.1.  Self-Referential Resource Updates via /me . . . . . . . .  17
      4.2.  Simple Resource Update  . . . . . . . . . . . . . . . . .  18
      4.3.  Resource Updates Originating at a Non-SCIM Source . . . .  18
      4.4.  Resources from Multiple SCIM Sources Coordinated by a
            Resource Manager  . . . . . . . . . . . . . . . . . . . .  19
      4.5.  Resources from SCIM and Non-SCIM sources, Coordinated by a
            Resource Manager  . . . . . . . . . . . . . . . . . . . .  19
-     4.6.  Complex sources including Multiple Resource Updaters  . .  20
+     4.6.  Complex sources including Multiple Resource Updaters  . .  19
      4.7.  Complex Multi-directional Object and Resource Management
            with simple Resource Subscribers  . . . . . . . . . . . .  20
      4.8.  Complex Multi-direction Object/Resource Management with
            bi-directional Resource Subscriber/Updaters . . . . . . .  20
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  21
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  20
    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  21
+     6.1.  Acknowledgements  . . . . . . . . . . . . . . . . . . . .  21
    7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  21
      7.1.  Normative References  . . . . . . . . . . . . . . . . . .  21
      7.2.  Informative References  . . . . . . . . . . . . . . . . .  21
-     7.3.  Acknowledgements  . . . . . . . . . . . . . . . . . . . .  22
-   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  22
-     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  22
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .  22
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  23
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  22
 
 1.  Introduction
 
@@ -106,6 +103,9 @@ Table of Contents
    be operated on, including "CRUD" operations that create, read, update
    or delete resource objects and more advanced goals such as search
    filters, synchronization of large resource populations, etc.  These
+   goals are codified as a data model in [RFC7643] defining resources,
+   attributes and default schema, as well as a protocol definition built
+   on HTTP in [RFC7644].  By standardizing the data model and protocol
 
 
 
@@ -114,9 +114,6 @@ Correia & Dingle         Expires 5 February 2024                [Page 2]
 Internet-Draft               SCIM Use Cases                  August 2023
 
 
-   goals are codified as a data model in [RFC7643] defining resources,
-   attributes and default schema, as well as a protocol definition built
-   on HTTP in [RFC7644].  By standardizing the data model and protocol
    for resource management, entire ecosystems can achieve better
    interoperability, security, and scalability.
 
@@ -162,6 +159,9 @@ Internet-Draft               SCIM Use Cases                  August 2023
 
    *  JIT: Just In Time
 
+   *  PaaS: Platform as a Service
+
+   *  SaaS: Software as a Service
 
 
 
@@ -169,10 +169,6 @@ Correia & Dingle         Expires 5 February 2024                [Page 3]
 
 Internet-Draft               SCIM Use Cases                  August 2023
 
-
-   *  PaaS: Platform as a Service
-
-   *  SaaS: Software as a Service
 
    *  IDaaS: Identity as a Service
 
@@ -218,6 +214,10 @@ Internet-Draft               SCIM Use Cases                  August 2023
    development and integration, while applying existing authentication,
    authorization, and privacy models.
    The intent of the SCIM specification is to reduce the cost and
+   complexity of resource management operations by providing a common
+   schemas and extension model, as well as binding documents to provide
+   patterns for exchanging this schema using standard protocols.  In
+   essence, make it fast, cheap, and easy to move resources in to, out
 
 
 
@@ -226,10 +226,6 @@ Correia & Dingle         Expires 5 February 2024                [Page 4]
 Internet-Draft               SCIM Use Cases                  August 2023
 
 
-   complexity of resource management operations by providing a common
-   schemas and extension model, as well as binding documents to provide
-   patterns for exchanging this schema using standard protocols.  In
-   essence, make it fast, cheap, and easy to move resources in to, out
    of, and around the applications.
    The SCIM scenarios are overviews of user stories designed to help
    clarify the intended scope of the SCIM effort.
@@ -274,6 +270,10 @@ Internet-Draft               SCIM Use Cases                  August 2023
    model that can be used to push or pull data between two parties.
    SCIM servers have additional responsibilities such as API Security,
    managing client identifiers & keys as well as performance management
+   such as API throttling.
+
+
+
 
 
 
@@ -281,8 +281,6 @@ Correia & Dingle         Expires 5 February 2024                [Page 5]
 
 Internet-Draft               SCIM Use Cases                  August 2023
 
-
-   such as API throttling.
 
 3.1.2.2.  SCIM Client
 
@@ -327,9 +325,11 @@ Internet-Draft               SCIM Use Cases                  August 2023
    entities that play this role include SaaS applications relying on an
    IDaaS cloud platform.
 
+3.1.3.5.  External Resource Creator (ERC)
 
-
-
+   An entity that has information about resources and its attributes,
+   but does not participate in SCIM flows, examples include databases or
+   internally-facing applications.
 
 
 
@@ -337,12 +337,6 @@ Correia & Dingle         Expires 5 February 2024                [Page 6]
 
 Internet-Draft               SCIM Use Cases                  August 2023
 
-
-3.1.3.5.  External Resource Creator (ERC)
-
-   An entity that has information about resources and its attributes,
-   but does not participate in SCIM flows, examples include databases or
-   internally-facing applications.
 
       +-------------+ +-------------+   +-------------+ +-------------+
       |(RO) Resource| |(RA) Resource|   |(RO) Resource| |(RA) Resource|
@@ -379,21 +373,6 @@ Internet-Draft               SCIM Use Cases                  August 2023
     +-------------+ +-------------+   +-------------+ +-------------+
                          Figure 1: SCIM Orchestrators Roles
 
-
-
-
-
-
-
-
-
-
-
-Correia & Dingle         Expires 5 February 2024                [Page 7]
-
-Internet-Draft               SCIM Use Cases                  August 2023
-
-
 3.1.4.  Triggers
 
    Triggers are actions or activities that may cause a SCIM action to
@@ -407,6 +386,13 @@ Internet-Draft               SCIM Use Cases                  August 2023
    Delete) using SCIM Actions or Operations as it is designed to capture
    a class of use case that makes sense to the actor requesting it
    rather than to describe a protocol operation.
+
+
+
+Correia & Dingle         Expires 5 February 2024                [Page 7]
+
+Internet-Draft               SCIM Use Cases                  August 2023
+
 
 3.1.4.1.  Periodic Intervals
 
@@ -439,17 +425,6 @@ Internet-Draft               SCIM Use Cases                  August 2023
    performing an HTTP POST to update the user's resource object at the
    SCIM server.
 
-
-
-
-
-
-
-Correia & Dingle         Expires 5 February 2024                [Page 8]
-
-Internet-Draft               SCIM Use Cases                  August 2023
-
-
 3.1.4.4.  SSO (Single Sign-on)
 
    Single Sign-on triggers occur when a user authenticates via federated
@@ -461,6 +436,19 @@ Internet-Draft               SCIM Use Cases                  August 2023
    resource attributes for the user object are passed in the federated
    assertion, resulting in a SCIM action to push or pull remaining
    needed attributes.
+
+
+
+
+
+
+
+
+
+Correia & Dingle         Expires 5 February 2024                [Page 8]
+
+Internet-Draft               SCIM Use Cases                  August 2023
+
 
    +---------------+                                   +---------------+
    |               |                                   |               |
@@ -499,19 +487,24 @@ Internet-Draft               SCIM Use Cases                  August 2023
    can have multiple roles, depending on the objective of the use case
    that we are describing.
 
-
-
-Correia & Dingle         Expires 5 February 2024                [Page 9]
-
-Internet-Draft               SCIM Use Cases                  August 2023
-
-
 3.1.5.1.  Client active Push
 
    A SCIM client uses HTTP verbs POST, PUT or PATCH to create or update
    objects and/or attributes at a SCIM server.  The SCIM client is
    actively "pushing" the data to the endpoint.  This SCIM action can
    occur when the SCIM client is the primary resource creator/updater.
+
+
+
+
+
+
+
+
+Correia & Dingle         Expires 5 February 2024                [Page 9]
+
+Internet-Draft               SCIM Use Cases                  August 2023
+
 
 3.1.5.1.1.  Resource Object creation/update from Client to Server
 
@@ -550,7 +543,14 @@ Internet-Draft               SCIM Use Cases                  August 2023
    The SCIM client will map to the RM/RC/RU and the Server will map into
    RS.
 
+3.1.5.1.2.  Resource Object creation from a Creation Entity
 
+   In this model we will have a Client that is going to provide
+   information about a RO and its RA to a Server, can also be called as
+   Service Provider in [RFC7643] and [RFC7644], in this model the Client
+   is just responsible for a limit set of attributes and do not do any
+   management overall, and the Resource management function resides on
+   the Server.
 
 
 
@@ -561,15 +561,6 @@ Correia & Dingle         Expires 5 February 2024               [Page 10]
 
 Internet-Draft               SCIM Use Cases                  August 2023
 
-
-3.1.5.1.2.  Resource Object creation from a Creation Entity
-
-   In this model we will have a Client that is going to provide
-   information about a RO and its RA to a Server, can also be called as
-   Service Provider in [RFC7643] and [RFC7644], in this model the Client
-   is just responsible for a limit set of attributes and do not do any
-   management overall, and the Resource management function resides on
-   the Server.
 
    +--------------+                                   +---------------+
    |              |                (1)                |               |
@@ -606,18 +597,6 @@ Internet-Draft               SCIM Use Cases                  August 2023
    responsibilities on the management of Resources, typically done by an
    IdM.
 
-
-
-
-
-
-
-
-Correia & Dingle         Expires 5 February 2024               [Page 11]
-
-Internet-Draft               SCIM Use Cases                  August 2023
-
-
 3.1.5.1.3.  Resource Object creation from a Creation Entity and
             consumption from an Application
 
@@ -628,6 +607,16 @@ Internet-Draft               SCIM Use Cases                  August 2023
    the RO will then be the Client for other SCIM services that will
    consume the RO/RA, that might have more RA than the original RO
    provided by the originator of the RO.
+
+
+
+
+
+
+Correia & Dingle         Expires 5 February 2024               [Page 11]
+
+Internet-Draft               SCIM Use Cases                  August 2023
+
 
  +--------+                +---------------+                 +---------+
  |        |     (1)        |               |      (1)        |         |
@@ -657,6 +646,17 @@ Internet-Draft               SCIM Use Cases                  August 2023
    4.  The Service Provider will return the RO/RA with additional
        metadata information to allow for audit.
 
+   The SCIM client on the left will map to the RC/RU and the Server in
+   the middle will map into RM/RS, the SCIM client on the left is also
+   sometimes called as the "HR Application", because it responsibilities
+   are only on be the creator and updater of the RO and specific number
+   of its RA, the client in this case has no responsibilities in doing
+   any management of the Resources, typically done by an IdM.
+   The center component as describe is the Server for the client on the
+   left, will act as the Client for the server on the right, which
+   typically is an SaaS application that want to consume RO and its RA
+   from an RM.
+
 
 
 
@@ -673,17 +673,6 @@ Correia & Dingle         Expires 5 February 2024               [Page 12]
 
 Internet-Draft               SCIM Use Cases                  August 2023
 
-
-   The SCIM client on the left will map to the RC/RU and the Server in
-   the middle will map into RM/RS, the SCIM client on the left is also
-   sometimes called as the "HR Application", because it responsibilities
-   are only on be the creator and updater of the RO and specific number
-   of its RA, the client in this case has no responsibilities in doing
-   any management of the Resources, typically done by an IdM.
-   The center component as describe is the Server for the client on the
-   left, will act as the Client for the server on the right, which
-   typically is an SaaS application that want to consume RO and its RA
-   from an RM.
 
 3.1.5.1.4.  Resource Object creation from a Creation Entity and
             consumption from an Application when different Resource
@@ -723,13 +712,6 @@ Internet-Draft               SCIM Use Cases                  August 2023
        HTTP POST, PUT, PATCH depending on the operation that the Client
        want to achieve.
 
-
-
-Correia & Dingle         Expires 5 February 2024               [Page 13]
-
-Internet-Draft               SCIM Use Cases                  August 2023
-
-
    4.  The Service Provider will return the RO/RA with additional
        metadata information to allow for audit.
 
@@ -740,6 +722,14 @@ Internet-Draft               SCIM Use Cases                  August 2023
    of its RA, the client in this case has no responsibilities in doing
    any management of the Resources, typically done by an IdM.
    The center component as describe is the Server for the client on the
+
+
+
+Correia & Dingle         Expires 5 February 2024               [Page 13]
+
+Internet-Draft               SCIM Use Cases                  August 2023
+
+
    left, will act as the Client for the server on the right, which
    typically is an SaaS application that want to consume RO and its RA
    from an RM.  In addition to the models seen before now the "HR
@@ -772,20 +762,6 @@ Internet-Draft               SCIM Use Cases                  August 2023
    Attributes), that are provided by the Server, and the RM (Resource
    Management) function resides on the Client.
 
-
-
-
-
-
-
-
-
-
-Correia & Dingle         Expires 5 February 2024               [Page 14]
-
-Internet-Draft               SCIM Use Cases                  August 2023
-
-
    +----------+                                   +----------+
    |          |                                   |          |
    |          |                                   |          |
@@ -800,6 +776,15 @@ Internet-Draft               SCIM Use Cases                  August 2023
    |          |                                   |          |
    +----------+                                   +----------+
            Figure 7:  SCIM  Flow and Orchestrator roles maps
+
+
+
+
+
+Correia & Dingle         Expires 5 February 2024               [Page 14]
+
+Internet-Draft               SCIM Use Cases                  August 2023
+
 
    1.  The SCIM client will do an HTTP GET to obtain the RO/RA that will
        be available in the Server.
@@ -821,26 +806,6 @@ Internet-Draft               SCIM Use Cases                  August 2023
    Client there is no status/change database, and it gets a list of all
    the RO/RA based on filters provided by the client, so there will be a
    full update every synchronization cycle.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Correia & Dingle         Expires 5 February 2024               [Page 15]
-
-Internet-Draft               SCIM Use Cases                  August 2023
-
 
    +----------+                                   +----------+
    |          |                                   |          |
@@ -868,6 +833,15 @@ Internet-Draft               SCIM Use Cases                  August 2023
    RO/RA, this operation will happen periodically and every time will
    get a full list of all the RO (Resource Objects).
 
+
+
+
+
+Correia & Dingle         Expires 5 February 2024               [Page 15]
+
+Internet-Draft               SCIM Use Cases                  August 2023
+
+
 3.1.5.2.3.  Resource Object Creation or Update and Subscription
 
    In this model we will bring together both of the two previous SCIM
@@ -878,25 +852,6 @@ Internet-Draft               SCIM Use Cases                  August 2023
    clients in the Active pull model to create any status database of
    attributes changes, so the clients will always do a pull on one or
    many RO (Resource Objects) based on triggers.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Correia & Dingle         Expires 5 February 2024               [Page 16]
-
-Internet-Draft               SCIM Use Cases                  August 2023
-
 
  +----------+                 +---------------+               +--------+
  |          |                 |               |               |        |
@@ -925,6 +880,24 @@ Internet-Draft               SCIM Use Cases                  August 2023
    4.  The SCIM Service Provider will return the RO and its RA with
        additional metadata information to allow for audit.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+Correia & Dingle         Expires 5 February 2024               [Page 16]
+
+Internet-Draft               SCIM Use Cases                  August 2023
+
+
    A typical example of this use case is a device that is going to use a
    mobile application or browser base to enroll devices and gathers its
    attributes, that mobile application or browser after enrollment
@@ -946,14 +919,6 @@ Internet-Draft               SCIM Use Cases                  August 2023
    explaining challenges and components.  Because SCIM is a protocol
    where two entities exchange information about resources across
    domains, the use cases explain how the different components can
-
-
-
-Correia & Dingle         Expires 5 February 2024               [Page 17]
-
-Internet-Draft               SCIM Use Cases                  August 2023
-
-
    interact to allow from simple to complex architectures for cross
    domain resource management.  Orchestrators roles are mapped to the
    use cases to simplify the task of explaining the multiple functions
@@ -973,6 +938,21 @@ Internet-Draft               SCIM Use Cases                  August 2023
    Special considerations exist from authorization perspective; unlike
    other listed CRUD use cases, the authorization for this use case only
    allows access to the RO (Resource Object) of the resource owner.
+
+
+
+
+
+
+
+
+
+
+
+Correia & Dingle         Expires 5 February 2024               [Page 17]
+
+Internet-Draft               SCIM Use Cases                  August 2023
+
 
 4.2.  Simple Resource Update
 
@@ -1002,14 +982,6 @@ Internet-Draft               SCIM Use Cases                  August 2023
    times the ERC can provide RO/RA using SAML Single Sign-On using Just
    in time Provision.  We also see some IDaaS providing softwares that
    allow them to exchange resource information by using proprietary
-
-
-
-Correia & Dingle         Expires 5 February 2024               [Page 18]
-
-Internet-Draft               SCIM Use Cases                  August 2023
-
-
    protocols, very common using HTTP REST to get the information from
    the ERC to the RM.
    Typically in this use case the RM will become the new source of truth
@@ -1024,6 +996,19 @@ Internet-Draft               SCIM Use Cases                  August 2023
    where resources were organized in a non standardize platform for
    Resources Management, where it isn't possible to cut/replace
    everything with a new system.
+
+
+
+
+
+
+
+
+
+Correia & Dingle         Expires 5 February 2024               [Page 18]
+
+Internet-Draft               SCIM Use Cases                  August 2023
+
 
 4.4.  Resources from Multiple SCIM Sources Coordinated by a Resource
       Manager
@@ -1058,14 +1043,6 @@ Internet-Draft               SCIM Use Cases                  August 2023
    information from the ERC and complement it.  This doesn't mean that
    the RM will not need to consolidate RO/RA from the SCIM and non SCIM
    entities and consolidate and aggregate RO/RAs for those multiple
-
-
-
-Correia & Dingle         Expires 5 February 2024               [Page 19]
-
-Internet-Draft               SCIM Use Cases                  August 2023
-
-
    sources.  The RM gets its RO (Resource Object) from both systems the
    RC/RU and from the ERC, and need to define rules which ones to take
    and to ignore.
@@ -1081,6 +1058,14 @@ Internet-Draft               SCIM Use Cases                  August 2023
    Typically we will see this use case in large organization where
    resources were organized in a non standardize platform for Resources
    Management and it isn't possible to cut/replace everything with a new
+
+
+
+Correia & Dingle         Expires 5 February 2024               [Page 19]
+
+Internet-Draft               SCIM Use Cases                  August 2023
+
+
    system.  Those organization start to adopt many application that
    brings new attributes to the different resources that already exist
    in the system.
@@ -1114,14 +1099,6 @@ Internet-Draft               SCIM Use Cases                  August 2023
    consolidated across different domains/services.
    Typically we will see this use case in large organizations, or
    between organizations that have their own business to business
-
-
-
-Correia & Dingle         Expires 5 February 2024               [Page 20]
-
-Internet-Draft               SCIM Use Cases                  August 2023
-
-
    communication and have the need to exchange information about
    Resources.  This example also happens during mergers or acquisitions,
    where multiple RMs exist and IT departments have to manage each RM in
@@ -1137,6 +1114,14 @@ Internet-Draft               SCIM Use Cases                  August 2023
    There can be privacy issues that go beyond transport security, e.g.,
    moving personally identifying information (PII) offshore between
    different SCIM elements.  Regulatory requirements shall be met when
+
+
+
+Correia & Dingle         Expires 5 February 2024               [Page 20]
+
+Internet-Draft               SCIM Use Cases                  August 2023
+
+
    migrating identity information between jurisdictional regions (e.g.,
    countries and states may have differing regulations on privacy).
    Additionally, privacy-sensitive data elements may be omitted or
@@ -1148,91 +1133,23 @@ Internet-Draft               SCIM Use Cases                  August 2023
 
 6.  IANA Considerations
 
+6.1.  Acknowledgements
+
 7.  References
 
 7.1.  Normative References
-
-   [RFC2119] Bradner, S., "Key words for use in RFCs to Indicate
-   Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March
-   1997, http://www.rfc-editor.org/info/rfc2119 (http://www.rfc-
-   editor.org/info/rfc2119).
-
-7.2.  Informative References
-
-   [RFC7643] Hunt, P., Ed., Grizzle, K., Wahlstroem, E., and C.
-   Mortimore, "System for Cross-domain Identity Management: Core
-   Schema", RFC 7643, DOI 10.17487/RFC7643, September 2015,
-   http://www.rfc-editor.org/info/rfc7643 (http://www.rfc-
-   editor.org/info/rfc7643).
-
-   [RFC7644] Hunt, P., Ed., Grizzle, K., Ansari, M., Wahlstroem, E., and
-   C.  Mortimore, "System for Cross-domain Identity Management:
-   Protocol", RFC 7644, DOI 10.17487/RFC7644, September 2015,
-   http://www.rfc-editor.org/info/rfc7644 (http://www.rfc-
-   editor.org/info/rfc7644).
-
-
-
-Correia & Dingle         Expires 5 February 2024               [Page 21]
-
-Internet-Draft               SCIM Use Cases                  August 2023
-
-
-   [RFC7642] K.  LI, P.  Hunt, B.  Khasnabish, A.  Nadalin and Z.
-   Zeltsan, "System for Cross-domain Identity Management: Definitions,
-   Overview, Concepts, and Requirements", RFC 7642, September 2015,
-   http://www.rfc-editor.org/info/rfc7642 (http://www.rfc-
-   editor.org/info/rfc7642).
-
-   [RFC9110] R.  Fielding, M.  Nottingham, J.  Reschke, "HTTP Semantics"
-   RFC 9110, June 2022, http://www.rfc-editor.org/info/rfc9110
-   (http://www.rfc-editor.org/info/rfc9110).
-
-   [RFC9112] R.  Fielding, M.  Nottingham, J.  Reschke, "HTTP/1.1", RFC
-   9112, June 2022, http://www.rfc-editor.org/info/rfc9112
-   (http://www.rfc-editor.org/info/rfc9112).
-
-   [RFC8417] P.  Hunt, M.  Jones, W.  Denniss, M.  Ansari "Security
-   Event Token (SET)", RFC 8417, July 2018, http://www.rfc-
-   editor.org/info/rfc8417 (http://www.rfc-editor.org/info/rfc8417).
-
-   [Device_Schema_Extensions_to_the_SCIM_model] M.  Shahzad, H.  Iqbal
-   and E.  Lear, "Device Schema Extensions to the SCIM model", July
-   2023, https://datatracker.ietf.org/doc/draft-shahzad-scim-device-
-   model (https://datatracker.ietf.org/doc/draft-shahzad-scim-device-
-   model).
-
-   [SCIM_Profile_for_Security_Event_Tokens] P.  Hunt, N.  Cam-Winget and
-   M.  Kiser, "SCIM Profile for Security Event Tokens", July 2023,
-   https://datatracker.ietf.org/doc/draft-ietf-scim-events
-   (https://datatracker.ietf.org/doc/draft-ietf-scim-events).
-
-7.3.  Acknowledgements
-
-8.  References
-
-8.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/rfc/rfc2119>.
 
-8.2.  Informative References
+7.2.  Informative References
 
    [RFC7643]  Hunt, P., Ed., Grizzle, K., Wahlstroem, E., and C.
               Mortimore, "System for Cross-domain Identity Management:
               Core Schema", RFC 7643, DOI 10.17487/RFC7643, September
               2015, <https://www.rfc-editor.org/rfc/rfc7643>.
-
-
-
-
-
-Correia & Dingle         Expires 5 February 2024               [Page 22]
-
-Internet-Draft               SCIM Use Cases                  August 2023
-
 
    [RFC7644]  Hunt, P., Ed., Grizzle, K., Ansari, M., Wahlstroem, E.,
               and C. Mortimore, "System for Cross-domain Identity
@@ -1253,6 +1170,13 @@ Internet-Draft               SCIM Use Cases                  August 2023
    [RFC9112]  Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP/1.1", STD 99, RFC 9112, DOI 10.17487/RFC9112,
               June 2022, <https://www.rfc-editor.org/rfc/rfc9112>.
+
+
+
+Correia & Dingle         Expires 5 February 2024               [Page 21]
+
+Internet-Draft               SCIM Use Cases                  August 2023
+
 
    [RFC8417]  Hunt, P., Ed., Jones, M., Denniss, W., and M. Ansari,
               "Security Event Token (SET)", RFC 8417,
@@ -1285,4 +1209,24 @@ Authors' Addresses
 
 
 
-Correia & Dingle         Expires 5 February 2024               [Page 23]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Correia & Dingle         Expires 5 February 2024               [Page 22]

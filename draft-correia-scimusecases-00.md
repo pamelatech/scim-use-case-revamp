@@ -473,49 +473,6 @@ Detailed security considerations are specified in Section 7 of the SCIM protocol
 # IANA Considerations
 
 
-# References
-
-## Normative References
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-   Requirement Levels", BCP 14, RFC 2119,
-   DOI 10.17487/RFC2119, March 1997,
-   <http://www.rfc-editor.org/info/rfc2119>.
-
-## Informative References
-   [RFC7643]  Hunt, P., Ed., Grizzle, K., Wahlstroem, E., and
-   C. Mortimore, "System for Cross-domain Identity
-   Management: Core Schema", RFC 7643, DOI 10.17487/RFC7643,
-   September 2015, <http://www.rfc-editor.org/info/rfc7643>.
-   
-   [RFC7644]  Hunt, P., Ed., Grizzle, K., Ansari, M., Wahlstroem, E.,
-   and C. Mortimore, "System for Cross-domain Identity
-   Management: Protocol", RFC 7644, DOI 10.17487/RFC7644,
-   September 2015, <http://www.rfc-editor.org/info/rfc7644>.
-
-   [RFC7642] K. LI, P. Hunt, B. Khasnabish, A. Nadalin and Z. Zeltsan,
-   "System for Cross-domain Identity Management: Definitions, Overview, Concepts, and Requirements", 
-   RFC 7642, September 2015, <http://www.rfc-editor.org/info/rfc7642>.
-
-   [RFC9110] R. Fielding, M. Nottingham, J. Reschke,
-   "HTTP Semantics"
-   RFC 9110, June 2022, <http://www.rfc-editor.org/info/rfc9110>.
-   
-   [RFC9112]  R. Fielding, M. Nottingham, J. Reschke,
-   "HTTP/1.1",
-   RFC 9112, June 2022, <http://www.rfc-editor.org/info/rfc9112>.
-
-   [RFC8417] P. Hunt, M. Jones, W. Denniss, M. Ansari
-   "Security Event Token (SET)",
-   RFC 8417, July 2018, <http://www.rfc-editor.org/info/rfc8417>.
-
-   [Device Schema Extensions to the SCIM model] M. Shahzad, H. Iqbal and E. Lear,
-   "Device Schema Extensions to the SCIM model",
-   July 2023, <https://datatracker.ietf.org/doc/draft-shahzad-scim-device-model>.
-
-   [SCIM Profile for Security Event Tokens] P. Hunt, N. Cam-Winget and M. Kiser,
-   "SCIM Profile for Security Event Tokens",
-   July 2023, <https://datatracker.ietf.org/doc/draft-ietf-scim-events>.
-
 ## Acknowledgements
 
 
