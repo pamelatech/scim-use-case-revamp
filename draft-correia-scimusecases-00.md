@@ -471,9 +471,9 @@ Additionally, privacy-sensitive data elements may be omitted or obscured in SCIM
 Detailed security considerations are specified in Section 7 of the SCIM protocol [RFC7644] and Section 9 of the SCIM schema [RFC7643].
 
 # IANA Considerations
+There are no additional IANA considerations to those specified [RFC7643] and [RFC7644].
 
-
-## Acknowledgements
+# Acknowledgements
 
 
 --- back

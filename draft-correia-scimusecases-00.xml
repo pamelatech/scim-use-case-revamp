@@ -530,10 +530,11 @@ Detailed security considerations are specified in Section 7 of the SCIM protocol
 
 </section>
 <section anchor="iana-considerations"><name>IANA Considerations</name>
-
-<section anchor="acknowledgements"><name>Acknowledgements</name>
+<t>There are no additional IANA considerations to those specified <xref target="RFC7643"></xref> and <xref target="RFC7644"></xref>.</t>
 
 </section>
+<section anchor="acknowledgements"><name>Acknowledgements</name>
+
 </section>
 
 
@@ -949,8 +950,8 @@ BjMGcMpg2HKuxypf1BymyMUPHjuHZaSfYeImyy2rAxOFdkp2AkQ18Btr0mDK
 KmWQSQSAZ4lD1DwtDi2UFm4H48HEJTYVAB15PvJbSNvlDnxLwbhqhRUmMz6v
 bFIqa5mLjUVAD+ryGoAFlZ1NwYY2kv+DyQW4vaY9gK93N1bfY9JviTI5xTMz
 ZJmOOEnWVawNag7a88wsd/lctT81/AK0VVBExoM3pNpDU4sT7Ugv0oCYBrIs
-EUrfRKkHLnrjw/SUxC2Nv40aYxXgVeKvUyfecTZ5N2nzDZKKkxSVNZgjizx8
-itmlsyS9Hfw3iUBE5YenAAA=
+EUrfRKkHLnrjw/SUxC2Nv40aYxXgVeKvUyfecTZ5N2nzDcbuhL0hQdIZtW1N
+lEQ+6g9+trvrmHylJimqgLByFqRmMBhgzuosSW8H/w2FhcYM3acAAA==
 
 -->
 
