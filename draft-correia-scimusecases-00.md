@@ -98,6 +98,20 @@ The specification suite seeks to build upon experience with existing schemas and
 The intent of the SCIM specification is to reduce the cost and complexity of resource management operations by providing a common schemas and extension model, as well as binding documents to provide patterns for exchanging this schema using standard protocols. In essence, make it fast, cheap, and easy to move resources in to, out of, and around the applications.  
 The SCIM scenarios are overviews of user stories designed to help clarify the intended scope of the SCIM effort.  
 
+## Evolution and new Challenges
+As the protocol has been adopt since its introduction in 2012, most of the IDMs and applications started to adopted it, mainly in the replacement of old protocols like LDAPv3. With the implementation the market started to reach more complex topologies, no longer the simple Client Server where there were only two SCIM entities. 
+We start to see many different SCIM entities with different roles and doing its own manipulation of the object (RO) and its attributes (RA).
+The maturity of the protocol also brought some challenges, that we don't plan to enumeratee all of them, but give a couple of examples.
+
+### Reconciliation 
+For some reason, the RO and its RA’s that was push by the Client was change in the Server (by some mechanism that was outside the SCIM agreement), which means that until the RO or one of its RA’s changes in the Client, there will be no “fix” to the RO and its RA that are in the Server.
+
+### HR Applications
+This type of SCIM element doesn’t do any management to the RO and RA information, but it is the creator for RO and RA, most of the times have the RA that are generic to all applications (like firstname, lastname, national ID, office address, home address, etc.), most of the times this elements will not know RA like email, telephone number, etc. This RO and Ra needs to be available in the IdMs, for them to provide it to all the SCIM subscribers application.
+
+### Extra RA for RO
+Some SCIM application that are typically SCIM Servers, are the creators and updaters of specific RA, for example an email server that will be a SCIM server should create the email RA for all the RO, but should only consume the other RA like firstname, lastname, etc.
+
 ## Implementation Concepts
 To understand the use cases we need to understand 4 different concepts of the protocol, that will describe underlying protocol, the different orchestrators roles, how we start the SCIM interaction and what methods we have to execute the actions.
 
