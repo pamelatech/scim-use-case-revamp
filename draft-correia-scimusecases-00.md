@@ -341,7 +341,7 @@ In this model we will have a Client that is going to pull information about a RO
 |          |                                   |          |
 |          |                                   |          |
 |          |                                   |          |
-|          |                (1)                |   SCIM   |
+|   SCIM   |                (1)                |   SCIM   |
 |  Client  | --------------------------------> |  Server  |
 |          |                                   |          |
 |          |                (2)                |          |
@@ -357,9 +357,10 @@ In this model we will have a Client that is going to pull information about a RO
 2. The SCIM Server will return the RO/RA with additional metadata information to allow for audit.  
 
 A typical example of this use case is a device that is going to use a mobile application or browser base to enroll devices and gathers its attributes, that mobile application or browser after enrollment process is finish will do a trigger to notify the client that is ready to provide the RO/RA of the device. It is the SCIM client that will do al the Resource management for all the devices.   
+Another example could be a SCIM client that has the role of an IDM that is not the owner of a specific RA  and gets it from the Server, for this kind of scenarios the SCIM server would need to create an change database for the attributes that are own by the server
 
 ##### Resources Subscription
-In this model we will have the Client that is going to pull information about a RO/RA from the Server. In this model in the Client there is no status/change database, and it gets a list of all the RO/RA based on filters provided by the client, so there will be a full update every synchronization cycle.  
+In this model we will have the Client that is going to pull information about a RO/RA from the Server. In this model, the Client has is no status/change database, and it gets a list of all the RO/RA based on filters provided by the client, so there will be a full update every synchronization cycle.  
 
 ~~~~~~~~
 +----------+                                   +----------+
