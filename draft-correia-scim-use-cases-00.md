@@ -1,6 +1,6 @@
 ---
 stand_alone: true
-docname: draft-correia-scimusecases-01
+docname: draft-correia-scim-use-cases-00
 ipr: trust200902
 submissiontype: IETF
 keyword: [Internet-Draft, SCIM]
@@ -25,7 +25,6 @@ normative:
 informative:
   RFC7643:
   RFC7644:
-  RFC7642:
   RFC9110:
   RFC9112:
   RFC8417:
@@ -53,7 +52,10 @@ This document provides definitions, overview and selected use cases of the Syste
 --- middle
 
 # Introduction
-The System for Cross-domain Identity Management (SCIM) family of specifications [RFC7643] and [RFC7644] is designed to manage resources used in the practice of identity management that need to be communicated across internet domains and services, with users and groups as the default resources supported (and an extensibility model additional resource definition). The specifications have two primary goals: 1) A common representation of a resource object and its attributes, and 2) Standardized patterns for how those resources can be operated on, including "CRUD" operations that create, read, update or delete resource objects and more advanced goals such as search filters, synchronization of large resource populations, etc. These goals are codified as a data model in [RFC7643] defining resources, attributes and default schema, as well as a protocol definition built on HTTP in [RFC7644]. By standardizing the data model and protocol for resource management, entire ecosystems can achieve better interoperability, security, and scalability.
+The System for Cross-domain Identity Management (SCIM) family of specifications [RFC7643] and [RFC7644] is designed to manage resources used in the practice of identity management that need to be communicated across internet domains and services, with users and groups as the default resources supported (and an extensibility model additional resource definition). 
+The specifications have two primary goals: 
+1) A common representation of a resource object and its attributes, and 
+2) Standardized patterns for how those resources can be operated on, including "CRUD" operations that create, read, update or delete resource objects and more advanced goals such as search filters, synchronization of large resource populations, etc. These goals are codified as a data model in [RFC7643] defining resources, attributes and default schema, as well as a protocol definition built on HTTP in [RFC7644]. By standardizing the data model and protocol for resource management, entire ecosystems can achieve better interoperability, security, and scalability.
 
 This document provides definitions, overview, concepts, flows, and use cases implementers may need to understand the design and applicability of the SCIM schema [RFC7643] and SCIM protocol [RFC7644]. Unlike the practice of some protocols like Application Bridging for Federated Access Beyond web (ABFAB) and SAML2 WebSSO, SCIM provides provisioning and de-provisioning of resources in a separate context from authentication. While SCIM is a protocol that standardizes movement of data only between two parties in a HTTP client-server model, implementation patterns are discussed in this document that use concepts beyond the core schema and protocol, but that are needed to understand how SCIM actions can fit into greater architectures.
 
@@ -197,7 +199,7 @@ Triggers are actions or activities that may cause a SCIM action to occur.  Trigg
 A periodic interval trigger is a configured-in-advance agreement where a SCIM client performs an action at a specific time. This trigger is often recurring, and in that case the combination of trigger and action together may be referred to as "polling" the SCIM server. An example of a periodic interval trigger could be a UNIX chron job calling a script.
 
 #### Events
-Event triggers are activities, contexts or notifications that could happen at any time. A SCIM client may be configured to perform a given SCIM action in response to a specific event occuring such as a specific entry written into an audit log, a signal of a corporate workflow completion, or a device management platform notification. A SCIM action could also be triggered by a Security Event Token (SET) as described in [RFC8417] or a SCIM event corresponding to [draft-ietf-scim-events]; for example an application acting as a resource subscriber and SCIM client could receive a SCIM event denoting creation of a new user object, triggering a SCIM action to fetch all the attributes for that user.
+Event triggers are activities, contexts or notifications that could happen at any time. A SCIM client may be configured to perform a given SCIM action in response to a specific event occuring such as a specific entry written into an audit log, a signal of a corporate workflow completion, or a device management platform notification. A SCIM action could also be triggered by a Security Event Token (SET) as described in [RFC8417] or a SCIM event corresponding to [SCIM Profile for Security Event Tokens]; for example an application acting as a resource subscriber and SCIM client could receive a SCIM event denoting creation of a new user object, triggering a SCIM action to fetch all the attributes for that user.
 
 #### Application Triggers
 Application triggers occur when administrative or end-user interfaces are manipulated. An example of an application trigger might be a user modifying their profile information, resulting in a SCIM client performing an HTTP POST to update the user's resource object at the SCIM server. 
@@ -345,7 +347,7 @@ So we will see that the 3 SCIM elements will be RC/RU/RS for each RO/RA.
 
 #### Client Active Pull
 A SCIM client uses the HTTP GET verb to ask for data from a SCIM Server. A client active pull can be used to fetch one object, a subset of objects, or all objects from a SCIM server. In cases where the client is a resource updater, it may perform an active pull of an object or objects in order to determine whether an active push of new data is necessary. Client active pulls can be used in situations where a client needs to maintain a synchronized large body of objects, such as a device list or user address book, but where there isn't any need to track individual RO/RA. 
-Another example of a client active pull would be a client that needs to have details of a specific device that was onboarded by a mobile application and that need to provide the RO/RA information on the behalf of the device.
+Another example of a client active pull would be a client that needs to have details of a specific device [Device Schema Extensions to the SCIM model] that was onboarded by a mobile application and that need to provide the RO/RA information on the behalf of the device.
 
 ##### Resource Object Creation or Update
 In this model we will have a Client that is going to pull information about a RO/RA from a Server. In this model the Client is going to management all the RO (Resource Objects) and its RA (Resource Attributes), that are provided by the Server, and the RM (Resource Management) function resides on the Client.
