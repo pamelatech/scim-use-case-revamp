@@ -1,6 +1,6 @@
 ---
 stand_alone: true
-docname: draft-correia-scim-use-cases-00
+docname: draft-correia-scimusecases-01
 ipr: trust200902
 submissiontype: IETF
 keyword: [Internet-Draft, SCIM]

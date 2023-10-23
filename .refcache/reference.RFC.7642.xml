@@ -1,0 +1,16 @@
+<reference anchor="RFC7642" target="https://www.rfc-editor.org/info/rfc7642">
+  <front>
+    <title>System for Cross-domain Identity Management: Definitions, Overview, Concepts, and Requirements</title>
+    <author fullname="K. LI" initials="K." role="editor" surname="LI"/>
+    <author fullname="P. Hunt" initials="P." surname="Hunt"/>
+    <author fullname="B. Khasnabish" initials="B." surname="Khasnabish"/>
+    <author fullname="A. Nadalin" initials="A." surname="Nadalin"/>
+    <author fullname="Z. Zeltsan" initials="Z." surname="Zeltsan"/>
+    <date month="September" year="2015"/>
+    <abstract>
+      <t>This document provides definitions and an overview of the System for Cross-domain Identity Management (SCIM). It lays out the system's concepts, models, and flows, and it includes user scenarios, use cases, and requirements.</t>
+    </abstract>
+  </front>
+  <seriesInfo name="RFC" value="7642"/>
+  <seriesInfo name="DOI" value="10.17487/RFC7642"/>
+</reference>
