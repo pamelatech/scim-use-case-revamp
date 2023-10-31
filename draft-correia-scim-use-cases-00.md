@@ -54,8 +54,8 @@ This document provides definitions, overview and selected use cases of the Syste
 # Introduction
 The System for Cross-domain Identity Management (SCIM) family of specifications [RFC7643] and [RFC7644] is designed to manage resources used in the practice of identity management that need to be communicated across internet domains and services, with users and groups as the default resources supported (and an extensibility model additional resource definition). 
 The specifications have two primary goals: 
-1) A common representation of a resource object and its attributes, and 
-2) Standardized patterns for how those resources can be operated on, including "CRUD" operations that create, read, update or delete resource objects and more advanced goals such as search filters, synchronization of large resource populations, etc. These goals are codified as a data model in [RFC7643] defining resources, attributes and default schema, as well as a protocol definition built on HTTP in [RFC7644]. By standardizing the data model and protocol for resource management, entire ecosystems can achieve better interoperability, security, and scalability.
+ 1. A common representation of a resource object and its attributes, and 
+ 1. Standardized patterns for how those resources can be operated on, including "CRUD" operations that create, read, update or delete resource objects and more advanced goals such as search filters, synchronization of large resource populations, etc. These goals are codified as a data model in [RFC7643] defining resources, attributes and default schema, as well as a protocol definition built on HTTP in [RFC7644]. By standardizing the data model and protocol for resource management, entire ecosystems can achieve better interoperability, security, and scalability.
 
 This document provides definitions, overview, concepts, flows, and use cases implementers may need to understand the design and applicability of the SCIM schema [RFC7643] and SCIM protocol [RFC7644]. Unlike the practice of some protocols like Application Bridging for Federated Access Beyond web (ABFAB) and SAML2 WebSSO, SCIM provides provisioning and de-provisioning of resources in a separate context from authentication. While SCIM is a protocol that standardizes movement of data only between two parties in a HTTP client-server model, implementation patterns are discussed in this document that use concepts beyond the core schema and protocol, but that are needed to understand how SCIM actions can fit into greater architectures.
 
@@ -64,21 +64,21 @@ This document provides definitions, overview, concepts, flows, and use cases imp
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC2119] when they appear in ALL CAPS. These words may also appear in this document in lowercase as plain English words, absent their normative meanings. Here is a list of acronyms and abbreviations used in this document:
 
 * CRUD: Create, Read, Update, Delete
+* ERC: External Resource Creator 
+* IaaS: Infrastructure as a Service
+* IDaaS: Identity as a Service
+* IdM: Identity Manager
+* JIT: Just In Time
 * RC: Resource Creator
 * RU: Resource Updater
 * RM: Resource Manager 
 * RS: Resource Subscriber 
 * RO: Resource Object 
 * RA: Resource Attribute 
-* ERC: External Resource Creator 
-* IaaS: Infrastructure as a Service
-* JIT: Just In Time
-* PaaS: Platform as a Service
 * SaaS: Software as a Service
-* IDaaS: Identity as a Service
-* IdM: Identity Manager
 * SAML: Security Assertion Markup Language
 * SCIM: System for Cross-domain Identity Management
+* SET: Security Event Token
 * SSO: Single Sign-On
 
 
@@ -89,30 +89,33 @@ SCIM architecture is a client-server model centered on a normative concept of a 
 +---------+                       +--------+
 |  SCIM   |                       |        | 
 | Server  |                       |  SCIM  | 
-|         | <--- SCIM Action ---> | Client |
+|         | <--- SCIM Action ---  | Client |
 | /Users  |                       |        |
 | /Groups |                       |        |
 +---------+                       +--------+
 ~~~
 
-
-The specification suite seeks to build upon experience with existing schemas and deployments, placing specific emphasis on simplicity of development and integration, while applying existing authentication, authorization, and privacy models.  
+ 
 The intent of the SCIM specification is to reduce the cost and complexity of resource management operations by providing a common schemas and extension model, as well as binding documents to provide patterns for exchanging this schema using standard protocols. In essence, make it fast, cheap, and easy to move resources in to, out of, and around the applications.  
 The SCIM scenarios are overviews of user stories designed to help clarify the intended scope of the SCIM effort.  
 
 ## Evolution and new Challenges
-As the protocol has been adopt since its introduction in 2012, most of the IDMs and applications started to adopted it, mainly in the replacement of old protocols like LDAPv3. With the implementation the market started to reach more complex topologies, no longer the simple Client Server where there were only two SCIM entities. 
-We start to see many different SCIM entities with different roles and doing its own manipulation of the object (RO) and its attributes (RA).
-The maturity of the protocol also brought some challenges, that we don't plan to enumeratee all of them, but give a couple of examples.
+At the time that protocol was adopt in 2012 the concepts of cloud computing were in their infancy, provision architecture have grown and become more complex, bringing new roles and new challenges to the basic concepts in RFC [RFC7643] and [RFC7644].
+Implementers today face greater challenges as their identity architectures grow to cross multiple domains, they no longer consider the architecture only as a point to point connection, but see the global picture in an end to end approach. 
+Typical examples of the modern challenges are:
 
 ### Reconciliation 
-For some reason, the RO and its RA’s that was push by the Client was change in the Server (by some mechanism that was outside the SCIM agreement), which means that until the RO or one of its RA’s changes in the Client, there will be no “fix” to the RO and its RA that are in the Server.
+For some reason, the identity data becomes inconsistent and the SCIM Client no longer has the same attributes as the SCIM Server, this might happen because of local editing of attributes in the SCIM Server. Since the client doesn't know that the attributes have changed in the Server there is no "fix" in the communication that is always generated by the SCIM Client.
 
 ### HR Applications
-This type of SCIM element doesn’t do any management to the RO and RA information, but it is the creator for RO and RA, most of the times have the RA that are generic to all applications (like firstname, lastname, national ID, office address, home address, etc.), most of the times this elements will not know RA like email, telephone number, etc. This RO and Ra needs to be available in the IdMs, for them to provide it to all the SCIM subscribers application.
+This type of SCIM entity that doesn't has any role of providing management into the Objects and its attributes.
 
-### Extra RA for RO
-Some SCIM application that are typically SCIM Servers, are the creators and updaters of specific RA, for example an email server that will be a SCIM server should create the email RA for all the RO, but should only consume the other RA like firstname, lastname, etc.
+*******
+
+element doesn’t do any management to the RO and RA information, but it is the creator for RO and RA, most of the times have the RA that are generic to all applications (like firstname, lastname, national ID, office address, home address, etc.), most of the times this elements will not know RA like email, telephone number, etc. This RO and Ra needs to be available in the IdMs, for them to provide it to all the SCIM subscribers application.
+
+### Per-Attribute Data Source
+There are cases where a given SCIM entity owns only one attribute of a given object. An example would be an email server that will be a SCIM server, and the authority of the email attribute for all the users, but the server need to consume from the SCIM Client other attributes like firstname, lastname, etc.
 
 ## Implementation Concepts
 To understand the use cases we need to understand 4 different concepts of the protocol, that will describe underlying protocol, the different orchestrators roles, how we start the SCIM interaction and what methods we have to execute the actions.

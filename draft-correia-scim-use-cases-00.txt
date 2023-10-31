@@ -11,7 +11,7 @@ Expires: 25 April 2024                             Microsoft Corporation
 
   System for Cross-domain Identity Management: Definitions, Overview,
                        Concepts, and Requirements
-                     draft-correia-scimusecases-01
+                    draft-correia-scim-use-cases-00
 
 Abstract
 
@@ -467,11 +467,11 @@ Internet-Draft               SCIM Use Cases                 October 2023
    specific entry written into an audit log, a signal of a corporate
    workflow completion, or a device management platform notification.  A
    SCIM action could also be triggered by a Security Event Token (SET)
-   as described in [RFC8417] or a SCIM event corresponding to [draft-
-   ietf-scim-events]; for example an application acting as a resource
-   subscriber and SCIM client could receive a SCIM event denoting
-   creation of a new user object, triggering a SCIM action to fetch all
-   the attributes for that user.
+   as described in [RFC8417] or a SCIM event corresponding to
+   [SCIM_Profile_for_Security_Event_Tokens]; for example an application
+   acting as a resource subscriber and SCIM client could receive a SCIM
+   event denoting creation of a new user object, triggering a SCIM
+   action to fetch all the attributes for that user.
 
 3.2.4.3.  Application Triggers
 
@@ -807,8 +807,9 @@ Internet-Draft               SCIM Use Cases                 October 2023
    objects, such as a device list or user address book, but where there
    isn't any need to track individual RO/RA.  Another example of a
    client active pull would be a client that needs to have details of a
-   specific device that was onboarded by a mobile application and that
-   need to provide the RO/RA information on the behalf of the device.
+   specific device [Device_Schema_Extensions_to_the_SCIM_model] that was
+   onboarded by a mobile application and that need to provide the RO/RA
+   information on the behalf of the device.
 
 3.2.5.2.1.  Resource Object Creation or Update
 
@@ -832,7 +833,6 @@ Internet-Draft               SCIM Use Cases                 October 2023
    |          |                                   |          |
    +----------+                                   +----------+
            Figure 7:  SCIM  Flow and Orchestrator roles maps
-
 
 
 
@@ -1201,12 +1201,6 @@ Internet-Draft               SCIM Use Cases                 October 2023
               Management: Protocol", RFC 7644, DOI 10.17487/RFC7644,
               September 2015, <https://www.rfc-editor.org/rfc/rfc7644>.
 
-   [RFC7642]  LI, K., Ed., Hunt, P., Khasnabish, B., Nadalin, A., and Z.
-              Zeltsan, "System for Cross-domain Identity Management:
-              Definitions, Overview, Concepts, and Requirements",
-              RFC 7642, DOI 10.17487/RFC7642, September 2015,
-              <https://www.rfc-editor.org/rfc/rfc7642>.
-
    [RFC9110]  Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Semantics", STD 97, RFC 9110,
               DOI 10.17487/RFC9110, June 2022,
@@ -1227,17 +1221,18 @@ Internet-Draft               SCIM Use Cases                 October 2023
               <https://datatracker.ietf.org/doc/draft-shahzad-scim-
               device-model>.
 
+   [SCIM_Profile_for_Security_Event_Tokens]
+              Hunt, P., Cam-Winget, N., and M. Kiser, "Device Schema
+              Extensions to the SCIM model", July 2023,
+              <https://datatracker.ietf.org/doc/draft-ietf-scim-events>.
+
+
 
 
 Correia & Dingle          Expires 25 April 2024                [Page 22]
 
 Internet-Draft               SCIM Use Cases                 October 2023
 
-
-   [SCIM_Profile_for_Security_Event_Tokens]
-              Hunt, P., Cam-Winget, N., and M. Kiser, "Device Schema
-              Extensions to the SCIM model", July 2023,
-              <https://datatracker.ietf.org/doc/draft-ietf-scim-events>.
 
 Authors' Addresses
 
@@ -1249,6 +1244,11 @@ Authors' Addresses
    Pamela Dingle
    Microsoft Corporation
    Email: pamela.dingle@microsoft.com
+
+
+
+
+
 
 
 
