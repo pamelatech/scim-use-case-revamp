@@ -1,3 +1,4 @@
+Deprecated: Do not use as of Dec 2023
 ---
 stand_alone: true
 docname: draft-correia-scimusecases-01
