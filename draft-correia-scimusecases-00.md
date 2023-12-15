@@ -1,4 +1,4 @@
-Outdated:  do not use
+Outdated:  do not use as of Dec 15 2023
 ---
 stand_alone: true
 docname: draft-correia-scim-use-cases-00
