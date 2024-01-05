@@ -112,51 +112,51 @@ This type of SCIM entity that doesn't has any role of providing management into 
 
 *******
 
-element doesn’t do any management to the RO and RA information, but it is the creator for RO and RA, most of the times have the RA that are generic to all applications (like firstname, lastname, national ID, office address, home address, etc.), most of the times this elements will not know RA like email, telephone number, etc. This RO and Ra needs to be available in the IdMs, for them to provide it to all the SCIM subscribers application.
+ Most of the times manages the most common attributes of an object and that can be used by many applications (for example if we are talking about the Users Objects attributes like firstname, lastname, national ID, office address, home address, etc.). Tipically the HR aplciation will be authoritive for those attribtues and will provide them to an IdM for the management and distribution.
 
 ### Per-Attribute Data Source
-There are cases where a given SCIM entity owns only one attribute of a given object. An example would be an email server that will be a SCIM server, and the authority of the email attribute for all the users, but the server need to consume from the SCIM Client other attributes like firstname, lastname, etc.
+There are cases where a given SCIM entity owns only one or a few attributes of a given object. An example would be an email server that could use SCIM and be server, in this case it would be the authority of the email attribute for all the users, but since it would be a consumer of Identity information would not be responsible for any CRUD operation in the other attributes of the object attributes like firstname, lastname, etc.
 
 ## Implementation Concepts
-To understand the use cases we need to understand 4 different concepts of the protocol, that will describe underlying protocol, the different orchestrators roles, how we start the SCIM interaction and what methods we have to execute the actions.
+To understand the use cases we need to understand 5 different concepts of the SCIM protocol (Data Models, Protocols Roles, Orchestrator Roles, Triggers, Actions).
 
-### Data Model
-SCIM defines two types of data entities: resources and attributes.
+### Data Models
+SCIM defines two types of data entities: Resources and Attributes.
 
 #### Resource Object (RO)
-A JSON object representing a user, group (or extension object) to be manipulated through the SCIM protocol. The Resource Object contains attributes defined by schemas such as those defined in [RFC7643] and can be acted on via the endpoints and parameters defined in [RFC7644].  
+A JSON object representing a user, group (or extension object like devices) to used by the CRUD operations through the SCIM protocol. The Resource Object contains attributes defined by schemas such as those defined in [RFC7643] and can be implemented via the endpoints and parameters defined in [RFC7644].  
 
 #### Resource Attribute (RA)
-A named element of a Resource Object. Attributes are defined in section 2 of [RFC7643] and include characteristics like cardinality (single or multiple values), data types (string, boolean, binary etc) and characteristics (required, unique etc). 
+A named element of a Resource Object (RO). Attributes are defined in section 2 of [RFC7643] and include characteristics like cardinality (single or multiple values), data types (string, boolean, binary etc) and characteristics (required, unique etc). 
 
-### HTTP Client-Server Roles
-HTTP client and server roles are defined in [RFC9110] and [RFC9112]. Any SCIM interaction requires one participant to be a SCIM server and the other to be a SCIM client. 
+### Protocol Roles
+SCIM is based in the HTTP protocol, HTTP client and server roles are defined in [RFC9110] and [RFC9112]. Any SCIM interaction requires one participant to be a SCIM server and the other to be a SCIM client. 
 
 #### SCIM Server (also known as a SCIM Service Provider)
 An HTTP web application that provides identity information via the SCIM protocol.  
 A SCIM Server is a RESTful API endpoint offering access to a data model that can be used to push or pull data between two parties. SCIM servers have additional responsibilities such as API Security, managing client identifiers & keys as well as performance management such as API throttling.  
 
 #### SCIM Client
-A website or application that uses the SCIM protocol to manage identity data maintained by the service provider.  The client initiates SCIM HTTP requests to a target SCIM Server. A SCIM Client is active software that can push or pull data between two parties.   
+A website or application that uses the SCIM protocol to manage identity data maintained by the service provider.  The client can initiates SCIM HTTP requests to a target SCIM Server. A SCIM Client is active software that can push or pull data between two parties.   
 
 ### Orchestrator Roles
 Orchestrators are the operating parties that take part in a SCIM protocol exchange and ensure data is moving in the correct flows.
-An entity can have one or more orchestrators roles, depending on the overall provisioning architecture.  
+An entity can have one or more orchestrators roles, depending on the overall architecture.  
 
 #### Resource Creator (RC)
-An entity responsible for creating the Resource Object (RO). Typically we can see this role in HR or resource management applications that are responsible for creating resources and some of its attributes.  
+An entity responsible for creating the Resource Object (RO). Typically we can see this role in HR or Resource Management (RM) applications that are responsible for creating resources and its attributes.  
 
 #### Resource Updater (RU)
-An entity responsible for updating specific attributes of a Resource Object (RO) or the RO itself. Typically, this role is used in conjunction with other SCIM roles that allow this SCIM entity to manage a specific Resource Attribute (RA).  
+An entity responsible for updating specific Resource Attributes (RA) of a Resource Object (RO) or the RO itself. Typically, this role is used in conjunction with other SCIM roles that allow this SCIM entity to manage specific Resource Attribute (RA) and/or Resource Objects (RO).  
 
 #### Resource Manager (RM)
-An entity that aggregates or transforms resource objects from resource creators/updaters (RC/RU) and make them available for resource subscribers (RS) using multiple SCIM interactions, an example of this role could be an Identity-as-a-Service (IDaaS) cloud platform.  
+An entity that aggregates or transforms Resource Objects (RO) from resource creators/updaters (RC/RU) and make them available for Resource Subscribers (RS) using multiple SCIM interactions, an example of this role could be an Identity-as-a-Service (IDaaS) cloud service.  
 
 #### Resource Subscriber (RS)
-An entity that consumes information in resource objects (RO) and typically don't create new objects or attributes. An example of entities that play this role include SaaS applications relying on an IDaaS cloud platform. 
+An entity that consumes Resource Objects (RO) and typically don't create new Objects or Attributes. An example would be a SaaS application that deliver a service and needs to create a database of Objects and would get those from a RM/RC/RU. 
 
 #### External Resource Creator (ERC)
-An entity that has information about resources and its attributes, but does not participate in SCIM flows, examples include databases or internally-facing applications.
+An entity that has information about Resource Objects (RO)  and its Resource Attributes (RA), but does not participate in SCIM flows, examples include databases or internally-facing applications.
 
 ~~~~~~~~
    +-------------+ +-------------+   +-------------+ +-------------+
@@ -194,6 +194,10 @@ An entity that has information about resources and its attributes, but does not 
  +-------------+ +-------------+   +-------------+ +-------------+
                       Figure 1: SCIM Orchestrators Roles
 ~~~~~~~~
+
+
+*******
+
 
 ### Triggers
 Triggers are actions or activities that may cause a SCIM action to occur.  Triggers can occur as a result of business processes like a corporate hiring event, but can also be scheduled events such as a unix bash script running as a chron job, or can be just-in-time events such as SAML assertion arriving at a federated relying party that identifies a not-seen-before user. Triggers can also be standardized events, such as those in the OpenID Shared Signals Framework. Triggers used to allow CRUD (Create, Read, Update, Delete) using SCIM Actions or Operations as it is designed to capture a class of use case that makes sense to the actor requesting it rather than to describe a protocol operation.  
