@@ -38,7 +38,7 @@ informative:
      date: 2023-07 
   SCIM Profile for Security Event Tokens:
      target: https://datatracker.ietf.org/doc/draft-ietf-scim-events
-     title: Device Schema Extensions to the SCIM model
+     title: SCIM Profile for Security Event Tokens
      author:
      - name: P. Hunt
      - name: N. Cam-Winget
@@ -263,18 +263,64 @@ An example would be SaaS service that needs to consume a list of contacts or dev
 |          |                                   |          |
 |          |                                   |          |
 +----------+                                   +----------+
-         Figure 8:  SCIM  Flow and Orchestrator roles maps
+         Figure 4:  SCIM  Flow and Orchestrator roles maps
 ~~~~~~~~
    
 1. The SCIM client will do an HTTP GET to obtain the selected list of RO (Resource Object) and its RA (Resource Attributes).  
 2. The SCIM Service Provider will return the RO and its RA with additional metadata information to allow for audit.  
 
 #### Active Dynamic Query
+A SCIM client uses the HTTP GET verb to ask for data from a SCIM Server, the client with the action of active pull will fetch one object or multiple objects from a SCIM server. At this point the SCIM server will provide an DQ token (Dynamic Query token) that will allow to locate in the Resource Object (RO) Database from which point in time the next update needs to start from, this way instead of providing a full sync every time that SCIM actions run, we achieve a delta update, just with the CRUD operation since the DQ token.
+With this kind of actions we would allow for SCIM reconciliations, where the SCIM client could fix inconsistences creates by changes in the SCIM Server.
+
+~~~~~~~~
++----------+                                   +----------+
+|          |                                   |          |
+|          |                                   |          |
+|          |                                   |          |
+|   SCIM   |                (1)                |          |
+|  Server  | <-------------------------------- |  Client  |
+|          |                                   |          |
+|          |                (2)                |          |
+|          | --------------------------------> |          |   
+| RC/RU/RM |                                   | RS/RU/RS |
+|          |                                   |          |
+|          |                                   |          |
++----------+                                   +----------+
+         Figure 5:  SCIM  Flow and Orchestrator roles maps
+~~~~~~~~
+   
+1. The SCIM Client will do an HTTP GET to obtain a delta list of RO (Resource Object) and its RA (Resource Attributes), since the previous SCIM action.
+2. The SCIM Service Provider will return the delta list of RO and its RA with additional metadata information to allow for audit.  
 
 #### Domain Replication Mode
+This is a action just for triggers that are events, for this mode there is an administrative relationship spanning multiple operational domains, data shared in Events typically uses the full mode variation of change events including the data payload attribute.  This eliminates the need for a call back to retrieve additional data.
+"Domain Based Replication" events (DBR) is to synchronize resource changes between SCIM service providers in a common administrative domain. 
 
-#### Domain Co-Ordinated Provision 
+~~~~~~~~
++--------+                +---------------+                 +---------+
+|        |                |               |                 |         |
+|  SCIM  |                |               |                 |         |
+| Client |                |  SCIM Server  |                 |         |
+|        |     (1)        |               |      (3)        |  SCIM   |
+|        | <------------- |               | --------------> | Server  |
+|        |                |               |                 |         | 
+| RM/RC  |     (2)        |               |                 |         |
+|  /RU   | -------------> |               |                 |         |
+|        |                |     RS/RC/RU  |                 |         |
+|        |                |               |                 | RS/RC   |
+|        |                |               |                 |  /RU    |
++--------+                +---------------+                 +---------+
+                     Figure 6:  SCIM  Flow and Orchestrator roles maps
+~~~~~~~~
 
+1. SCIM Operation.   
+2. SCIM Response.   
+3. Event SCIM:prov:<op> id:xyz
+
+#### Co-Ordinated Provision 
+In these relationships an Event Publisher and Receiver [SCIM Profile for Security Event Tokens] typically exchange resource change events without exchanging data.  For a receiver to know the value of the data, the Event Receiver usually has calls back to the SCIM Event Publisher domain to receive a new copy of data (e.g. Uses a SCIM GET request).
+In any Event Publisher and Receiver relationship, the set of SCIM resources (e.g.  Users) that are linked or co-ordinated is managed within the context of an event feed and which MAY be a subset of the total set of resources on either side.  For example, an event feed could be limited to users who have consented to the sharing of information between domains.  To support capability, "feed" specific events are defined to indicate the addition and removal of SCIM resources from a feed.  
 
 
 ************************************************
