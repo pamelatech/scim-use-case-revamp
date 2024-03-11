@@ -220,41 +220,39 @@ The SCIM protocol defines interactions between two standardized parties that con
 #### Client active Push
 A SCIM client uses HTTP verbs POST, PUT or PATCH to create or update objects and/or attributes at a SCIM server. The SCIM client is actively "pushing" the data to the endpoint. This SCIM action can occur when the SCIM client is the primary Resource Creator/Updater (RC/RU).
    
-The most common example, and most widely deployed example will a SCIM Client that is going to provide information about a RO and its RA to a Server, that can also be called as SCIM Server in [RFC7643] and [RFC7644].
+The most common example, and most widely deployed example is a SCIM Client that is going to provide information about a RO and its RA to a Server, that can also be called a SCIM Server in [RFC7643] and [RFC7644].
 
 ~~~~~~~~
 +----------------+                                   +----------------+
-|                |                (1)                |                |
-|                | --------------------------------> |                |
 |                |                                   |                |
-|                |                (2)                |      SCIM      |
-|     Client     | <-------------------------------- |     Server     |
-|   (typically   |                                   |  (typically a  |
-|    an IdM)     |                (3)                |   Application) |
-|                | --------------------------------> |                |   
+|                |                                   |                |
+|                |                                   |                |
+|      SCIM      |                (1)                |      SCIM      |
+|     Client     |  -------------------------------> |     Server     |
+|                |                                   |                |
+|                |                (2)                |                |
+|                | <-------------------------------- |                |   
 |     RM/RC/RU   |                                   |        RS      |
-|                |                (4)                |                |
-|                | <-------------------------------- |                |
+|                |                                   |                |
+|                |                                   |                |
 +----------------+                                   +----------------+
               Figure 3: SCIM  Flow and Orchestrator roles maps
 ~~~~~~~~
 
-1. Before creating/updating a RO/RA the SCIM client will always do a HTTP GET to get current information from the SCIM Server.   
-2. SCIM Server will provide the current information on the resources asked by the SCIM Client.   
-3. Based on the RO and RA returned by the Server, there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve.   
-4. The Service Provider will return the RO/RA with additional metadata information to allow for audit.   
+1. There will be push using a HTTP POST, PUT, PATCH, DELETE depending on the operation that the Client want to achieve at the Server. 
+2. The Service Provider will return the RO/RA with additional metadata information to allow for audit.   
 
 #### Client Active Pull
-A SCIM client uses the HTTP GET verb to ask for data from a SCIM Server, the client with the action of active pull will fetch one object or multiple objects from a SCIM server. Client active pulls can be used in situations where a client needs to maintain a synchronized large body of objects, such as a device list or user address book, but where there isn't any need to track individual RO/RA. 
-Another example of a client active pull would be a client that needs to have details of a specific device [Device Schema Extensions to the SCIM model] that was onboarded by a mobile application and that need to provide the RO/RA information on the behalf of the device.
-An example would be SaaS service that needs to consume a list of contacts or devices, this SaaS service will need to know the relevant RO/RA, this operation will happen periodically and every time will get a full list of all the RO (Resource Objects).   
+A SCIM client uses the HTTP GET verb to ask for data from a SCIM Server, the client with the action of active pull will fetch one object or multiple objects from a SCIM server. 
+Client active pulls can be used in situations where a client needs to maintain a synchronized large body of objects, such as a device list or user address book, but where there isn't any need to track individual RO/RA. 
+There are case where the client does an one time pull of specific RO and its RA from a server that manages many RO, for example a mobile app (SCIM Client) that gets the current license entitlement from a Device manager (SCIM Server) 
 
 ~~~~~~~~
 +----------+                                   +----------+
 |          |                                   |          |
 |          |                                   |          |
 |          |                                   |          |
-|   SCIM   |                (1)                |          |
+|   SCIM   |                (1)                |   SCIM   |
 |  Server  | <-------------------------------- |  Client  |
 |          |                                   |          |
 |          |                (2)                |          |
@@ -268,6 +266,9 @@ An example would be SaaS service that needs to consume a list of contacts or dev
    
 1. The SCIM client will do an HTTP GET to obtain the selected list of RO (Resource Object) and its RA (Resource Attributes).  
 2. The SCIM Service Provider will return the RO and its RA with additional metadata information to allow for audit.  
+
+
+********************************************************************************
 
 #### Active Dynamic Query
 A SCIM client uses the HTTP GET verb to ask for data from a SCIM Server, the client with the action of active pull will fetch one object or multiple objects from a SCIM server. At this point the SCIM server will provide an DQ token (Dynamic Query token) that will allow to locate in the Resource Object (RO) Database from which point in time the next update needs to start from, this way instead of providing a full sync every time that SCIM actions run, we achieve a delta update, just with the CRUD operation since the DQ token.
