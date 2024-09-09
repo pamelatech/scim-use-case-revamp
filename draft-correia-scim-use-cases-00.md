@@ -210,8 +210,8 @@ An entity can have one or more orchestrator roles, depending on the overall arch
           Figure 3:  SCIM  Flow and Entities map
 ~~~~~~~~
 
- 1. An SSO trigger creates the user and might create some Resource Attributes (RA) of a Resource Object (RO). 
- 2. SCIM actions will then complement the attributes created initially through SSO JIT with additional Resource Attributes (RA) of the previously created Resource Objects (RO).
+   1. An SSO trigger creates the user and might create some Resource Attributes (RA) of a Resource Object (RO). 
+   2. SCIM actions will then complement the attributes created initially through SSO JIT with additional Resource Attributes (RA) of the previously created Resource Objects (RO).
   This use case combines the SCIM protocol with other protocols used for Single Sign-On, especially in the context of JIT (Just-in-Time Provisioning). This is particularly useful with protocols like SAML, which are limited by the number of characters in the URL.
 
 ### SCIM Actions
