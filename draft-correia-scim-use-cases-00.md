@@ -190,7 +190,7 @@ An entity can have one or more orchestrator roles, depending on the overall arch
 #### Application Triggers
   Application triggers occur when administrative or end-user interfaces are manipulated. An example of an application trigger might be a user modifying their profile information, resulting in a SCIM client performing an HTTP POST to update the user's resource object at the SCIM server. Another example might be an Identity Administrator creating a new User in the IdM, who immediately wants to update one or more resource Subscribers (typically a SaaS application that is a SCIM Server).
 
-#### SSO (Single Sign-on)
+#### SSO (Single Sign-On)
  Single Sign-On triggers occur when a user authenticates via federated protocols such as SAML 2.0 or OpenID Connect. If a federated assertion arrives for a user who has not yet been provisioned into the destination application, the application may be triggered to perform just-in-time (JIT) provisioning. This trigger occurs in scenarios where a Single Sign-On flow happens, but not all the resource attributes for the user object are passed in the federated assertion, resulting in a SCIM action to push or pull the remaining needed attributes.
 
 ~~~~~~~~
@@ -207,7 +207,7 @@ An entity can have one or more orchestrator roles, depending on the overall arch
 |    RC/RU/RM   |                                   |      RS       |
 |               |                                   |               |
 +---------------+                                   +---------------+
-          Figure 3:  SCIM  Flow and Entities map
+          Figure 3:  SCIM trigger using  Single Sign-On
 ~~~~~~~~
 
    1. An SSO trigger creates the user and might create some Resource Attributes (RA) of a Resource Object (RO). 
@@ -238,13 +238,13 @@ An entity can have one or more orchestrator roles, depending on the overall arch
               Figure 4: SCIM action for Client Active Push
 ~~~~~~~~
 
-1. There will be push using a HTTP POST, PUT, PATCH, DELETE depending on the operation that the Client want to achieve at the Server. 
-2. The Service Provider will return the RO/RA with additional metadata information to allow for audit.   
+   1. There will be push using a HTTP POST, PUT, PATCH, DELETE depending on the operation that the Client want to achieve at the Server. 
+   2. The Service Provider will return the RO/RA with additional metadata information to allow for audit.   
 
 #### Client Active Pull
-A SCIM client uses the HTTP GET verb to ask for data from a SCIM Server, the client with the action of active pull will fetch one object or multiple objects from a SCIM server. 
-Client active pulls can be used in situations where a client needs to maintain a synchronized large body of objects, such as a device list or user address book, but where there isn't any need to track individual RO/RA. 
-There are case where the client does an one time pull of specific RO and its RA from a server that manages many RO, for example a mobile app (SCIM Client) that gets the current license entitlement from a Device manager (SCIM Server) 
+ A SCIM client uses the HTTP GET verb to request data from a SCIM server. With the action of an active pull, the client will fetch one or multiple objects from the SCIM server.
+ Client active pulls can be used in situations where a client needs to maintain a synchronized large body of objects, such as a device list or user address book, without the need to track individual Resource Objects (RO) or Resource Attributes (RA).
+ here are cases where the client performs a one-time pull of specific ROs and their RAs from a server that manages many ROs. For example, a mobile app (SCIM Client) may fetch the current license entitlement from a Device Manager (SCIM Server).
 
 ~~~~~~~~
 +----------+                                   +----------+
@@ -260,18 +260,15 @@ There are case where the client does an one time pull of specific RO and its RA 
 |          |                                   |          |
 |          |                                   |          |
 +----------+                                   +----------+
-         Figure 4:  SCIM  Flow and Orchestrator roles maps
+         Figure 5:  SCIM action for Client Active Pull
 ~~~~~~~~
    
-1. The SCIM client will do an HTTP GET to obtain the selected list of RO (Resource Object) and its RA (Resource Attributes).  
-2. The SCIM Service Provider will return the RO and its RA with additional metadata information to allow for audit.  
-
-
-********************************************************************************
+   1. The SCIM client will perform an HTTP GET to obtain the selected list of Resource Objects (RO) and their Resource Attributes (RA).  
+   2. The SCIM Service Provider will return the RO and its RA along with additional metadata information to allow for auditing.
 
 #### Active Dynamic Query
-A SCIM client uses the HTTP GET verb to ask for data from a SCIM Server, the client with the action of active pull will fetch one object or multiple objects from a SCIM server. At this point the SCIM server will provide an DQ token (Dynamic Query token) that will allow to locate in the Resource Object (RO) Database from which point in time the next update needs to start from, this way instead of providing a full sync every time that SCIM actions run, we achieve a delta update, just with the CRUD operation since the DQ token.
-With this kind of actions we would allow for SCIM reconciliations, where the SCIM client could fix inconsistences creates by changes in the SCIM Server.
+ A SCIM client uses the HTTP GET verb to request data from a SCIM server. With the action of an active pull, the client will fetch one or multiple objects from the SCIM server. At this point, the SCIM server will provide a Dynamic Query (DQ) token that allows locating the point in the Resource Object (RO) database from which the next update needs to start. This approach enables delta updates instead of providing a full sync every time SCIM actions run, achieving incremental updates with CRUD operations since the last DQ token.
+ With this kind of action, SCIM reconciliations are possible, where the SCIM client can resolve inconsistencies created by changes in the SCIM server.
 
 ~~~~~~~~
 +----------+                                   +----------+
@@ -287,15 +284,15 @@ With this kind of actions we would allow for SCIM reconciliations, where the SCI
 |          |                                   |          |
 |          |                                   |          |
 +----------+                                   +----------+
-         Figure 5:  SCIM  Flow and Orchestrator roles maps
+         Figure 6: SCIM action for Client Active Dynamic Query
 ~~~~~~~~
    
-1. The SCIM Client will do an HTTP GET to obtain a delta list of RO (Resource Object) and its RA (Resource Attributes), since the previous SCIM action.
-2. The SCIM Service Provider will return the delta list of RO and its RA with additional metadata information to allow for audit.  
+   1. The SCIM client will perform an HTTP GET to obtain a delta list of Resource Objects (RO) and their Resource Attributes (RA) since the previous SCIM action.
+   2. The SCIM Service Provider will return the delta list of RO and their RA along with additional metadata information for auditing purposes.
 
 #### Domain Replication Mode
-This is a action just for triggers that are events, for this mode there is an administrative relationship spanning multiple operational domains, data shared in Events typically uses the full mode variation of change events including the data payload attribute.  This eliminates the need for a call back to retrieve additional data.
-"Domain Based Replication" events (DBR) is to synchronize resource changes between SCIM service providers in a common administrative domain. 
+ This is an action specifically for triggers that are events. In this mode, there is an administrative relationship spanning multiple operational domains. Data shared in events typically uses the full mode variation of change events, including the data payload attribute. This eliminates the need for a callback to retrieve additional data.
+ "Domain-Based Replication" events (DBR) are used to synchronize resource changes between SCIM service providers within a common administrative domain.
 
 ~~~~~~~~
 +--------+                +---------------+                 +---------+
@@ -311,24 +308,35 @@ This is a action just for triggers that are events, for this mode there is an ad
 |        |                |               |                 | RS/RC   |
 |        |                |               |                 |  /RU    |
 +--------+                +---------------+                 +---------+
-                     Figure 6:  SCIM  Flow and Orchestrator roles maps
+         Figure 7:  SCIM action for events using Domain Replication mode
 ~~~~~~~~
 
-1. SCIM Operation.   
-2. SCIM Response.   
-3. Event SCIM:prov:<op> id:xyz
+   1. SCIM Operation.   
+   2. SCIM Response.   
+   3. Event SCIM:prov:<op> id:xyz
 
 #### Co-Ordinated Provision 
-In these relationships an Event Publisher and Receiver [SCIM Profile for Security Event Tokens] typically exchange resource change events without exchanging data.  For a receiver to know the value of the data, the Event Receiver usually has calls back to the SCIM Event Publisher domain to receive a new copy of data (e.g. Uses a SCIM GET request).
-In any Event Publisher and Receiver relationship, the set of SCIM resources (e.g.  Users) that are linked or co-ordinated is managed within the context of an event feed and which MAY be a subset of the total set of resources on either side.  For example, an event feed could be limited to users who have consented to the sharing of information between domains.  To support capability, "feed" specific events are defined to indicate the addition and removal of SCIM resources from a feed.  
-
-
-************************************************
-
+In these relationships, an Event Publisher and Receiver [SCIM Profile for Security Event Tokens] typically exchange resource change events without exchanging data. For the receiver to know the value of the data, the Event Receiver usually makes calls back to the SCIM Event Publisher domain to receive a new copy of the data (e.g., using a SCIM GET request).
+In any Event Publisher and Receiver relationship, the set of SCIM resources (e.g., users) that are linked or coordinated is managed within the context of an event feed, which MAY be a subset of the total set of resources on either side. For example, an event feed could be limited to users who have consented to the sharing of information between domains. To support this capability, "feed" specific events are defined to indicate the addition and removal of SCIM resources from a feed.
 
 # SCIM Use Cases
-This section describes some common SCIM use cases, explaining when, where, why and how we find them in the cross-domain environment. The ultimate goal is guidance for developers working on common models, explaining challenges and components.
-Because SCIM is a protocol where two entities exchange information about resources across domains, the use cases explain how the different components can interact to allow from simple to complex architectures for cross domain resource management. Orchestrators roles are mapped to the use cases to simplify the task of explaining the multiple functions of the SCIM elements. Use cases build on each other, starting with simple cases, and ending with the most complex ones. 
+This section describes some common SCIM use cases, explaining when, where, why, and how they are found in cross-domain environments. The ultimate goal is to provide guidance for developers working on common models, explaining the challenges and components involved.
+Because SCIM is a protocol where two entities exchange information about resources across domains, the use cases explain how the different components can interact to support simple to complex architectures for cross-domain resource management. Orchestrator roles are mapped to the use cases to simplify the explanation of the multiple functions of the SCIM elements. The use cases build on each other, starting with simple cases and ending with the most complex ones.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+############################################################
 
 ## Self-Referential Resource Updates via /me
 Get information about persona /me endpoint.  
@@ -377,6 +385,10 @@ Typically we will see this use case in large organization where resources were o
 One or more ERC, one or more RC/RU/RS, with one or more RM/RC/RU/RS and multiple RS/RU.  
 In this use case we introduce the possibility of having multiple Resource Managers, where the information from the RO/RA is consolidated across different domains/services.  
 Typically we will see this use case in large organizations, or between organizations that have their own business to business communication and have the need to exchange information about Resources. This example also happens during mergers or acquisitions, where multiple RMs exist and IT departments have to manage each RM in parallel.
+
+#######################################################
+
+
 
 # Security Considerations
 Authentication and authorization must be guaranteed for the SCIM operations to ensure that only authenticated entities can perform the SCIM requests and the requested SCIM operations are authorized. 
