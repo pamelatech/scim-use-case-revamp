@@ -52,14 +52,14 @@ This document provides definitions, overview and selected use cases of the Syste
 --- middle
 
 # Introduction
-The text you've provided is mostly clear but could benefit from a few grammatical and stylistic adjustments for better readability and clarity. Here's the revised version:
-The System for Cross-domain Identity Management (SCIM) family of specifications [RFC7643] and [RFC7644] is designed to manage resources used in the practice of identity management that need to be communicated across internet domains and services, with users and groups as the default resources supported (and an extensibility model for additional resource definitions).
-The specifications have two primary goals:
-1. A common representation of a resource object and its attributes.
-2. Standardized patterns for how those resources can be operated on, including "CRUD" operations (Create, Read, Update, Delete) for resource objects and more advanced goals such as search filters, synchronization of large resource populations, etc.
-These goals are codified as a data model in [RFC7643], which defines resources, attributes, and default schemas, as well as a protocol definition built on HTTP in [RFC7644]. By standardizing the data model and protocol for resource management, entire ecosystems can achieve better interoperability, security, and scalability.
+ The text you've provided is mostly clear but could benefit from a few grammatical and stylistic adjustments for better readability and clarity. Here's the revised version:
+ The System for Cross-domain Identity Management (SCIM) family of specifications [RFC7643] and [RFC7644] is designed to manage resources used in the practice of identity management that need to be communicated across internet domains and services, with users and groups as the default resources supported (and an extensibility model for additional resource definitions).
+ The specifications have two primary goals:
+   1. A common representation of a resource object and its attributes.
+   2. Standardized patterns for how those resources can be operated on, including "CRUD" operations (Create, Read, Update, Delete) for resource objects and more advanced goals such as search filters, synchronization of large resource populations, etc.
+ These goals are codified as a data model in [RFC7643], which defines resources, attributes, and default schemas, as well as a protocol definition built on HTTP in [RFC7644]. By standardizing the data model and protocol for resource management, entire ecosystems can achieve better interoperability, security, and scalability.
 
-This document provides definitions, overviews, concepts, flows, and use cases that implementers may need to understand the design and applicability of the SCIM schema [RFC7643] and SCIM protocol [RFC7644]. Unlike some protocols like Application Bridging for Federated Access Beyond Web (ABFAB) and SAML2 WebSSO, SCIM provides provisioning and de-provisioning of resources in a separate context from authentication. While SCIM is a protocol that standardizes the movement of data only between two parties in an HTTP client-server model, this document discusses implementation patterns that use concepts beyond the core schema and protocol, which are necessary to understand how SCIM actions can fit into larger architectures.
+ This document provides definitions, overviews, concepts, flows, and use cases that implementers may need to understand the design and applicability of the SCIM schema [RFC7643] and SCIM protocol [RFC7644]. Unlike some protocols like Application Bridging for Federated Access Beyond Web (ABFAB) and SAML2 WebSSO, SCIM provides provisioning and de-provisioning of resources in a separate context from authentication. While SCIM is a protocol that standardizes the movement of data only between two parties in an HTTP client-server model, this document discusses implementation patterns that use concepts beyond the core schema and protocol, which are necessary to understand how SCIM actions can fit into larger architectures.
 
 # Terminology
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC2119] when they appear in ALL CAPS. These words may also appear in this document in lowercase as plain English words, absent their normative meanings. Here is a list of acronyms and abbreviations used in this document:
@@ -84,62 +84,62 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 
 # SCIM Components and Architecture
-The SCIM architecture is a client-server model centered on a normative concept of a "resource." Resources have types (such as a user or a group), and each unique instance of a resource type is represented by a JSON object, accessed via a standardized REST API. Each resource object can be managed individually or in bulk using actions that by default are specified in [RFC9110](HTTP GET, PUT, POST, etc.), but may also expand to concepts in extension documents, such as security event tokens (SETs). This model enables organizations to represent information about user populations and the groups those user populations are part of using the core specifications, and to extend to other important resources using extension drafts in the same family, with the high-level concept of performing SCIM actions on resource objects. SCIM actions result in resource objects and associated data "moving" between the client and server, as clients actively push and pull information that reflects changes over time. This communication of data enables systems within domains and across domains to operate on the freshest possible version of object state.
+ The SCIM architecture is a client-server model centered on a normative concept of a "resource." Resources have types (such as a user or a group), and each unique instance of a resource type is represented by a JSON object, accessed via a standardized REST API. Each resource object can be managed individually or in bulk using actions that by default are specified in [RFC9110](HTTP GET, PUT, POST, etc.), but may also expand to concepts in extension documents, such as security event tokens (SETs). This model enables organizations to represent information about user populations and the groups those user populations are part of using the core specifications, and to extend to other important resources using extension drafts in the same family, with the high-level concept of performing SCIM actions on resource objects. SCIM actions result in resource objects and associated data "moving" between the client and server, as clients actively push and pull information that reflects changes over time. This communication of data enables systems within domains and across domains to operate on the freshest possible version of object state.
 
 ~~~
-+---------+                       +--------+
-|  SCIM   |                       |        | 
-| Server  |                       |  SCIM  | 
-|         | <--- SCIM Action ---  | Client |
-| /Users  |                       |        |
-| /Groups |                       |        |
-+---------+                       +--------+
+ +---------+                       +--------+
+ |  SCIM   |                       |        | 
+ | Server  |                       |        | 
+ |         | <--- SCIM Action ---  |  SCIM  |
+ | /Users  |                       | Client |
+ | /Groups |                       |        |
+ | /Device |                       |        |
+ +---------+                       +--------+
+  Figure 1: SCIM Components
 ~~~
 
- 
-The intent of the SCIM specification is to reduce the cost and complexity of resource management operations by providing a common schemas and extension model, as well as binding documents to provide patterns for exchanging this schema using standard protocols. In essence, make it fast, cheap, and easy to move resources in to, out of, and around the applications.  
-The SCIM scenarios are overviews of user stories designed to help clarify the intended scope of the SCIM effort.  
+ The intent of the SCIM specification is to reduce the cost and complexity of resource management operations by providing common schemas and an extension model, as well as binding documents to offer patterns for exchanging this schema using standard protocols. In essence, it aims to make it fast, cheap, and easy to move resources into, out of, and around applications.
+ The SCIM scenarios are overviews of user stories designed to help clarify the intended scope of the SCIM effort.
 
 ## Implementation Concepts
-To understand the use cases we need to understand 5 different concepts of the SCIM protocol (Data Models, Protocols Roles, Orchestrator Roles, Triggers, Actions).
+ To understand the use cases, we need to familiarize ourselves with five different concepts of the SCIM protocol: Data Models, Protocol Roles, Orchestrator Roles, Triggers, and Actions.
 
 ### Data Models
-SCIM defines two types of data entities: Resources and Attributes.
+ SCIM defines two types of data entities: Resources and Attributes.
 
 #### Resource Object (RO)
-A JSON object representing a user, group (or extension object like devices) to used by the CRUD operations through the SCIM protocol. The Resource Object contains attributes defined by schemas such as those defined in [RFC7643] and can be implemented via the endpoints and parameters defined in [RFC7644].  
+ A JSON object representing a user, group (or extension object like devices) used by the CRUD operations through the SCIM protocol. The Resource Object contains attributes defined by schemas such as those defined in [RFC7643] and can be implemented via the endpoints and parameters defined in [RFC7644].
 
 #### Resource Attribute (RA)
-A named element of a Resource Object (RO). Attributes are defined in section 2 of [RFC7643] and include characteristics like cardinality (single or multiple values), data types (string, boolean, binary etc) and characteristics (required, unique etc). 
+ A named element of a Resource Object (RO). Attributes are defined in section 2 of [RFC7643] and include characteristics like cardinality (single or multiple values), data types (string, boolean, binary, etc.), and characteristics (required, unique, etc.).
 
 ### Protocol Roles
-SCIM is based in the HTTP protocol, HTTP client and server roles are defined in [RFC9110] and [RFC9112]. Any SCIM interaction requires one participant to be a SCIM server and the other to be a SCIM client. 
+ SCIM is based on the HTTP protocol; HTTP client and server roles are defined in [RFC9110] and [RFC9112]. Any SCIM interaction requires one participant to be a SCIM server and the other to be a SCIM client.
 
 #### SCIM Server (also known as a SCIM Service Provider)
-An HTTP web application that provides identity information via the SCIM protocol.  
-A SCIM Server is a RESTful API endpoint offering access to a data model that can be used to push or pull data between two parties. SCIM servers have additional responsibilities such as API Security, managing client identifiers & keys as well as performance management such as API throttling.  
+ An HTTP web application that provides identity information via the SCIM protocol. A SCIM Server is a RESTful API endpoint offering access to a data model that can be used to push or pull data between two parties. SCIM servers have additional responsibilities such as API security, managing client identifiers and keys, as well as performance management such as API throttling.
 
 #### SCIM Client
-A website or application that uses the SCIM protocol to manage identity data maintained by the service provider.  The client can initiates SCIM HTTP requests to a target SCIM Server. A SCIM Client is active software that can push or pull data between two parties.   
+ A website or application that uses the SCIM protocol to manage identity data maintained by the service provider. The client can initiate SCIM HTTP requests to a target SCIM Server. A SCIM Client is active software that can push or pull data between two parties.
 
 ### Orchestrator Roles
-Orchestrators are the operating parties that take part in a SCIM protocol exchange and ensure data is moving in the correct flows.
-An entity can have one or more orchestrators roles, depending on the overall architecture.  
+ Orchestrators are the operating parties that take part in a SCIM protocol exchange and ensure data is moving in the correct flows. 
+An entity can have one or more orchestrator roles, depending on the overall architecture.
 
 #### Resource Creator (RC)
-An entity responsible for creating the Resource Object (RO). Typically we can see this role in HR or Resource Management (RM) applications that are responsible for creating resources and its attributes.  
+ An entity responsible for creating the Resource Object (RO). Typically, this role is found in HR or Resource Management (RM) applications that are responsible for creating resources and their attributes.  
 
 #### Resource Updater (RU)
-An entity responsible for updating specific Resource Attributes (RA) of a Resource Object (RO) or the RO itself. Typically, this role is used in conjunction with other SCIM roles that allow this SCIM entity to manage specific Resource Attribute (RA) and/or Resource Objects (RO).  
+ An entity responsible for updating specific Resource Attributes (RA) of a Resource Object (RO) or the RO itself. Typically, this role is used in conjunction with other SCIM roles that allow this SCIM entity to manage specific Resource Attributes (RA) and/or Resource Objects (RO).  
 
 #### Resource Manager (RM)
-An entity that aggregates or transforms Resource Objects (RO) from resource creators/updaters (RC/RU) and make them available for Resource Subscribers (RS) using multiple SCIM interactions, an example of this role could be an Identity-as-a-Service (IDaaS) cloud service.  
+ An entity that aggregates or transforms Resource Objects (RO) from resource creators/updaters (RC/RU) and makes them available for Resource Subscribers (RS) using multiple SCIM interactions. An example of this role could be an Identity-as-a-Service (IDaaS) cloud service.
 
 #### Resource Subscriber (RS)
-An entity that consumes Resource Objects (RO) and typically don't create new Objects or Attributes. An example would be a SaaS application that deliver a service and needs to create a database of Objects and would get those from a RM/RC/RU. 
+ An entity that consumes Resource Objects (RO) and typically doesn't create new Objects or Attributes. An example would be a SaaS application that delivers a service and needs to create a database of Objects and would get those from an RM/RC/RU.
 
 #### External Resource Creator (ERC)
-An entity that has information about Resource Objects (RO)  and its Resource Attributes (RA), but does not participate in SCIM flows, examples include databases or internally-facing applications.
+ An entity that has information about Resource Objects (RO) and their Resource Attributes (RA) but does not participate in SCIM flows. Examples include databases or internally-facing applications.
 
 ~~~~~~~~
    +-------------+ +-------------+   +-------------+ +-------------+
@@ -175,24 +175,23 @@ An entity that has information about Resource Objects (RO)  and its Resource Att
  |(RO) Resource| |(RO) Resource|   |(RO) Resource| |(RO) Resource|
  |   Object1   | |   Object2   |   |   Object1   | |   Object2   |
  +-------------+ +-------------+   +-------------+ +-------------+
-                      Figure 1: SCIM Orchestrators Roles
+        Figure 2: SCIM Orchestrators Roles
 ~~~~~~~~
 
 ### Triggers
-Triggers are activities that may cause a SCIM action to occur.  Triggers can occur as a result of business processes like a corporate hiring event, but can also be scheduled events such as a unix bash script running as a chron job, they can also be a SSO just-in-time events arriving at a federated relying party that identifies a not-seen-before user. Triggers can also be standardized events, such as those in the OpenID Shared Signals Framework. 
-Triggers are used to start a CRUD (Create, Read, Update, Delete) using SCIM Actions, the use cases described in this document can use or or multiple triggers mechanisms to achieve the goal of the SCIM element.
+ Triggers are activities that may cause a SCIM action to occur. Triggers can result from business processes like a corporate hiring event, scheduled events such as a Unix bash script running as a cron job, or SSO just-in-time events arriving at a federated relying party that identifies a previously unseen user. Triggers can also be standardized events, such as those in the OpenID Shared Signals Framework. Triggers are used to initiate CRUD (Create, Read, Update, Delete) operations using SCIM Actions. The use cases described in this document can use one or multiple trigger mechanisms to achieve the goal of the SCIM element.
 
 #### Periodic Intervals
-A periodic interval trigger is a configured-in-advance agreement where a SCIM client or server performs an action at a specific time. This trigger is often recurring, and will start an action typically from the SCIM Client, but can also in some use cases be done by the SCIM Server. An example of a periodic interval trigger could be a UNIX chron job calling a script.
+ A periodic interval trigger is a pre-configured agreement where a SCIM client or server performs an action at a specific time. This trigger is often recurring and typically initiates an action from the SCIM Client, though in some use cases it can be done by the SCIM Server. An example of a periodic interval trigger could be a UNIX cron job calling a script.
 
 #### Events
-Event triggers are activities, contexts or notifications that could happen at any time. A SCIM client may be configured to perform a given SCIM action in response to a specific event occurring such as a specific entry written into an audit log, a signal of a corporate workflow completion, or a device management platform notification. A SCIM actions could also be triggered by a Security Event Token (SET) as described in [RFC8417] or a SCIM event corresponding to [SCIM Profile for Security Event Tokens].
+ Event triggers are activities, contexts, or notifications that could happen at any time. A SCIM client may be configured to perform a given SCIM action in response to a specific event, such as an entry written into an audit log, a signal of a corporate workflow completion, or a device management platform notification. SCIM actions could also be triggered by a Security Event Token (SET) as described in [RFC8417] or a SCIM event corresponding to [SCIM Profile for Security Event Tokens].
 
 #### Application Triggers
-Application triggers occur when administrative or end-user interfaces are manipulated. An example of an application trigger might be a user modifying their profile information, resulting in a SCIM client performing an HTTP POST to update the user's resource object at the SCIM server. Another example might be an Identity Administrator create a new User in the IdM and the IdM and immediately wants to update one of more resource Subscriber (typically a SaaS application that is a SCIM Server)
+  Application triggers occur when administrative or end-user interfaces are manipulated. An example of an application trigger might be a user modifying their profile information, resulting in a SCIM client performing an HTTP POST to update the user's resource object at the SCIM server. Another example might be an Identity Administrator creating a new User in the IdM, who immediately wants to update one or more resource Subscribers (typically a SaaS application that is a SCIM Server).
 
 #### SSO (Single Sign-on)
-Single Sign-on triggers occur when a user authenticates via federated protocols such as SAML 2.0 or OpenID Connect. If a federated assertion arrives for a user who has not yet been provisioned into the destination application, the application may be triggered to perform just-in-time (JIT) provisioning. This trigger occurs in scenarios where a Single Sign-On flow happens, but not all the resource attributes for the user object are passed in the federated assertion, resulting in a SCIM action to push or pull remaining needed attributes.  
+ Single Sign-On triggers occur when a user authenticates via federated protocols such as SAML 2.0 or OpenID Connect. If a federated assertion arrives for a user who has not yet been provisioned into the destination application, the application may be triggered to perform just-in-time (JIT) provisioning. This trigger occurs in scenarios where a Single Sign-On flow happens, but not all the resource attributes for the user object are passed in the federated assertion, resulting in a SCIM action to push or pull the remaining needed attributes.
 
 ~~~~~~~~
 +---------------+                                   +---------------+
@@ -208,20 +207,19 @@ Single Sign-on triggers occur when a user authenticates via federated protocols 
 |    RC/RU/RM   |                                   |      RS       |
 |               |                                   |               |
 +---------------+                                   +---------------+
-          Figure 2:  SCIM  Flow and Entities map
+          Figure 3:  SCIM  Flow and Entities map
 ~~~~~~~~
 
- 1. SSO trigger that creates the user and might create some RA (Resource Attributes) of a RO (Resource Object)       
- 1. SCIM actions that will complement the attributes created before with an SSO JIT with additional RA (Resource Attributes) of the RO (Resource Objects) created before.   
-This use case combines the SCIM protocol with other protocols used for Single Sign-On, specially in the use case of JIT (Just in time Provision), specially useful with protocols like SAML that is limit by the number of characters in the URL.
+ 1. An SSO trigger creates the user and might create some Resource Attributes (RA) of a Resource Object (RO). 
+ 2. SCIM actions will then complement the attributes created initially through SSO JIT with additional Resource Attributes (RA) of the previously created Resource Objects (RO).
+  This use case combines the SCIM protocol with other protocols used for Single Sign-On, especially in the context of JIT (Just-in-Time Provisioning). This is particularly useful with protocols like SAML, which are limited by the number of characters in the URL.
 
 ### SCIM Actions
-The SCIM protocol defines interactions between two standardized parties that conform to HTTP RESTful conventions. The protocol enables CRUD operations by corresponding those activities to HTTP verbs such as POST, PUT, GET, DELETE etc.  The protocol itself doesn't assume a direction of data flow, and use cases discussed in section 4 are created using the orchestrator roles and an SCIM entity can have multiple roles, depending on the objective of the use case that we are describing.
+  The SCIM protocol defines interactions between two standardized parties that conform to HTTP RESTful conventions. The protocol enables CRUD operations by mapping these activities to HTTP verbs such as POST, PUT, GET, DELETE, etc. The protocol itself doesn't assume a direction of data flow, and use cases discussed in section 4 are created using the orchestrator roles. A SCIM entity can have multiple roles depending on the objective of the use case being described.
 
 #### Client active Push
-A SCIM client uses HTTP verbs POST, PUT or PATCH to create or update objects and/or attributes at a SCIM server. The SCIM client is actively "pushing" the data to the endpoint. This SCIM action can occur when the SCIM client is the primary Resource Creator/Updater (RC/RU).
-   
-The most common example, and most widely deployed example is a SCIM Client that is going to provide information about a RO and its RA to a Server, that can also be called a SCIM Server in [RFC7643] and [RFC7644].
+  A SCIM client uses HTTP verbs POST, PUT, or PATCH to create or update objects and/or attributes at a SCIM server. The SCIM client is actively "pushing" the data to the endpoint. This SCIM action can occur when the SCIM client is the primary Resource Creator/Updater (RC/RU).
+  The most common and widely deployed example is a SCIM client providing information about a RO and its RA to a server, which is also called a SCIM Server in [RFC7643] and [RFC7644].
 
 ~~~~~~~~
 +----------------+                                   +----------------+
@@ -237,7 +235,7 @@ The most common example, and most widely deployed example is a SCIM Client that 
 |                |                                   |                |
 |                |                                   |                |
 +----------------+                                   +----------------+
-              Figure 3: SCIM  Flow and Orchestrator roles maps
+              Figure 4: SCIM action for Client Active Push
 ~~~~~~~~
 
 1. There will be push using a HTTP POST, PUT, PATCH, DELETE depending on the operation that the Client want to achieve at the Server. 
