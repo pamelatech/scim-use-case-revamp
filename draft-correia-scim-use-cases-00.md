@@ -265,7 +265,6 @@ An entity can have one or more orchestrator roles, depending on the overall arch
    
    1. The SCIM client will perform an HTTP GET to obtain the selected list of Resource Objects (RO) and their Resource Attributes (RA).  
    2. The SCIM Service Provider will return the RO and its RA along with additional metadata information to allow for auditing.
-
 #### Active Dynamic Query
  A SCIM client uses the HTTP GET verb to request data from a SCIM server. With the action of an active pull, the client will fetch one or multiple objects from the SCIM server. At this point, the SCIM server will provide a Dynamic Query (DQ) token that allows locating the point in the Resource Object (RO) database from which the next update needs to start. This approach enables delta updates instead of providing a full sync every time SCIM actions run, achieving incremental updates with CRUD operations since the last DQ token.
  With this kind of action, SCIM reconciliations are possible, where the SCIM client can resolve inconsistencies created by changes in the SCIM server.
