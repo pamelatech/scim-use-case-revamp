@@ -492,10 +492,83 @@ A good example would be a traditional HR on-premises application (most commonly 
    1. SCIM action - SCIM Client performs Active/Delta Pull
 
 ### Multi-Tenant Resource Creator/Updater (RC/RU)
-
-#### Multi-Tenant Resource Creator/Updater that is the SCIM Server
+It only differs from the Single-Tenant Resource Creator/Updater (RC/RU) by supporting multiple tenants. A typically would be an HR SaaS aplication.
 
 #### Multi-Tenant Resource Creator/Updater that is the SCIM Client
+It is common today for the SCIM Client, typically performing the roles of RC (Resource Creator) and RU (Resource Updater), to perform CRUD operations on the database of the RS (Resource Subscriber) or RM (Resource Manager) using the Active Push method. This action delivers RO (Resource Objects) and their RA (Resource Attributes) from a multi-tenant provision service to a consumer.
+A good example would be any new SaaS HR (Human Resources) application that creates Resource Objects (RO) either in a central IdM (Identity Management) system or directly in target applications.
+~~~~~~~~
++------------+ 
+|+----------+|                                   +------------+
+||   SCIM   ||                                   |    SCIM    |
+||  Client  ||                                   |   Server   |
+||          ||                (1)                |            |
+||          || --------------------------------> |            |
+||   RC/RU  ||                                   |   RS/RM    |
+||          ||                                   |            |
+||(Tenant A)||                                   |(Consumer A)|
+|+----------+|                                   +------------+
+|+----------+|                                   +------------+
+||   SCIM   ||                                   |    SCIM    |
+||  Client  ||                                   |   Server   |
+||          ||                (1)                |            |
+||          || --------------------------------> |            |
+||   RC/RU  ||                                   |   RS/RM    |
+||          ||                                   |            |
+||(Tenant B)||                                   |(Consumer B)|
+|+----------+|                                   +------------+
+|+----------+|                                   +------------+
+||   SCIM   ||                                   |    SCIM    |
+||  Client  ||                                   |   Server   |
+||          ||                (1)                |            |
+||          || --------------------------------> |            |
+||   RC/RU  ||                                   |   RS/RM    |
+||          ||                                   |            |
+||(Tenant C)||                                   |(Consumer C)|
+|+----------+|                                   +------------+
++------------+
+         Figure 14: Multi-Tenant Resource Creator/Updater that is the SCIM Client
+~~~~~~~~
+
+   1. SCIM action - SCIM Client performs Active Push 
+
+#### Multi-Tenant Resource Creator/Updater that is the SCIM Server
+The SCIM Client, which can be the RS (Resource Subscriber) or RM (Resource Manager), will perform CRUD operations on its own database using the Active and/or Delta Pull methods. Source information is available in the SCIM server, which is the source system responsible for the roles of RC (Resource Creator) and RU (Resource Updater) for the RO (Resource Objects) and their RA (Resource Attributes).
+A good example would be a SaaS HR (Human Resource) application (most commonly a multi-tenant application) that has its own database of objects and provides them to a SCIM client. The SCIM client can either be an RS (Resource Subscriber), typically a standalone application that requires object information from the HR application, or an RM (Resource Manager), such as an on-premises IdM that will consolidate and add additional RA (Resource Attributes) to the RO (Resource Objects). 
+~~~~~~~~
++------------+ 
+|+----------+|                                   +------------+
+||   SCIM   ||                                   |    SCIM    |
+||  Server  ||                                   |   Client   |
+||          ||                (1)                |            |
+||          || --------------------------------> |            |
+||   RC/RU  ||                                   |   RS/RM    |
+||          ||                                   |            |
+||(Tenant A)||                                   |(Consumer A)|
+|+----------+|                                   +------------+
+|+----------+|                                   +------------+
+||   SCIM   ||                                   |    SCIM    |
+||  Server  ||                                   |   Client   |
+||          ||                (1)                |            |
+||          || --------------------------------> |            |
+||   RC/RU  ||                                   |   RS/RM    |
+||          ||                                   |            |
+||(Tenant B)||                                   |(Consumer B)|
+|+----------+|                                   +------------+
+|+----------+|                                   +------------+
+||   SCIM   ||                                   |    SCIM    |
+||  Server  ||                                   |   Client   |
+||          ||                (1)                |            |
+||          || --------------------------------> |            |
+||   RC/RU  ||                                   |   RS/RM    |
+||          ||                                   |            |
+||(Tenant C)||                                   |(Consumer C)|
+|+----------+|                                   +------------+
++------------+
+         Figure 15: Multi-Tenant Resource Creator/Updater that is the SCIM Server
+~~~~~~~~
+
+   1. SCIM action - SCIM Client performs Active/Delta Pull
 
 ## Simple Resource Manager (RM)
 
