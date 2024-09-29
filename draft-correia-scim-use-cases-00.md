@@ -333,8 +333,8 @@ Typically we will find this kind of use case in small to mid size organization, 
 Resource Subscriber (RS) is a single tenant that can either be the SCIM Client or SCIM Server
 
 #### Single-Tenant Resource Subscriber that is the SCIM Server
-It is the most common implementation today. Where the SCIM Client typically doing roles of RM (Resource Manager), RC (Resource Creator) and RU (Resource Updater) is going to do CRUD operation into the database of the RS (Resrouce Subscriber)  using as actions the Active Push method.
-A good example would be a SaaS application tat is going to create its own database of users and groups for it own usage from a central IdM.
+It is common today for the SCIM Client, typically performing the roles of RM (Resource Manager), RC (Resource Creator), and RU (Resource Updater), to perform CRUD operations on the database of the RS (Resource Subscriber) using the Active Push method. This method delivers RO (Resource Objects) and their RA (Resource Attributes) to the single-tenant RS.
+A good example would be an on-premises application (most commonly a single-tenant application) that creates its own database of objects for its own use, obtaining the objects from a central IdM (Identity Management) system.
 ~~~~~~~~
 +----------+                                   +----------+
 |   SCIM   |                                   |   SCIM   |
@@ -351,8 +351,8 @@ A good example would be a SaaS application tat is going to create its own databa
    1. SCIM action - Active Push 
 
 #### Single-Tenant Resource Subscriber that is the SCIM Client
-The SCIM Client that is the RS ( Resoruce Subscriber) is going to do CRUD operation into its own database using as actions the Active and/or Delta Pull method.
-A good example would be a SaaS application that is going to create its own database of objects, like devices, from a central database.
+The SCIM Client, which is the RS (Resource Subscriber), will perform CRUD operations on its own database using the Active and/or Delta Pull methods. Source information is available in the SCIM server, which is the IdM (Identity Management) system and is responsible for the roles of RM (Resource Manager), RC (Resource Creator), and RU (Resource Updater) for the RO (Resource Objects) and their RA (Resource Attributes).
+A good example would be an on-premises application (most commonly a single-tenant application) that creates its own database of objects, such as devices, from a central IdM (Identity Management) system.
 ~~~~~~~~
 +----------+                                   +----------+
 |   SCIM   |                                   |   SCIM   |
@@ -369,10 +369,15 @@ A good example would be a SaaS application that is going to create its own datab
    1. SCIM action - Active/Delta Pull 
 
 ### Multi-Tenant Resource Subscriber 
+A Resource Subscriber (RS) is multi-tenant and can function as either the SCIM Client or the SCIM Server.
 
 ## Simple Resource Creator/Updater (RC/RU)
 
 ### Single-Tenant Resource Creator/Updater (RC/RU)
+
+#### Single-Tenant Resource Creator/Updater that is the SCIM Server
+
+#### Single-Tenant Resource Creator/Updater that is the SCIM Client
 
 ### Multi-Tenant Resource Creator/Updater (RC/RU)
 
