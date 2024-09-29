@@ -265,6 +265,7 @@ An entity can have one or more orchestrator roles, depending on the overall arch
    
    1. The SCIM client will perform an HTTP GET to obtain the selected list of Resource Objects (RO) and their Resource Attributes (RA).  
    2. The SCIM Service Provider will return the RO and its RA along with additional metadata information to allow for auditing.
+
 #### Active Dynamic Query
  A SCIM client uses the HTTP GET verb to request data from a SCIM server. With the action of an active pull, the client will fetch one or multiple objects from the SCIM server. At this point, the SCIM server will provide a Dynamic Query (DQ) token that allows locating the point in the Resource Object (RO) database from which the next update needs to start. This approach enables delta updates instead of providing a full sync every time SCIM actions run, achieving incremental updates with CRUD operations since the last DQ token.
  With this kind of action, SCIM reconciliations are possible, where the SCIM client can resolve inconsistencies created by changes in the SCIM server.
@@ -322,10 +323,64 @@ In any Event Publisher and Receiver relationship, the set of SCIM resources (e.g
 This section describes some common SCIM use cases, explaining when, where, why, and how they are found in cross-domain environments. The ultimate goal is to provide guidance for developers working on common models, explaining the challenges and components involved.
 Because SCIM is a protocol where two entities exchange information about resources across domains, the use cases explain how the different components can interact to support simple to complex architectures for cross-domain resource management. Orchestrator roles are mapped to the use cases to simplify the explanation of the multiple functions of the SCIM elements. The use cases build on each other, starting with simple cases and ending with the most complex ones.
 
+## Simple Resource Subscriber (RS)
+Resource Subscriber (RS) that received data from a remote corporate data store.
+This is a very common and simple SCIM use case, we have the IdM/Device Managers/etc. do all CRUD operation with the resources, then after the trigger mechanisms the resources information RO/RA reach the RS (Resource Subscribers), also know as the SaaS Application.  
+The RS (Resource Subscriber) will take the decision on which RA (Resource Attributes) to consider and how the RO (Resource Object) will show in its resource database.  
+Typically we will find this kind of use case in small to mid size organization, where there is no structure method to handle the resources and typically in Organization that start with a blank sheet of paper in a greenfield deployment.
 
+### Single-Tenant Resource Subscriber 
+Resource Subscriber (RS) is a single tenant that can either be the SCIM Client or SCIM Server
 
+#### Single-Tenant Resource Subscriber that is the SCIM Server
+It is the most common implementation today. Where the SCIM Client typically doing roles of RM (Resource Manager), RC (Resource Creator) and RU (Resource Updater) is going to do CRUD operation into the database of the RS (Resrouce Subscriber)  using as actions the Active Push method.
+A good example would be a SaaS application tat is going to create its own database of users and groups for it own usage from a central IdM.
+~~~~~~~~
++----------+                                   +----------+
+|   SCIM   |                                   |   SCIM   |
+|  Client  |                                   |  Server  |
+|          |                (1)                |          |
+|          | --------------------------------> |          |
+| RC/RU/RM |                                   |    RS    |
+|          |                                   |          |
+| (Source) |                                   |(Consumer)|
++----------+                                   +----------+
+         Figure 8: Single-Tenant Resource Subscriber that is the SCIM Server
+~~~~~~~~
 
+   1. SCIM action - Active Push 
 
+#### Single-Tenant Resource Subscriber that is the SCIM Client
+The SCIM Client that is the RS ( Resoruce Subscriber) is going to do CRUD operation into its own database using as actions the Active and/or Delta Pull method.
+A good example would be a SaaS application that is going to create its own database of objects, like devices, from a central database.
+~~~~~~~~
++----------+                                   +----------+
+|   SCIM   |                                   |   SCIM   |
+|  Server  |                                   |  Client  |
+|          |                (1)                |          |
+|          | --------------------------------> |          |
+| RC/RU/RM |                                   |    RS    |
+|          |                                   |          |
+| (Source) |                                   |(Consumer)|
++----------+                                   +----------+
+         Figure 9: Single-Tenant Resource Subscriber that is the SCIM Client
+~~~~~~~~
+
+   1. SCIM action - Active/Delta Pull 
+
+### Multi-Tenant Resource Subscriber 
+
+## Simple Resource Creator/Updater (RC/RU)
+
+### Single-Tenant Resource Creator/Updater (RC/RU)
+
+### Multi-Tenant Resource Creator/Updater (RC/RU)
+
+## Simple Resource Manager (RM)
+
+### Single-Tenant Resource Manager (RM)
+
+### Multi-Tenant Resource Manager (RM)
 
 
 
