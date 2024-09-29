@@ -570,13 +570,18 @@ A good example would be a SaaS HR (Human Resource) application (most commonly a 
 
    1. SCIM action - SCIM Client performs Active/Delta Pull
 
-## Simple Resource Manager (RM)
+## Identity and Access Management Platform
+Normally one or more upstream object database that populates the Resource Manager that after provides that resource information to downstream services that requires a specific that requires a specific sets of the populated objects.
 
 ### Single-Tenant Resource Manager (RM)
+Single-tenant provisioning is done using a Resource Creator/Updater (RC/RU), which is responsible for creating the objects that will be passed across different systems. This is a very common and simple SCIM use case, where the Resource Object (RO) and its Resource Attributes (RA) are created. The CRUD operations on these resources trigger specific actions to facilitate the information exchange between two entities, typically the SCIM Client and Server.
+It is the responsibility of the Resource Creator/Updater to pass all relevant Resource Attributes (RA) for that specific RS/RM. Typically, we find this kind of use case in small to mid-sized organizations, mainly in on-premises systems, where there is no structured method to handle the resources.
 
 #### Single-Tenant Resource Manager that is the SCIM Server
 
 #### Single-Tenant Resource Manager that is the SCIM Client
+
+#### Single-Tenant Resource Manager that is the SCIM Server and SCIM Client
 
 ### Multi-Tenant Resource Manager (RM)
 
@@ -584,7 +589,7 @@ A good example would be a SaaS HR (Human Resource) application (most commonly a 
 
 #### Multi-Tenant Resource Manager that is the SCIM Client
 
-
+#### Multi-Tenant Resource Manager that is the SCIM Server and SCIM Client
 
 ############################################################
 
