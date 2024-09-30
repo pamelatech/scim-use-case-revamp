@@ -789,7 +789,6 @@ Provision Domain
 
    1. SCIM action - SCIM Client performs Active Pull
 
-
 ### Device Identity Creation
 
 ### Client Applications gets directory Services 
