@@ -583,11 +583,13 @@ Provision Domain
 ### Provision Domain Identity and Access Management (IAM) 
 Typically, one or more upstream object databases populate the Resource Manager (RM), which then provides that resource information to downstream services requiring specific sets of the populated objects.
 The scenarios described in the next chapter will always outline the concept of upstream services, which are normally the sources of the objects, and downstream services, which are typically the consumers of the objects.
-
-#### Single-Tenant Resource Manager (RM)
 A single-tenant Resource Manager (RM) will receive Resource Objects (RO) and their Resource Attributes (RA) from an upstream entity, which can be either SCIM or non-SCIM. A good example of a non-SCIM upstream source would be connectors that synchronize users and groups using an HTTP REST interface to copy those objects from a database using legacy protocols like LDAP.
 Normally, the Resource Manager (RM) will accept objects from multiple sources, and it is its responsibility to understand which Resource Attributes (RA) to obtain from each source. There might also be independent agreements for different groups of Resource Objects (RO).
 The Resource Manager (RM) can also assume the roles of Resource Creator (RC) and Resource Updater (RU), where some or all of the Resource Objects (RO) or some of their Resource Attributes (RA) are created locally. These kinds of deployments are very common in greenfield deployments.
+
+#### Single-Tenant Resource Manager (RM)
+Single-Tenant Resrouce Manager are tipically Identity Manager (IdM) that are on-premises, where the upStream is tipically also on-premise but the Downstream can iether be on-premise, Cloud or hybrid application.
+
 
 ##### Single-Tenant Resource Manager that is the SCIM Server
 The upstream service will provide one or more sources of Resource Objects (RO) and their Resource Attributes (RA). If the source is a SCIM Client, it will use the Active Push method to deliver that information to the Resource Manager, which will be the SCIM Server and the consumer of those Resource Objects. The same Resource Manager will act as a SCIM server for the downstream consumer, which will be the SCIM Client performing the actions of Active/Delta Push.
@@ -642,7 +644,9 @@ This is a partial implementation used by some IdM systems today, where they obta
    3. SCIM action - SCIM Client performs Active Push
 
 ##### Single-Tenant Resource Manager that is the SCIM Server and SCIM Client
-The upstream service will provide one or more sources of Resource Objects (RO) and their Resource Attributes (RA). If the source is a SCIM Server, the Resource Manager, which will act as a SCIM Client, will use the Active/Delta Pull method to obtain that information. The same Resource Manager will act as a SCIM Server for the downstream consumer and will perform the action of pushing a select group of Resource Objects (RO) and their Resource Attributes (RA) to the consumer service.
+The upstream service will provide one or more sources of Resource Objects (RO) and their Resource Attributes (RA).
+This scenario we will use as SCIM action Active/Delta Pull from the UpStream to the Resource Manager and the same action from it to the DownStream, for the scenarios where the initial Source is a SCIM server and the final Consumer is the SCIM Client.
+This scenarios we will use as SCIM action Active Push from the UpStream to the Resource Manager and the same action from it to the DownStream, for the scenarios where the initial Source is a SCIM Client and the final Consumer is the SCIM Server.
 This is a partial implementation used by some IdM systems today, where they obtain Resource Objects from legacy databases using non-SCIM protocols and provide Resource Objects (RO) to downstream services, typically SaaS applications that need to create their own database of Resource Objects.
 ~~~~~~~~
                         Provision Domain
@@ -690,12 +694,16 @@ This is a partial implementation used by some IdM systems today, where they obta
    3. SCIM action - SCIM Client performs Active Push
 
 #### Multi-Tenant Resource Manager (RM)
+Multi-Tenant Resource Manager are tipically Identity Manager (IdM) that are cloud base, normally designated as IDaaS, where the upStream and Downstream are either on-premise or Cloud base.
 
 ##### Multi-Tenant Resource Manager that is the SCIM Server
+Same information as Single-Tenant Resource Manager that is the SCIM Server but the Provision domain has multiple Tenants 
 
 ##### Multi-Tenant Resource Manager that is the SCIM Client
+Same information as Single-Tenant Resource Manager that is the SCIM Client but the Provision domain has multiple Tenants 
 
 ##### Multi-Tenant Resource Manager that is the SCIM Server and SCIM Client
+Same information as Single-Tenant Resource Manager that is the SCIM Server and SCIM Client but the Provision domain has multiple Tenants 
 
 ## Specific Implementations
 
