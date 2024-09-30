@@ -708,6 +708,87 @@ Same information as Single-Tenant Resource Manager that is the SCIM Server and S
 ## Specific Implementations
 
 ### Partner Device Registry
+An important step in making a device work is to provide its details from the manufacturer to the customer. The Resource Object (RO) of the device, provided by the manufacturer, includes its Resource Attributes (RA), such as certificates, pairing protocols, and other relevant details.
+
+#### Manufacturer details provided to customer by vendor that is the SCIM client
+The manufacturer is the multi-tenant SCIM client and will push details of devices acquired by specific customers to their SCIM servers. The customer will provide the SCIM server and will receive information from the acquired devices. Additionally, the customer will manage the attributes of those devices, assuming the roles of Resource Subscriber (RS), Resource Updater (RU), and Resource Manager (RM). After the initial creation of the Resource Object (RO) in the customer's device database, it will be the server's responsibility to add and update the Resource Attributes (RA).
+Typically, the device will reach out to a device manager in the customer's network, which will provide the SCIM server endpoint to the manufacturer. This task can also be done manually at the time of the device acquisition, allowing a SCIM push of the Resource Object (RO) to the customer's device management platform.
+~~~~~~~~
+Provision Domain
++------------+ 
+|+----------+|                                   +------------+
+||   SCIM   ||                                   |    SCIM    |
+||  Client  ||                                   |   Server   |
+||          ||                (1)                |            |
+||          || --------------------------------> |            |
+||    RC    ||                                   |  RS/RU/RM  |
+||          ||                                   |            |
+||(Tenant A)||                                   |(Customer A)|
+|+----------+|                                   +------------+
+|+----------+|                                   +------------+
+||   SCIM   ||                                   |    SCIM    |
+||  Client  ||                                   |   Server   |
+||          ||                (1)                |            |
+||          || --------------------------------> |            |
+||    RC    ||                                   |  RS/RU/RM  |
+||          ||                                   |            |
+||(Tenant B)||                                   |(Costumer B)|
+|+----------+|                                   +------------+
+|+----------+|                                   +------------+
+||   SCIM   ||                                   |    SCIM    |
+||  Client  ||                                   |   Server   |
+||          ||                (1)                |            |
+||          || --------------------------------> |            |
+||    RC    ||                                   |  RS/RU/RM  |
+||          ||                                   |            |
+||(Tenant C)||                                   |(Costumer C)|
+|+----------+|                                   +------------+
++------------+
+         Figure 20: Manufactor is the SCIM client and push RO to Customers 
+~~~~~~~~
+
+   1. SCIM action - SCIM Client performs Active Push
+
+#### Manufacturer details provided by requesting it from Customer that is the SCIM client
+The manufacturer is the multi-tenant SCIM server that holds the details of the Resource Objects, which it can provide to customers who acquire them. The customer will provide a SCIM client that will perform an Active Pull of the Resource Objects acquired from a specific manufacturer.
+The SCIM client will have the roles of Resource Subscriber (RS), Resource Manager (RM), and Resource Updater (RU), because after creating the Resource Object (RO) in its object database, it will be responsible for updating and modifying that object.
+This use case is especially interesting for customers whose Device Manager is not reachable from the Internet. In such cases, the Device Manager will act as a SCIM client and perform the action of pulling the Resource Object (RO) from the multi-tenant SCIM server provided by the manufacturer.
+~~~~~~~~
+Provision Domain
++------------+ 
+|+----------+|                                   +------------+
+||   SCIM   ||                                   |    SCIM    |
+||  Server  ||                                   |   Client   |
+||          ||                (1)                |            |
+||          || --------------------------------> |            |
+||    RC    ||                                   |  RS/RU/RM  |
+||          ||                                   |            |
+||(Tenant A)||                                   |(Consumer A)|
+|+----------+|                                   +------------+
+|+----------+|                                   +------------+
+||   SCIM   ||                                   |    SCIM    |
+||  Server  ||                                   |   Client   |
+||          ||                (1)                |            |
+||          || --------------------------------> |            |
+||    RC    ||                                   |  RS/RU/RM  |
+||          ||                                   |            |
+||(Tenant B)||                                   |(Consumer B)|
+|+----------+|                                   +------------+
+|+----------+|                                   +------------+
+||   SCIM   ||                                   |    SCIM    |
+||  Server  ||                                   |   Client   |
+||          ||                (1)                |            |
+||          || --------------------------------> |            |
+||    RC    ||                                   |  RS/RU/RM  |
+||          ||                                   |            |
+||(Tenant C)||                                   |(Consumer C)|
+|+----------+|                                   +------------+
++------------+
+         Figure 21: Manufactor is the SCIM Server and Customers Pull information about Device
+~~~~~~~~
+
+   1. SCIM action - SCIM Client performs Active Pull
+
 
 ### Device Identity Creation
 
