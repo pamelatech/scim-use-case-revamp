@@ -590,25 +590,25 @@ Normally, the Resource Manager (RM) will accept objects from multiple sources, a
 The Resource Manager (RM) can also assume the roles of Resource Creator (RC) and Resource Updater (RU), where some or all of the Resource Objects (RO) or some of their Resource Attributes (RA) are created locally. These kinds of deployments are very common in greenfield deployments.
 
 ##### Single-Tenant Resource Manager that is the SCIM Server
-
-
+The upstream service will provide one or more sources of Resource Objects (RO) and their Resource Attributes (RA). If the source is a SCIM Client, it will use the Active Push method to deliver that information to the Resource Manager, which will be the SCIM Server and the consumer of those Resource Objects. The same Resource Manager will act as a SCIM server for the downstream consumer, which will be the SCIM Client performing the actions of Active/Delta Push.
+This is a partial implementation used by some IdM systems today, where they obtain Resource Objects from legacy databases using non-SCIM protocols and provide Resource Objects (RO) to downstream services, typically SaaS applications that need to create their own database of Resource Objects.
 ~~~~~~~~
                         Provision Domain
-                    +-----------------------+ 
+ UpStream           +-----------------------+        DownStream
 +----------+        |+---------++----------+|        +---------+
 |   SCIM   |        ||   SCIM  ||   SCIM   ||        |   SCIM  |
 |  Client  |        ||  Server ||  Server  ||        |  Client |
 |   RC/RU  |  (1)   ||  RS/RM  || RM/RC/RU ||        |         |  
 |(Source A)|------->||         ||          ||        |         |         
 +----------+        ||         ||          ||  (3)   |    RS   |
-+----------+        ||         ||          ||------->|         |
++----------+        ||  RC/RU  ||          ||------->|         |
 |    Non   |        ||         ||          ||        |         |
-|    SCIM  |  (2)   |!         !|          ||        |         |
+|   SCIM   |  (2)   |!         !|          ||        |         |
 |          |------->||(Consumer||          ||        |(Consumer|  
 |(Source B)|        ||   A,B)  ||(Source Z)||        |     Z)  |
 +----------+        |+---------++----------+|        +---------+
                     +-----------------------+ 
-         Figure 14: Single-Tenant Resource Manager that is the SCIM Server
+         Figure 16: Single-Tenant Resource Manager that is the SCIM Server
 ~~~~~~~~
 
    1. SCIM action - SCIM Client performs Active Push
@@ -616,8 +616,78 @@ The Resource Manager (RM) can also assume the roles of Resource Creator (RC) and
    3. SCIM action - SCIM Client performs Active/Delta Pull
 
 ##### Single-Tenant Resource Manager that is the SCIM Client
+The upstream service will provide one or more sources of Resource Objects (RO) and their Resource Attributes (RA). If the source is a SCIM Server, the Resource Manager, which will act as a SCIM Client, will use the Active/Delta Pull method to obtain that information. The same Resource Manager will act as a SCIM Server for the downstream consumer and will perform the action of pushing a select group of Resource Objects (RO) and their Resource Attributes (RA) to the consumer service.
+This is a partial implementation used by some IdM systems today, where they obtain Resource Objects from legacy databases using non-SCIM protocols and provide Resource Objects (RO) to downstream services, typically SaaS applications that need to create their own database of Resource Objects.
+~~~~~~~~
+                        Provision Domain
+ UpStream           +-----------------------+        DownStream
++----------+        |+---------++----------+|        +---------+
+|   SCIM   |        ||   SCIM  ||   SCIM   ||        |   SCIM  |
+|  Server  |        ||  Client ||  Client  ||        |  Server |
+|   RC/RU  |  (1)   ||  RS/RM  || RM/RC/RU ||        |         |  
+|(Source A)|------->||         ||          ||        |         |         
++----------+        ||         ||          ||  (3)   |    RS   |
++----------+        ||  RC/RU  ||          ||------->|         |
+|    Non   |        ||         ||          ||        |         |
+|   SCIM   |  (2)   |!         !|          ||        |         |
+|          |------->||(Consumer||          ||        |(Consumer|  
+|(Source B)|        ||   A,B)  ||(Source Z)||        |     Z)  |
++----------+        |+---------++----------+|        +---------+
+                    +-----------------------+ 
+         Figure 17: Single-Tenant Resource Manager that is the SCIM Client
+~~~~~~~~
+
+   1. SCIM action - SCIM Client performs Active/Delta Pull
+   2. Non SCIM action
+   3. SCIM action - SCIM Client performs Active Push
 
 ##### Single-Tenant Resource Manager that is the SCIM Server and SCIM Client
+The upstream service will provide one or more sources of Resource Objects (RO) and their Resource Attributes (RA). If the source is a SCIM Server, the Resource Manager, which will act as a SCIM Client, will use the Active/Delta Pull method to obtain that information. The same Resource Manager will act as a SCIM Server for the downstream consumer and will perform the action of pushing a select group of Resource Objects (RO) and their Resource Attributes (RA) to the consumer service.
+This is a partial implementation used by some IdM systems today, where they obtain Resource Objects from legacy databases using non-SCIM protocols and provide Resource Objects (RO) to downstream services, typically SaaS applications that need to create their own database of Resource Objects.
+~~~~~~~~
+                        Provision Domain
+ UpStream           +-----------------------+        DownStream
++----------+        |+---------++----------+|        +---------+
+|   SCIM   |        ||   SCIM  ||   SCIM   ||        |   SCIM  |
+|  Server  |        ||  Client ||  Server  ||        |  Client |
+|   RC/RU  |  (1)   ||  RS/RM  || RM/RC/RU ||        |         |  
+|(Source A)|------->||         ||          ||        |         |         
++----------+        ||         ||          ||  (3)   |    RS   |
++----------+        ||  RC/RU  ||          ||------->|         |
+|    Non   |        ||         ||          ||        |         |
+|   SCIM   |  (2)   |!         !|          ||        |         |
+|          |------->||(Consumer||          ||        |(Consumer|  
+|(Source B)|        ||   A,B)  ||(Source Z)||        |     Z)  |
++----------+        |+---------++----------+|        +---------+
+                    +-----------------------+ 
+         Figure 18: Single-Tenant Resource Manager that is the SCIM Client and SCIM Server
+~~~~~~~~
+
+   1. SCIM action - SCIM Client performs Active/Delta Pull
+   2. Non SCIM action
+   3. SCIM action - SCIM Client performs Active/Delta Pull
+~~~~~~~~
+                        Provision Domain
+ UpStream           +-----------------------+        DownStream
++----------+        |+---------++----------+|        +---------+
+|   SCIM   |        ||   SCIM  ||   SCIM   ||        |   SCIM  |
+|  Client  |        ||  Server ||  Client  ||        |  Server |
+|   RC/RU  |  (1)   ||  RS/RM  || RM/RC/RU ||        |         |  
+|(Source A)|------->||         ||          ||        |         |         
++----------+        ||         ||          ||  (3)   |    RS   |
++----------+        ||  RC/RU  ||          ||------->|         |
+|    Non   |        ||         ||          ||        |         |
+|   SCIM   |  (2)   |!         !|          ||        |         |
+|          |------->||(Consumer||          ||        |(Consumer|  
+|(Source B)|        ||   A,B)  ||(Source Z)||        |     Z)  |
++----------+        |+---------++----------+|        +---------+
+                    +-----------------------+ 
+         Figure 19: Single-Tenant Resource Manager that is the SCIM Server and SCIM Client
+~~~~~~~~
+
+   1. SCIM action - SCIM Client performs Active Push
+   2. Non SCIM action
+   3. SCIM action - SCIM Client performs Active Push
 
 #### Multi-Tenant Resource Manager (RM)
 
