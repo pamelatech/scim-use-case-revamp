@@ -707,61 +707,23 @@ Same information as Single-Tenant Resource Manager that is the SCIM Server and S
 
 ## Specific Implementations
 
+### Partner Device Registry
 
+### Device Identity Creation
 
-############################################################
+### Client Applications gets directory Services 
 
-## Self-Referential Resource Updates via /me
-Get information about persona /me endpoint.  
-A use case cover in [RFC7644] where a SCIM client can do CRUD operation on the entity of the user, in this use case the SCIM client that is the RM (Resource Manager), RC (Resource Creator) and RU (Resource Updater), will be able to read, create, update the RO (Resource Object) and its RA (Resource Attributes) in the RS (Resource Subscriber). the RS will provide an /me URI to achieve this.  
-Special considerations exist from authorization perspective; unlike other listed CRUD use cases, the authorization for this use case only allows access to the RO (Resource Object) of the resource owner.  
+### Provide Credetials to manage Device
 
-## Simple Resource Update
-Single RM/RC/RU and multiple RS.  
-This is a very common and simple SCIM use case, we have the IdM/Device Managers/etc. do all CRUD operation with the resources, then after the trigger mechanisms the resources information RO/RA reach the RS (Resource Subscribers), also know as the SaaS Application.  
-The RS (Resource Subscriber) will take the decision on which RA (Resource Attributes) to consider and how the RO (Resource Object) will show in its resource database.  
-Typically we will find this kind of use case in small to mid size organization, where there is no structure method to handle the resources and typically in Organization that start with a blank sheet of paper in a greenfield deployment.
+### Enterprise simple Applications
 
-## Resource Updates Originating at a Non-SCIM Source
-One or more ERC with single RM/RC/RU and multiple RS.  
-This is another common use case, because it allow the organization to adopt SCIM protocol for CRUD operations of their resources. In this use case the organization already have an existent database of resources that is going to be the source of truth for the Resource Manager.   
-Normally this ERC, specially if we are talking about user Identity, will have a User database that can be accessible using LDAP, some times the ERC can provide RO/RA using SAML Single Sign-On using Just in time Provision. We also see some IDaaS providing softwares that allow them to exchange resource information by using proprietary protocols, very common using HTTP REST to get the information from the ERC to the RM.  
-Typically in this use case the RM will become the new source of truth for the resources of our Organization, will add extra RA (Resource Attributes) and ignore other RA that existed in the ERC.  
-Some organization that already realize that going forward in the SCIM path, the RM will manage the RO/RA, will also start create new RO in the RM.  
-The Resource Subscribers will consume all or a subset of the RO/RA from the RM.  
-Typically we will see this use case in small to mid size organization where resources were organized in a non standardize platform for Resources Management, where it isn't possible to cut/replace everything with a new system.    
-    
-## Resources from Multiple SCIM Sources Coordinated by a Resource Manager
-One or more RC/RU, with single RM/RC/RU/RS and multiple RS.  
-In this use case, the the CRUD operation for the RO (Resource Object) and its RA (Resource Attributes) does not belong to the RM (Resource Manager), this is done in a separate SCIM entity, the Resource Creator/Resource Updater.   
-A good example of this is use case are Organization that have their HR application, and the lifecycle of the resource (typically groups and Users) is done by that application.  
-We could also have devices where the creation and update operations are always done by the device  itself or by a mobile application/web server on their behalf, in this use case the roles of RC/RU moves away from the RM.
-We could also have this use case where the RM is extended with the Roles of RC/RU for extra RA (Resources Attributes), but the RO (Resource Object) is typically created by the "HR System"/device.   
-Typically we will see this use case in mid to large organization where no structure method to handle the resources start with a blank sheet of paper in a  greenfield deployment. 
+### RA authority in SaaS Application
 
-## Resources from SCIM and Non-SCIM sources, Coordinated by a Resource Manager
-One or more ERC, one or more RC/RU, with single RM/RC/RU/RS and multiple RS.  
-In this use case, one source of the Resource information is an ERC (External Resource Creator), or the entity that has the role of RC/RU (such as an HR System). In some cases the HR system can also consume information from the ERC and complement it. 
-This doesn't mean that the RM will not need to consolidate RO/RA from the SCIM and non SCIM entities and consolidate and aggregate RO/RAs for those multiple sources. The RM gets its RO (Resource Object) from both systems the RC/RU and from the ERC, and need to define rules which ones to take and to ignore.
+#### Implementers Provision Domain is a SCIM Client and a SCIM server
 
-## Complex sources including Multiple Resource Updaters
-One or more ERC, one or more RC/RU, with single RM/RC/RU/RS and multiple RS/RU.  
-In this use case we add the capability of the Resource Subscriber to be also an Resource Update, it is very common that an SaaS application can be the source of truth for specifics RA and add extra details to the RO.  
-Typically we will see this use case in large organization where resources were organized in a non standardize platform for Resources Management and it isn't possible to cut/replace everything with a new system. Those organization start to adopt many application that brings new attributes to the different resources that already exist in the system.  
+#### Implementers Provision Domain is a SCIM Client
 
-## Complex Multi-directional Object and Resource Management with simple Resource Subscribers
-One or more ERC, one or more RC/RU/RS, with single RM/RC/RU/RS and multiple RS/RU.  
-In this use case we introduce the possibility of the RC/RU (example given before the HR System) be interested in the attribute that was created updated by the RS/RU (also known as the SaaS application), an example could be adding the business email that was created by the mail service (that came from RS/RU) to the HR information service (the RC/RU/RS element).  
-Typically we will see this use case in large organization where resources were organized in a non standardize platform for Resources Management and it isn't possible to cut/replace everything with a new system. Those organization start to adopt many application that brings attributes to the different resources that already exist in the system, but they need to have all the important attributes of Resources in a application in our examples "HR application".  
-
-## Complex Multi-direction Object/Resource Management with bi-directional Resource Subscriber/Updaters 
-One or more ERC, one or more RC/RU/RS, with one or more RM/RC/RU/RS and multiple RS/RU.  
-In this use case we introduce the possibility of having multiple Resource Managers, where the information from the RO/RA is consolidated across different domains/services.  
-Typically we will see this use case in large organizations, or between organizations that have their own business to business communication and have the need to exchange information about Resources. This example also happens during mergers or acquisitions, where multiple RMs exist and IT departments have to manage each RM in parallel.
-
-#######################################################
-
-
+### Reconciliations 
 
 # Security Considerations
 Authentication and authorization must be guaranteed for the SCIM operations to ensure that only authenticated entities can perform the SCIM requests and the requested SCIM operations are authorized. 
