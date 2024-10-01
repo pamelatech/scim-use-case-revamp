@@ -910,6 +910,27 @@ Provision Domain                               Customer A
    2. SCIM action - SCIM Client performs Active/Delta Pull
 
 ### Reconciliations 
+Because of inconsistencies or mistakes in the SaaS App Resource Objects and it attributes might change and there is no visibility of the IdM that it happens.
+System will do reconciliation to make sure that Resource Objects (RO) and its Resrouce Attributes (RA) are consistent across different systems.
+If there is a new attributes from SCIM Server in the Delta Pull, the SCIM client will do a push to fix it and make again synchronize
+
+~~~~~~~~
+                                              Application
+Provision Domain                               Customer A
++----------+                                  +----------+
+|   SCIM   |               (1)                |   SCIM   |
+|  Client  | -------------------------------> |  Server  |
+|          |               (2)                |          |
+|          | <------------------------------- |          |
+| RM/RC/RU |               (3)                |    RS    |
+|          | -------------------------------> |          |
++----------+                                  +----------+
+         Figure 27: Reconciliation of RO/RA between IDM and Application
+~~~~~~~~
+
+   1. Regular SCIM action - SCIM Client performs Active Push
+   2. SCIM action - SCIM Client performs Active/Delta Pull
+   3. Remediation SCIM action - SCIM Client performs Active Push
 
 # Security Considerations
 Authentication and authorization must be ensured for SCIM operations to guarantee that only authenticated entities can perform SCIM requests and that the requested SCIM operations are authorized.
