@@ -325,7 +325,7 @@ Because SCIM is a protocol where two entities exchange information about resourc
 
 ## Common Use Cases
 
-###Simple Provision Domain Objects Consumer 
+### Simple Provision Domain Objects Consumer 
 A Resource Subscriber (RS) receives data from a remote corporate data store. This is a very common and simple SCIM use case, where the Resource Object (RO) and its Resource Attributes (RA) are created by another party. The CRUD operations on these resources trigger specific actions to facilitate the information exchange between two entities, typically the SCIM Client and Server.
 The Resource Subscriber (RS) will decide which RA (Resource Attributes) to consider and how the RO (Resource Object) will appear in its resource database.
 Typically, we find this kind of use case in small to mid-sized organizations, and it is usually seen in on-premises deployments.
