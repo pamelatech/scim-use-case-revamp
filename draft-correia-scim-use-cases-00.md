@@ -789,11 +789,68 @@ Provision Domain
 
    1. SCIM action - SCIM Client performs Active Pull
 
-### Device Identity Creation
+### Device Identity Creation from Commissioner Tool
+When devices are initially provisioned from the client application (mobile application, web application, etc.), the client application will allow for the provision of additional details about the devices that are specific to that installation.
+Whether the commissioning tool is already SCIM-enabled or the client application includes the commissioning tool, there will ultimately be a SCIM action to perform an Active Push. This action will provide the additional Resource Attributes (RA) to be added to the Resource Object (RO) that is maintained in the device manager.
+~~~~~~~~
+Device Manager                Client App        Commissioner Tool
++--------+                +---------------+    (2)   +----+
+|        |                |  SCIM client  | <------> | RA |
+|  SCIM  |     (1)        | +----+ +----+ |          +----+
+| Server | <------------- | | RA | | RA | |    (2)   +----+
+|        |                | +----+ +----+ | <------> | RA |
+|        |                +---------------+          +----+
+|        |                           Client App + Comissioner Tool
+|        |                               +--------+
+|  RC/RU |               (1)             |   RA   |
+|  RM/RS | <---------------------------- |  SCIM  |
+|        |                               | Client |
++--------+                               +--------+
+         Figure 22:  Commissioner tool provide Resource Attribtues to Device Manager
+~~~~~~~~
+
+   1. SCIM action - SCIM client performs Active Push   
+   2. Non SCIM action   
 
 ### Client Applications gets directory Services 
+Client App gets from device manager information about all devices and its attributes from their environments
+Client App does the operation of downloading the full list of devices typically every day in non working hours, optionally with on-demand sync
+SCIM clients should only be able to access to devices that they manage  
+~~~~~~~~
+Device Manager                Client App        Commissioner Tool
++--------+                +---------------+    (2)   +----+
+|        |                |  SCIM client  | <------> | RA |
+|  SCIM  |     (1)        | +----+ +----+ |          +----+
+| Server | -------------> | | RA | | RA | |    (2)   +----+
+|        |                | +----+ +----+ | <------> | RA |
+|        |                +---------------+          +----+
+|        |                         Client App + Comissioner Tool
+|        |                               +--------+
+|  RC/RU |               (1)             |   RA   |
+|  RM/RS |  ---------------------------> |  SCIM  |
+|        |                               | Client |
++--------+                               +--------+
+         Figure 23: Device manager provides RO and RA to the DEvcies through Commissioner Tool
+~~~~~~~~
+
+   1. SCIM action - SCIM client performs Active Pull   
+   2. Non SCIM action   
 
 ### Provide Credetials to manage Device
+Device Manager can provide Resource Attributes to the Client App so that the Devices can be configured from the Commissioner Tool. An example can be the Device manager providing credentials to the Device using the client Application as the gateway, through the Comissioner Tool, they can be a single entity.
+~~~~~~~~
+Device Manager                Client App        Commissioner Tool
++--------+                +---------------+    (2)   +----+
+|        |     (1)        |               | <------> | RA |
+|  SCIM  | -------------> |  SCIM Server  |          +----+
+| Client |                |               |    (2)   +----+
+|        |                |      RS       | <------> | RA |
++--------+                +---------------+          +----+
+         Figure 24:  Device Manager provide Resource Attributes to the Commissioner tool to configure device
+~~~~~~~~
+
+   1. SCIM action - SCIM client performs Active Push   
+   2. Non SCIM action   
 
 ### Enterprise simple Applications
 
