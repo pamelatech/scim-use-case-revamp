@@ -813,9 +813,7 @@ Device Manager                Client App        Commissioner Tool
    2. Non SCIM action   
 
 ### Client Applications gets directory Services 
-Client App gets from device manager information about all devices and its attributes from their environments
-Client App does the operation of downloading the full list of devices typically every day in non working hours, optionally with on-demand sync
-SCIM clients should only be able to access to devices that they manage  
+The client application retrieves information about all devices and their attributes from the Device Manager for their environments. The client application typically downloads the full list of devices daily during non-working hours, with an optional on-demand sync. SCIM clients should only be able to access the devices that they manage.
 ~~~~~~~~
 Device Manager                Client App        Commissioner Tool
 +--------+                +---------------+    (2)   +----+
@@ -837,7 +835,7 @@ Device Manager                Client App        Commissioner Tool
    2. Non SCIM action   
 
 ### Provide Credetials to manage Device
-Device Manager can provide Resource Attributes to the Client App so that the Devices can be configured from the Commissioner Tool. An example can be the Device manager providing credentials to the Device using the client Application as the gateway, through the Comissioner Tool, they can be a single entity.
+The Device Manager can provide Resource Attributes to the client application so that the devices can be configured using the commissioning tool. For example, the Device Manager can provide credentials to the device using the client application as the gateway. Through the commissioning tool, which can be a single entity, these credentials can be delivered to the device.
 ~~~~~~~~
 Device Manager                Client App        Commissioner Tool
 +--------+                +---------------+    (2)   +----+
@@ -855,19 +853,69 @@ Device Manager                Client App        Commissioner Tool
 ### Enterprise simple Applications
 
 ### RA authority in SaaS Application
+Sometimes, not all the Resource Attributes (RA) of a Resource Object (RO) are owned (created) by the Resource Creator (RC) or Resource Updater (RU). Very specialized Resource Attributes (RA) can be the responsibility of a SaaS application. For example, an IdM should create user records with standard attributes like first name, last name, home address, etc., but the SaaS application should define the email attribute if that SaaS application is an email server.
 
 #### Implementers Provision Domain is a SCIM Client and a SCIM server
+The implementer's domain acts as the SCIM Client and is the authority for regular attributes such as first name, last name, home address, etc., of a user. These attributes are created and updated by the Provision Domain, which functions as the Resource Manager (RM), Resource Creator (RC), and Resource Updater (RU).
+The application is the authority for one or more specific Resource Attributes (RA), such as the email address of a given user. This means the application will serve as the Resource Manager (RM), Resource Creator (RC), and Resource Updater (RU) for those specific attributes only.
+Both the Provision Domain and the application will function as both the SCIM Client and SCIM Server for the respective Resource Attributes they are responsible for. They will use the SCIM action of Active Push to pass the Resource Attributes of the Resource Object to their counterpart.
+Thus, both the roles of SCIM Server and SCIM Client exist within the Provision Domain and the application.
+~~~~~~~~
+                                                 Application
+Provision Domain                                  Customer A
++------------+                                  +------------+ 
+|+----------+|                                  |+----------+|
+||   SCIM   ||                                  ||   SCIM   ||
+||  Client  ||                                  ||  Server  ||
+||          ||                (1)               ||          ||
+||          || -------------------------------> ||          ||
+|| RM/RC/RU ||                                  ||    RS    ||
+||          ||                                  ||          ||
+||          ||                                  ||          ||
+|+----------+|                                  |+----------+|
+|+----------+|                                  |+----------+|
+||   SCIM   ||                                  ||   SCIM   ||
+||  Server  ||                                  ||  Client  ||
+||          ||                (1)               ||          ||
+||          || <------------------------------- ||          ||
+||    RS    ||                                  || RM/RC/RU ||
+||          ||                                  ||          ||
+||          ||                                  ||          ||
+|+----------+|                                  |+----------+|
++------------+                                  +------------+
+         Figure 25: Single Ro with diferent RA authority implemented between the Provision Domain and the customer SaaS App 
+~~~~~~~~
+
+   1. SCIM action - SCIM Client performs Active Push
 
 #### Implementers Provision Domain is a SCIM Client
+The implementer's domain acts as the SCIM Client and is the authority for regular attributes, such as first name, last name, home address, etc., of a user. These attributes are created and updated by the Provision Domain, which functions as the Resource Manager (RM), Resource Creator (RC), and Resource Updater (RU).
+The application is the authority for one or more specific Resource Attributes (RA), such as the email address of a given user. This means the application will serve as the Resource Manager (RM), Resource Creator (RC), and Resource Updater (RU) for those specific attributes only.
+In this use case, since the Provision Domain is always the SCIM Client and the application is always the SCIM Server, the Active Push method will be used for the regular attributes of the Resource Objects (RO). The Active/Delta Pull method will be used to retrieve the specialized Resource Attributes that are the responsibility of the application.
+~~~~~~~~
+                                              Application
+Provision Domain                               Customer A
++----------+                                  +----------+
+|   SCIM   |               (1)                |   SCIM   |
+|  Client  | -------------------------------> |  Server  |
+|          |                                  |          |
+|          |               (2)                |          |
+| RM/RC/RU | <------------------------------- |    RS    |
+|          |                                  |          |
++----------+                                  +----------+
+         Figure 26: Single RO with diferent RA authority implemented between the Provision Domain and the customer SaaS App 
+~~~~~~~~
+
+   1. SCIM action - SCIM Client performs Active Push
+   2. SCIM action - SCIM Client performs Active/Delta Pull
 
 ### Reconciliations 
 
 # Security Considerations
-Authentication and authorization must be guaranteed for the SCIM operations to ensure that only authenticated entities can perform the SCIM requests and the requested SCIM operations are authorized. 
-SCIM resources (e.g., Users and Groups) can contain sensitive information.  Thus, data confidentiality MUST be guaranteed at the transport layer.
-There can be privacy issues that go beyond transport security, e.g., moving personally identifying information (PII) offshore between different SCIM elements.
-Regulatory requirements shall be met when migrating identity information between jurisdictional regions (e.g., countries and states may have differing regulations on privacy).
-Additionally, privacy-sensitive data elements may be omitted or obscured in SCIM transactions or stored records to protect these data elements for a user. For instance, a role-based identifier might be used in place of an individual's name.
+Authentication and authorization must be ensured for SCIM operations to guarantee that only authenticated entities can perform SCIM requests and that the requested SCIM operations are authorized.
+SCIM resources (e.g., Users and Groups) can contain sensitive information. Therefore, data confidentiality must be ensured at the transport layer.
+There can be privacy issues that extend beyond transport security, such as moving personally identifiable information (PII) offshore between different SCIM elements. Regulatory requirements must be met when migrating identity information between different jurisdictions (e.g., countries and states may have differing privacy regulations).
+Additionally, privacy-sensitive data elements may be omitted or obscured in SCIM transactions or stored records to protect these data elements for a user. For instance, a role-based identifier might be used instead of an individual's name.
 Detailed security considerations are specified in Section 7 of the SCIM protocol [RFC7644] and Section 9 of the SCIM schema [RFC7643].
 
 # IANA Considerations
