@@ -301,20 +301,20 @@ An entity can have one or more orchestrator roles, depending on the overall arch
 |        |                |               |                 |         | 
 | RM/RC  |     (2)        |               |                 |         |
 |  /RU   | -------------> |               |                 |         |
-|        |                |     RS/RC/RU  |                 |         |
-|        |                |               |                 | RS/RC   |
-|        |                |               |                 |  /RU    |
+|        |                |     RS/RC/RU  |                 |   RS    |
+|        |                |               |                 |         |
 +--------+                +---------------+                 +---------+
-         Figure 7:  SCIM action for events using Domain Replication mode
+         Figure 7:  SCIM actions aggregated by a SCIM server then transmitted via SCIM Events using Domain Replication Mode
 ~~~~~~~~
 
-   1. SCIM Operation.   
+   1. SCIM Action.   
    2. SCIM Response.   
    3. Event SCIM:prov:<op> id:xyz
 
-#### Co-Ordinated Provision 
+#### Co-Ordinated Provisioning 
 In these relationships, an Event Publisher and Receiver [SCIM Profile for Security Event Tokens] typically exchange resource change events without exchanging data. For the receiver to know the value of the data, the Event Receiver usually makes calls back to the SCIM Event Publisher domain to receive a new copy of the data (e.g., using a SCIM GET request).
 In any Event Publisher and Receiver relationship, the set of SCIM resources (e.g., users) that are linked or coordinated is managed within the context of an event feed, which MAY be a subset of the total set of resources on either side. For example, an event feed could be limited to users who have consented to the sharing of information between domains. To support this capability, "feed" specific events are defined to indicate the addition and removal of SCIM resources from a feed.
+[[TODO: Paulo to add diagram, diagram like the above but adds a SCIM action below the event as (4)]]
 
 # SCIM Use Cases
 This section describes some common SCIM use cases, explaining when, where, why, and how they are found in cross-domain environments. The ultimate goal is to provide guidance for developers working on common models, explaining the challenges and components involved.
