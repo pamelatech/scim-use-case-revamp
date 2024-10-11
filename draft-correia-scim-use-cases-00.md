@@ -52,7 +52,6 @@ This document provides definitions, overview and selected use cases of the Syste
 --- middle
 
 # Introduction
- The text you've provided is mostly clear but could benefit from a few grammatical and stylistic adjustments for better readability and clarity. Here's the revised version:
  The System for Cross-domain Identity Management (SCIM) family of specifications [RFC7643] and [RFC7644] is designed to manage resources used in the practice of identity management that need to be communicated across internet domains and services, with users and groups as the default resources supported (and an extensibility model for additional resource definitions).
  The specifications have two primary goals:
    1. A common representation of a resource object and its attributes.
@@ -127,7 +126,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 An entity can have one or more orchestrator roles, depending on the overall architecture.
 
 #### Resource Creator (RC)
- An entity responsible for creating the Resource Object (RO). Typically, this role is found in HR or Resource Management (RM) applications that are responsible for creating resources and their attributes.  
+ An entity responsible for creating the Resource Object (RO). Typically, this role is found in HR or Resource Management (RM) applications that are responsible for creating resources and their attributes. 
 
 #### Resource Updater (RU)
  An entity responsible for updating specific Resource Attributes (RA) of a Resource Object (RO) or the RO itself. Typically, this role is used in conjunction with other SCIM roles that allow this SCIM entity to manage specific Resource Attributes (RA) and/or Resource Objects (RO).  
@@ -243,8 +242,7 @@ An entity can have one or more orchestrator roles, depending on the overall arch
 
 #### Client Active Pull
  A SCIM client uses the HTTP GET verb to request data from a SCIM server. With the action of an active pull, the client will fetch one or multiple objects from the SCIM server.
- Client active pulls can be used in situations where a client needs to maintain a synchronized large body of objects, such as a device list or user address book, without the need to track individual Resource Objects (RO) or Resource Attributes (RA).
- here are cases where the client performs a one-time pull of specific ROs and their RAs from a server that manages many ROs. For example, a mobile app (SCIM Client) may fetch the current license entitlement from a Device Manager (SCIM Server).
+ Client active pulls can be used in situations where a client needs to maintain a synchronized large body of objects, such as a device list or user address book, without the need to track individual Resource Objects (RO) or Resource Attributes (RA). There are also cases where the client performs a one-time pull of only one specific RO from a server that manages many ROs. For example, a mobile app (SCIM Client) may fetch the current license entitlement from a Device Manager (SCIM Server).
 
 ~~~~~~~~
 +----------+                                   +----------+
@@ -264,11 +262,10 @@ An entity can have one or more orchestrator roles, depending on the overall arch
 ~~~~~~~~
    
    1. The SCIM client will perform an HTTP GET to obtain the selected list of Resource Objects (RO) and their Resource Attributes (RA).  
-   2. The SCIM Service Provider will return the RO and its RA along with additional metadata information to allow for auditing.
+   2. The SCIM Server will return the RO and its RA along with additional metadata information to allow for auditing.
 
 #### Active Dynamic Query
- A SCIM client uses the HTTP GET verb to request data from a SCIM server. With the action of an active pull, the client will fetch one or multiple objects from the SCIM server. At this point, the SCIM server will provide a Dynamic Query (DQ) token that allows locating the point in the Resource Object (RO) database from which the next update needs to start. This approach enables delta updates instead of providing a full sync every time SCIM actions run, achieving incremental updates with CRUD operations since the last DQ token.
- With this kind of action, SCIM reconciliations are possible, where the SCIM client can resolve inconsistencies created by changes in the SCIM server.
+ A SCIM client uses the HTTP GET verb to request data from a SCIM server. With the action of an active pull, the client will fetch one or multiple objects from the SCIM server. The response data from the SCIM server will include a Dynamic Query (DQ) token that allows the client to subsequent active pulls that will only return RO objects that have changed (including references to deleted objects). The data returned from a dynamic query is usually much smaller, and allows a client to focus only on processing incremental changes rather than performing a full sync every time. With this kind of action, SCIM reconciliations are possible, where the SCIM client can resolve inconsistencies created over time between the client and the SCIM server.
 
 ~~~~~~~~
 +----------+                                   +----------+
@@ -287,7 +284,7 @@ An entity can have one or more orchestrator roles, depending on the overall arch
          Figure 6: SCIM action for Client Active Dynamic Query
 ~~~~~~~~
    
-   1. The SCIM client will perform an HTTP GET to obtain a delta list of Resource Objects (RO) and their Resource Attributes (RA) since the previous SCIM action.
+   1. The SCIM client will perform an HTTP GET requesting a delta list of Resource Objects (RO) and their Resource Attributes (RA) since the previous SCIM action.
    2. The SCIM Service Provider will return the delta list of RO and their RA along with additional metadata information for auditing purposes.
 
 #### Domain Replication Mode
