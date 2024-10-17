@@ -336,15 +336,13 @@ In any Event Publisher and Receiver relationship, the set of SCIM resources (e.g
    3. Event SCIM:prov:<op> id:xyz
    4. SCIM Active Pull
 
-[[TODO: Paulo to add diagram, diagram like the above but adds a SCIM action below the event as (4)]]
-
 # SCIM Use Cases
 This section describes some common SCIM use cases, explaining when, where, why, and how they are found in cross-domain environments. The ultimate goal is to provide guidance for developers working on common models, explaining the challenges and components involved.
 Because SCIM is a protocol where two entities exchange information about resources across domains, the use cases explain how the different components can interact to support simple to complex architectures for cross-domain resource management. Orchestrator roles are mapped to the use cases to simplify the explanation of the multiple functions of the SCIM elements. The use cases build on each other, starting with simple cases and ending with the most complex ones.
 
-## Common Use Cases
+## Elements for the Use Case
 
-### Simple Provision Domain Objects Consumer 
+### Resource Subscriber (RS) 
 A Resource Subscriber (RS) receives data from a remote corporate data store. This is a very common and simple SCIM use case, where the Resource Object (RO) and its Resource Attributes (RA) are created by another party. The CRUD operations on these resources trigger specific actions to facilitate the information exchange between two entities, typically the SCIM Client and Server.
 The Resource Subscriber (RS) will decide which RA (Resource Attributes) to consider and how the RO (Resource Object) will appear in its resource database.
 Typically, we find this kind of use case in small to mid-sized organizations, and it is usually seen in on-premises deployments.
@@ -473,7 +471,7 @@ A good example would be a SaaS application (most commonly a multi-tenant applica
 
    1. SCIM action - SCIM Client performs Active/Delta Pull 
 
-### Simple Provision Domain Objects Creator
+### Resource Creator (RC/RU)
 Single-tenant provisioning is done using a Resource Creator/Updater (RC/RU), which is responsible for creating the objects that will be passed across different systems. This is a very common and simple SCIM use case, where the Resource Object (RO) and its Resource Attributes (RA) are created. The CRUD operations on these resources trigger specific actions to facilitate the information exchange between two entities, typically the SCIM Client and Server.
 It is the responsibility of the Resource Creator/Updater to pass all relevant Resource Attributes (RA) for that specific RS/RM. Typically, we find this kind of use case in small to mid-sized organizations, mainly in on-premises systems, where there is no structured method to handle the resources.
 
@@ -599,7 +597,7 @@ Provision Domain
 
    1. SCIM action - SCIM Client performs Active/Delta Pull
 
-### Provision Domain Identity and Access Management (IAM) 
+### Resource Management (RM) 
 Typically, one or more upstream object databases populate the Resource Manager (RM), which then provides that resource information to downstream services requiring specific sets of the populated objects.
 The scenarios described in the next chapter will always outline the concept of upstream services, which are normally the sources of the objects, and downstream services, which are typically the consumers of the objects.
 A single-tenant Resource Manager (RM) will receive Resource Objects (RO) and their Resource Attributes (RA) from an upstream entity, which can be either SCIM or non-SCIM. A good example of a non-SCIM upstream source would be connectors that synchronize users and groups using an HTTP REST interface to copy those objects from a database using legacy protocols like LDAP.
