@@ -314,6 +314,28 @@ An entity can have one or more orchestrator roles, depending on the overall arch
 #### Co-Ordinated Provisioning 
 In these relationships, an Event Publisher and Receiver [SCIM Profile for Security Event Tokens] typically exchange resource change events without exchanging data. For the receiver to know the value of the data, the Event Receiver usually makes calls back to the SCIM Event Publisher domain to receive a new copy of the data (e.g., using a SCIM GET request).
 In any Event Publisher and Receiver relationship, the set of SCIM resources (e.g., users) that are linked or coordinated is managed within the context of an event feed, which MAY be a subset of the total set of resources on either side. For example, an event feed could be limited to users who have consented to the sharing of information between domains. To support this capability, "feed" specific events are defined to indicate the addition and removal of SCIM resources from a feed.
+
+~~~~~~~~
++--------+                +---------------+                 +---------+
+|        |                |               |                 |         |
+|  SCIM  |                |               |                 |         |
+| Client |                |  SCIM Server  |                 |         |
+|        |     (1)        |               |      (3)        |  SCIM   |
+|        | <------------- |               | --------------> | Server  |
+|        |                |               |                 |         | 
+| RM/RC  |     (2)        |               |      (4)        |         |
+|  /RU   | -------------> |               | --------------> |         |
+|        |                |     RS/RC/RU  |                 |   RS    |
+|        |                |               |                 |         |
++--------+                +---------------+                 +---------+
+         Figure 8:  SCIM actions aggregated by a SCIM server then transmitted via SCIM Events using Co-Ordinated Provisioning
+~~~~~~~~
+
+   1. SCIM Action.   
+   2. SCIM Response.   
+   3. Event SCIM:prov:<op> id:xyz
+   4. SCIM Active Pull
+
 [[TODO: Paulo to add diagram, diagram like the above but adds a SCIM action below the event as (4)]]
 
 # SCIM Use Cases
