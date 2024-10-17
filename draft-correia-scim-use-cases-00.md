@@ -364,7 +364,7 @@ A good example would be an on-premises application (most commonly a single-tenan
 |          |                                   |          |
 | (Source) |                                   |(Consumer)|
 +----------+                                   +----------+
-         Figure 8: Single-Tenant Resource Subscriber that is the SCIM Server
+         Figure 9: Single-Tenant Resource Subscriber that is the SCIM Server
 ~~~~~~~~
 
    1. SCIM action - SCIM Client performs Active Push 
@@ -383,7 +383,7 @@ A good example would be an on-premises application (most commonly a single-tenan
 |          |                                   |          |
 | (Source) |                                   |(Consumer)|
 +----------+                                   +----------+
-         Figure 9: Single-Tenant Resource Subscriber that is the SCIM Client
+         Figure 10: Single-Tenant Resource Subscriber that is the SCIM Client
 ~~~~~~~~
 
    1. SCIM action - SCIM Client performs Active/Delta Pull 
@@ -426,7 +426,7 @@ A good example would be a SaaS application (most commonly a multi-tenant applica
 +----------+                                  |+----------+|
                                               +------------+
 
-         Figure 10: Multi-Tenant Resource Subscriber that is the SCIM Server
+         Figure 11: Multi-Tenant Resource Subscriber that is the SCIM Server
 ~~~~~~~~
 
    1. SCIM action - SCIM Client performs Active Push 
@@ -466,7 +466,7 @@ A good example would be a SaaS application (most commonly a multi-tenant applica
 +----------+                                  |+----------+|
                                               +------------+
 
-         Figure 11: Multi-Tenant Resource Subscriber that is the SCIM Client
+         Figure 12: Multi-Tenant Resource Subscriber that is the SCIM Client
 ~~~~~~~~
 
    1. SCIM action - SCIM Client performs Active/Delta Pull 
@@ -492,7 +492,7 @@ Provision Domain
 |          |                                   |          |
 | (Source) |                                   |(Consumer)|
 +----------+                                   +----------+
-         Figure 12: Single-Tenant Resource Creator/Updater that is the SCIM Client
+         Figure 13: Single-Tenant Resource Creator/Updater that is the SCIM Client
 ~~~~~~~~
 
    1. SCIM action - SCIM Client performs Active Push 
@@ -511,7 +511,7 @@ Provision Domain
 |          |                                   |          |
 | (Source) |                                   |(Consumer)|
 +----------+                                   +----------+
-         Figure 13: Single-Tenant Resource Creator/Updater that is the SCIM Server
+         Figure 14: Single-Tenant Resource Creator/Updater that is the SCIM Server
 ~~~~~~~~
 
    1. SCIM action - SCIM Client performs Active/Delta Pull
@@ -553,7 +553,7 @@ Provision Domain
 ||(Tenant C)||                                   |(Consumer C)|
 |+----------+|                                   +------------+
 +------------+
-         Figure 14: Multi-Tenant Resource Creator/Updater that is the SCIM Client
+         Figure 15: Multi-Tenant Resource Creator/Updater that is the SCIM Client
 ~~~~~~~~
 
    1. SCIM action - SCIM Client performs Active Push 
@@ -592,7 +592,7 @@ Provision Domain
 ||(Tenant C)||                                   |(Consumer C)|
 |+----------+|                                   +------------+
 +------------+
-         Figure 15: Multi-Tenant Resource Creator/Updater that is the SCIM Server
+         Figure 16: Multi-Tenant Resource Creator/Updater that is the SCIM Server
 ~~~~~~~~
 
    1. SCIM action - SCIM Client performs Active/Delta Pull
@@ -627,7 +627,7 @@ This is a partial implementation used by some IdM systems today, where they obta
 |(Source B)|        ||   A,B)  ||(Source Z)||        |     Z)  |
 +----------+        |+---------++----------+|        +---------+
                     +-----------------------+ 
-         Figure 16: Single-Tenant Resource Manager that is the SCIM Server
+         Figure 17: Single-Tenant Resource Manager that is the SCIM Server
 ~~~~~~~~
 
    1. SCIM action - SCIM Client performs Active Push
@@ -653,7 +653,7 @@ This is a partial implementation used by some IdM systems today, where they obta
 |(Source B)|        ||   A,B)  ||(Source Z)||        |     Z)  |
 +----------+        |+---------++----------+|        +---------+
                     +-----------------------+ 
-         Figure 17: Single-Tenant Resource Manager that is the SCIM Client
+         Figure 18: Single-Tenant Resource Manager that is the SCIM Client
 ~~~~~~~~
 
    1. SCIM action - SCIM Client performs Active/Delta Pull
@@ -681,7 +681,7 @@ This is a partial implementation used by some IdM systems today, where they obta
 |(Source B)|        ||   A,B)  ||(Source Z)||        |     Z)  |
 +----------+        |+---------++----------+|        +---------+
                     +-----------------------+ 
-         Figure 18: Single-Tenant Resource Manager that is the SCIM Client and SCIM Server
+         Figure 19: Single-Tenant Resource Manager that is the SCIM Client and SCIM Server
 ~~~~~~~~
 
    1. SCIM action - SCIM Client performs Active/Delta Pull
@@ -703,7 +703,7 @@ This is a partial implementation used by some IdM systems today, where they obta
 |(Source B)|        ||   A,B)  ||(Source Z)||        |     Z)  |
 +----------+        |+---------++----------+|        +---------+
                     +-----------------------+ 
-         Figure 19: Single-Tenant Resource Manager that is the SCIM Server and SCIM Client
+         Figure 20: Single-Tenant Resource Manager that is the SCIM Server and SCIM Client
 ~~~~~~~~
 
    1. SCIM action - SCIM Client performs Active Push
@@ -761,7 +761,7 @@ Provision Domain
 ||(Tenant C)||                                   |(Costumer C)|
 |+----------+|                                   +------------+
 +------------+
-         Figure 20: Manufactor is the SCIM client and push RO to Customers 
+         Figure 21: Manufactor is the SCIM client and push RO to Customers 
 ~~~~~~~~
 
    1. SCIM action - SCIM Client performs Active Push
@@ -801,7 +801,7 @@ Provision Domain
 ||(Tenant C)||                                   |(Consumer C)|
 |+----------+|                                   +------------+
 +------------+
-         Figure 21: Manufactor is the SCIM Server and Customers Pull information about Device
+         Figure 22: Manufactor is the SCIM Server and Customers Pull information about Device
 ~~~~~~~~
 
    1. SCIM action - SCIM Client performs Active Pull
@@ -823,7 +823,7 @@ Device Manager                Client App        Commissioner Tool
 |  RM/RS | <---------------------------- |  SCIM  |
 |        |                               | Client |
 +--------+                               +--------+
-         Figure 22:  Commissioner tool provide Resource Attribtues to Device Manager
+         Figure 23:  Commissioner tool provide Resource Attribtues to Device Manager
 ~~~~~~~~
 
    1. SCIM action - SCIM client performs Active Push   
@@ -845,7 +845,7 @@ Device Manager                Client App        Commissioner Tool
 |  RM/RS |  ---------------------------> |  SCIM  |
 |        |                               | Client |
 +--------+                               +--------+
-         Figure 23: Device manager provides RO and RA to the DEvcies through Commissioner Tool
+         Figure 24: Device manager provides RO and RA to the DEvcies through Commissioner Tool
 ~~~~~~~~
 
    1. SCIM action - SCIM client performs Active Pull   
@@ -861,7 +861,7 @@ Device Manager                Client App        Commissioner Tool
 | Client |                |               |    (2)   +----+
 |        |                |      RS       | <------> | RA |
 +--------+                +---------------+          +----+
-         Figure 24:  Device Manager provide Resource Attributes to the Commissioner tool to configure device
+         Figure 25:  Device Manager provide Resource Attributes to the Commissioner tool to configure device
 ~~~~~~~~
 
    1. SCIM action - SCIM client performs Active Push   
@@ -900,7 +900,7 @@ Provision Domain                                  Customer A
 ||          ||                                  ||          ||
 |+----------+|                                  |+----------+|
 +------------+                                  +------------+
-         Figure 25: Single Ro with diferent RA authority implemented between the Provision Domain and the customer SaaS App 
+         Figure 26: Single Ro with diferent RA authority implemented between the Provision Domain and the customer SaaS App 
 ~~~~~~~~
 
    1. SCIM action - SCIM Client performs Active Push
@@ -920,7 +920,7 @@ Provision Domain                               Customer A
 | RM/RC/RU | <------------------------------- |    RS    |
 |          |                                  |          |
 +----------+                                  +----------+
-         Figure 26: Single RO with diferent RA authority implemented between the Provision Domain and the customer SaaS App 
+         Figure 27: Single RO with diferent RA authority implemented between the Provision Domain and the customer SaaS App 
 ~~~~~~~~
 
    1. SCIM action - SCIM Client performs Active Push
@@ -942,7 +942,7 @@ Provision Domain                               Customer A
 | RM/RC/RU |               (3)                |    RS    |
 |          | -------------------------------> |          |
 +----------+                                  +----------+
-         Figure 27: Reconciliation of RO/RA between IDM and Application
+         Figure 28: Reconciliation of RO/RA between IDM and Application
 ~~~~~~~~
 
    1. Regular SCIM action - SCIM Client performs Active Push
