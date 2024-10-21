@@ -28,14 +28,6 @@ informative:
   RFC9110:
   RFC9112:
   RFC8417:
-  Device Schema Extensions to the SCIM model:
-     target: https://datatracker.ietf.org/doc/draft-shahzad-scim-device-model
-     title: Device Schema Extensions to the SCIM model
-     author:
-     - name: M. Shahzad
-     - name: H. Iqbal
-     - name: E. Lear
-     date: 2023-07 
   SCIM Profile for Security Event Tokens:
      target: https://datatracker.ietf.org/doc/draft-ietf-scim-events
      title: SCIM Profile for Security Event Tokens
@@ -43,7 +35,8 @@ informative:
      - name: P. Hunt
      - name: N. Cam-Winget
      - name: M. Kiser
-     date: 2023-07 
+     - name: J. Schreiber
+     date: 2024-08 
 
 --- abstract
 
@@ -52,35 +45,33 @@ This document provides definitions, overview and selected use cases of the Syste
 --- middle
 
 # Introduction
- The System for Cross-domain Identity Management (SCIM) family of specifications [RFC7643] and [RFC7644] is designed to manage resources used in the practice of identity management that need to be communicated across internet domains and services, with users and groups as the default resources supported (and an extensibility model for additional resource definitions).
- The specifications have two primary goals:
-   1. A common representation of a resource object and its attributes.
-   2. Standardized patterns for how those resources can be operated on, including "CRUD" operations (Create, Read, Update, Delete) for resource objects and more advanced goals such as search filters, synchronization of large resource populations, etc.
- These goals are codified as a data model in [RFC7643], which defines resources, attributes, and default schemas, as well as a protocol definition built on HTTP in [RFC7644]. By standardizing the data model and protocol for resource management, entire ecosystems can achieve better interoperability, security, and scalability.
+The System for Cross-domain Identity Management (SCIM) family of specifications [RFC7643] and [RFC7644] is designed to manage resources used in the practice of identity management that need to be communicated across internet domains and services, with users and groups as the default resources supported (and an extensibility model for additional resource definitions).
+The specifications have two primary goals:
+ 1. A common representation of a resource object and its attributes.
+ 2. Standardized patterns for how those resources can be operated on, including "CRUD" operations (Create, Read, Update, Delete) for resource objects and more advanced goals such as search filters, synchronization of large resource populations, etc.
+These goals are codified as a data model in [RFC7643], which defines resources, attributes, and default schemas, as well as a protocol definition built on HTTP in [RFC7644]. By standardizing the data model and protocol for resource management, entire ecosystems can achieve better interoperability, security, and scalability.
 
- This document provides definitions, overviews, concepts, flows, and use cases that implementers may need to understand the design and applicability of the SCIM schema [RFC7643] and SCIM protocol [RFC7644]. Unlike some protocols like Application Bridging for Federated Access Beyond Web (ABFAB) and SAML2 WebSSO, SCIM provides provisioning and de-provisioning of resources in a separate context from authentication. While SCIM is a protocol that standardizes the movement of data only between two parties in an HTTP client-server model, this document discusses implementation patterns that use concepts beyond the core schema and protocol, which are necessary to understand how SCIM actions can fit into larger architectures.
+This document provides definitions, overviews, concepts, flows, and use cases that implementers may need to understand the design and applicability of the SCIM schema [RFC7643] and SCIM protocol [RFC7644]. Unlike some protocols like Application Bridging for Federated Access Beyond Web (ABFAB) and SAML2 WebSSO, SCIM provides provisioning and de-provisioning of resources in a separate context from authentication. While SCIM is a protocol that standardizes the movement of data only between two parties in an HTTP client-server model, this document discusses implementation patterns that use concepts beyond the core schema and protocol, which are necessary to understand how SCIM actions can fit into larger architectures.
 
 # Terminology
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC2119] when they appear in ALL CAPS. These words may also appear in this document in lowercase as plain English words, absent their normative meanings. Here is a list of acronyms and abbreviations used in this document:
-
-* CRUD: Create, Read, Update, Delete
-* ERC: External Resource Creator 
-* IaaS: Infrastructure as a Service
-* IDaaS: Identity as a Service
-* IdM: Identity Manager
-* JIT: Just In Time
-* RC: Resource Creator
-* RU: Resource Updater
-* RM: Resource Manager 
-* RS: Resource Subscriber 
-* RO: Resource Object 
-* RA: Resource Attribute 
-* SaaS: Software as a Service
-* SAML: Security Assertion Markup Language
-* SCIM: System for Cross-domain Identity Management
-* SET: Security Event Token
-* SSO: Single Sign-On
-
+ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC2119] when they appear in ALL CAPS. These words may also appear in this document in lowercase as plain English words, absent their normative meanings. Here is a list of acronyms and abbreviations used in this document:
+ * CRUD: Create, Read, Update, Delete
+ * ERC: External Resource Creator 
+ * IaaS: Infrastructure as a Service
+ * IDaaS: Identity as a Service
+ * IdM: Identity Manager
+ * JIT: Just In Time
+ * RC: Resource Creator
+ * RU: Resource Updater
+ * RM: Resource Manager 
+ * RS: Resource Subscriber 
+ * RO: Resource Object 
+ * RA: Resource Attribute 
+ * SaaS: Software as a Service
+ * SAML: Security Assertion Markup Language
+ * SCIM: System for Cross-domain Identity Management
+ * SET: Security Event Token
+ * SSO: Single Sign-On
 
 # SCIM Components and Architecture
  The SCIM architecture is a client-server model centered on a normative concept of a "resource." Resources have types (such as a user or a group), and each unique instance of a resource type is represented by a JSON object, accessed via a standardized REST API. Each resource object can be managed individually or in bulk using actions that by default are specified in [RFC9110](HTTP GET, PUT, POST, etc.), but may also expand to concepts in extension documents, such as security event tokens (SETs). This model enables organizations to represent information about user populations and the groups those user populations are part of using the core specifications, and to extend to other important resources using extension drafts in the same family, with the high-level concept of performing SCIM actions on resource objects. SCIM actions result in resource objects and associated data "moving" between the client and server, as clients actively push and pull information that reflects changes over time. This communication of data enables systems within domains and across domains to operate on the freshest possible version of object state.
