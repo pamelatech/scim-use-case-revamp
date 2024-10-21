@@ -340,7 +340,7 @@ In any Event Publisher and Receiver relationship, the set of SCIM resources (e.g
 This section describes some common SCIM use cases, explaining when, where, why, and how they are found in cross-domain environments. The ultimate goal is to provide guidance for developers working on common models, explaining the challenges and components involved.
 Because SCIM is a protocol where two entities exchange information about resources across domains, the use cases explain how the different components can interact to support simple to complex architectures for cross-domain resource management. Orchestrator roles are mapped to the use cases to simplify the explanation of the multiple functions of the SCIM elements. The use cases build on each other, starting with simple cases and ending with the most complex ones.
 
-## Elements for the Use Case
+## Use Cases for Orchetrator Roles 
 
 ### Resource Subscriber (RS) 
 A Resource Subscriber (RS) receives data from a remote corporate data store. This is a very common and simple SCIM use case, where the Resource Object (RO) and its Resource Attributes (RA) are created by another party. The CRUD operations on these resources trigger specific actions to facilitate the information exchange between two entities, typically the SCIM Client and Server.
