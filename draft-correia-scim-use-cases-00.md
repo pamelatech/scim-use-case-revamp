@@ -340,7 +340,7 @@ In any Event Publisher and Receiver relationship, the set of SCIM resources (e.g
 This section describes some common SCIM use cases, explaining when, where, why, and how they are found in cross-domain environments. The ultimate goal is to provide guidance for developers working on common models, explaining the challenges and components involved.
 Because SCIM is a protocol where two entities exchange information about resources across domains, the use cases explain how the different components can interact to support simple to complex architectures for cross-domain resource management. Orchestrator roles are mapped to the use cases to simplify the explanation of the multiple functions of the SCIM elements. The use cases build on each other, starting with simple cases and ending with the most complex ones.
 
-## Use Cases for Orchetrator Roles 
+## Use Cases for Orchestrator Roles 
 
 ### Resource Subscriber (RS) 
 A Resource Subscriber (RS) receives data from a remote corporate data store. This is a very common and simple SCIM use case, where the Resource Object (RO) and its Resource Attributes (RA) are created by another party. The CRUD operations on these resources trigger specific actions to facilitate the information exchange between two entities, typically the SCIM Client and Server.
@@ -711,7 +711,7 @@ This is a partial implementation used by some IdM systems today, where they obta
    3. SCIM action - SCIM Client performs Active Push
 
 #### Multi-Tenant Resource Manager (RM)
-Multi-Tenant Resource Manager are tipically Identity Manager (IdM) that are cloud base, normally designated as IDaaS, where the upStream and Downstream are either on-premise or Cloud base.
+Multi-Tenant Resource Manager are typically Identity Manager (IdM) that are cloud base, normally designated as IDaaS, where the upStream and Downstream are either on-premise or Cloud base.
 
 ##### Multi-Tenant Resource Manager that is the SCIM Server
 Same information as Single-Tenant Resource Manager that is the SCIM Server but the Provision domain has multiple Tenants 
@@ -845,7 +845,7 @@ Device Manager                Client App        Commissioner Tool
 |  RM/RS |  ---------------------------> |  SCIM  |
 |        |                               | Client |
 +--------+                               +--------+
-         Figure 24: Device manager provides RO and RA to the DEvcies through Commissioner Tool
+         Figure 24: Device manager provides RO and RA to the Devices through Commissioner Tool
 ~~~~~~~~
 
    1. SCIM action - SCIM client performs Active Pull   
@@ -867,7 +867,8 @@ Device Manager                Client App        Commissioner Tool
    1. SCIM action - SCIM client performs Active Push   
    2. Non SCIM action   
 
-### Enterprise simple Applications
+### Enterprise "Last Mile" Applications
+When provisioning to line of business Enterprise applications, implementers may need to adopt whatever solution the application itself can accept in order to move provisioning data from dedicated SCIM infrastructure into use by the application (this data hop is often called the last mile). Proprietary connectors that run at the application layer, the database layer, or the framework layer may add SCIM Client functionality to an application that cannot itself be updated. In this case, connectors often use a client active pull over a periodic interval to keep the application in sync. It is also common for this pattern to include a just-in-time SSO trigger, so that should a new user try to access the line of business application before the resource has been created by the periodic active pull, they are created instead based on the contents of the user's SAML assertion and then managed going forward by SCIM active pulls.  
 
 ### RA authority in SaaS Application
 Sometimes, not all the Resource Attributes (RA) of a Resource Object (RO) are owned (created) by the Resource Creator (RC) or Resource Updater (RU). Very specialized Resource Attributes (RA) can be the responsibility of a SaaS application. For example, an IdM should create user records with standard attributes like first name, last name, home address, etc., but the SaaS application should define the email attribute if that SaaS application is an email server.
