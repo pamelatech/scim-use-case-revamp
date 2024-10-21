@@ -154,7 +154,7 @@ An entity that consumes information in resource objects (RO) and typically don't
 #### External Resource Creator (ERC)
 An entity that has information about resources and its attributes, but does not participate in SCIM flows, examples include databases or internally-facing applications.
 
-~~~~~~~~
+~~~
    +-------------+ +-------------+   +-------------+ +-------------+
    |(RO) Resource| |(RA) Resource|   |(RO) Resource| |(RA) Resource|
    |   Object1   | |  Attribute1 |   |   Object2   | |  Attribute2 |
@@ -189,7 +189,7 @@ An entity that has information about resources and its attributes, but does not 
  |   Object1   | |   Object2   |   |   Object1   | |   Object2   |
  +-------------+ +-------------+   +-------------+ +-------------+
                       Figure 1: SCIM Orchestrators Roles
-~~~~~~~~
+~~~
 
 ### Triggers
 Triggers are actions or activities that may cause a SCIM action to occur.  Triggers can occur as a result of business processes like a corporate hiring event, but can also be scheduled events such as a unix bash script running as a chron job, or can be just-in-time events such as SAML assertion arriving at a federated relying party that identifies a not-seen-before user. Triggers can also be standardized events, such as those in the OpenID Shared Signals Framework. Triggers used to allow CRUD (Create, Read, Update, Delete) using SCIM Actions or Operations as it is designed to capture a class of use case that makes sense to the actor requesting it rather than to describe a protocol operation.  
@@ -206,7 +206,7 @@ Application triggers occur when administrative or end-user interfaces are manipu
 #### SSO (Single Sign-on)
 Single Sign-on triggers occur when a user authenticates via federated protocols such as SAML 2.0 or OpenID Connect. If a federated assertion arrives for a user who has not yet been provisioned into the destination application, the application may be triggered to perform just-in-time (JIT) provisioning. This trigger occurs in scenarios where a Single Sign-On flow happens, but not all the resource attributes for the user object are passed in the federated assertion, resulting in a SCIM action to push or pull remaining needed attributes.  
 
-~~~~~~~~
+~~~
 +---------------+                                   +---------------+
 |               |                                   |               |
 |               |                                   |               |
@@ -221,7 +221,7 @@ Single Sign-on triggers occur when a user authenticates via federated protocols 
 |               |                                   |               |
 +---------------+                                   +---------------+
           Figure 2:  SCIM  Flow and Entities map
-~~~~~~~~
+~~~
 
  1. SSO trigger that creates the user and might create some RA (Resource Attributes) of a RO (Resource Object)       
  1. SCIM actions that will complement the attributes created before with an SSO JIT with additional RA (Resource Attributes) of the RO (Resource Objects) created before.   
@@ -236,7 +236,7 @@ A SCIM client uses HTTP verbs POST, PUT or PATCH to create or update objects and
 ##### Resource Object creation/update from Client to Server
 In this model we will have a Client that is going to provide information about a RO and its RA to a Server, that can also be called as SCIM Server in [RFC7643] and [RFC7644].
 
-~~~~~~~~
+~~~
 +----------------+                                   +----------------+
 |                |                (1)                |                |
 |                | --------------------------------> |                |
@@ -251,7 +251,7 @@ In this model we will have a Client that is going to provide information about a
 |                | <-------------------------------- |                |
 +----------------+                                   +----------------+
               Figure 3: SCIM  Flow and Orchestrator roles maps
-~~~~~~~~
+~~~
 
 1. Before creating/updating a RO/RA the SCIM client will always do a HTTP GET to get current information from the SCIM Server.   
 2. SCIM Server will provide the current information on the resources asked by the SCIM Client.   
@@ -263,7 +263,7 @@ The SCIM client will map to the RM/RC/RU and the Server will map into RS.
 ##### Resource Object creation from a Creation Entity 
 In this model we will have a Client that is going to provide information about a RO and its RA to a Server, can also be called as Service Provider in [RFC7643] and [RFC7644], in this model the Client is just responsible for a limit set of attributes and do not do any management overall, and the Resource management function resides on the Server.
 
-~~~~~~~~
+~~~
 +--------------+                                   +---------------+
 |              |                (1)                |               |
 |              | --------------------------------> |               |
@@ -279,7 +279,7 @@ In this model we will have a Client that is going to provide information about a
 +--------------+                                   +---------------+
              Figure 4:  SCIM  Flow and Orchestrator roles maps
    
-~~~~~~~~
+~~~
 1. Before creating/updating a RO/RA the SCIM client will always do a HTTP GET to get current information from the SCIM Server.   
 2. SCIM Server will provide the current information on the resources asked by the SCIM Client.   
 3. Based on the RO and RA returned by the Server, there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve.  
@@ -290,7 +290,7 @@ The SCIM client will map to the RC/RU and the Server will map into RM/RS. The SC
 ##### Resource Object creation from a Creation Entity and consumption from an Application
 In this model we will have a Client that is going to provide information about a RO and its RA to a Server, this Client is just responsible for a limit set of attributes and do not do any management overall the RO. This SCIM element that is going to manage the RO will then be the Client for other SCIM services that will consume the RO/RA, that might have more RA than the original RO provided by the originator of the RO. 
 
-~~~~~~~~
+~~~
 +--------+                +---------------+                 +---------+
 |        |     (1)        |               |      (1)        |         |
 |        | -------------> |               | --------------> |         |
@@ -305,7 +305,7 @@ In this model we will have a Client that is going to provide information about a
 |        | <------------- |               | <-------------- |         |
 +--------+                +---------------+                 +---------+
                      Figure 5:  SCIM  Flow and Orchestrator roles maps
-~~~~~~~~
+~~~
 1. Before creating/updating a RO/RA the SCIM client will always do a HTTP GET to get current information from the SCIM Server.   
 2. SCIM Server will provide the current information on the resources asked by the SCIM Client.   
 3. Based on the RO and RA returned by the Server, there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve.  
@@ -318,7 +318,7 @@ The center component as describe is the Server for the client on the left, will 
 In this model we will have a Client that is going to provide information about a RO and its RA to a Server, this Client is just responsible for a limit set of attributes and do not do any management overall the RO. This SCIM element that is going to manage the RO will then be the Client for other SCIM services that will consume the RO/RA, that might have more RA than the original RO provided by the originator of the RO. 
 Now the right SCIM element will have it own RA that needs to be updated in the RM (Resource Manager), that will also update the SCIM element on the left.
 
-~~~~~~~~
+~~~
  +----------+               +---------------+                +--------+
  |          | -----(1)----> |               | -----(1)-----> |        |
  |  Client  | <----(2)----- |SCIM           | <----(2)------ |  SCIM  |
@@ -333,7 +333,7 @@ Now the right SCIM element will have it own RA that needs to be updated in the R
  +----------+               +---------------+                +--------+
                  Figure 6:  SCIM  Flow and Orchestrator roles maps
    
-~~~~~~~~
+~~~
 1. Before creating/updating a RO/RA the SCIM client will always do a HTTP GET to get current information from the SCIM Server.   
 2. SCIM Server will provide the current information on the resources asked by the SCIM Client.   
 3. Based on the RO and RA returned by the Server, there will be a HTTP POST, PUT, PATCH depending on the operation that the Client want to achieve.  
@@ -351,7 +351,7 @@ Another example of a client active pull would be a client that needs to have det
 ##### Resource Object Creation or Update
 In this model we will have a Client that is going to pull information about a RO/RA from a Server. In this model the Client is going to management all the RO (Resource Objects) and its RA (Resource Attributes), that are provided by the Server, and the RM (Resource Management) function resides on the Client.
 
-~~~~~~~~
+~~~
 +----------+                                   +----------+
 |          |                                   |          |
 |          |                                   |          |
@@ -366,7 +366,7 @@ In this model we will have a Client that is going to pull information about a RO
 |          |                                   |          |
 +----------+                                   +----------+
         Figure 7:  SCIM  Flow and Orchestrator roles maps
-~~~~~~~~
+~~~
    
 1. The SCIM client will do an HTTP GET to obtain the RO/RA that will be available in the Server.   
 2. The SCIM Server will return the RO/RA with additional metadata information to allow for audit.  
@@ -377,7 +377,7 @@ Another example could be a SCIM client that has the role of an IDM that is not t
 ##### Resources Subscription
 In this model we will have the Client that is going to pull information about a RO/RA from the Server. In this model, the Client has is no status/change database, and it gets a list of all the RO/RA based on filters provided by the client, so there will be a full update every synchronization cycle.  
 
-~~~~~~~~
+~~~
 +----------+                                   +----------+
 |          |                                   |          |
 |          |                                   |          |
@@ -392,7 +392,7 @@ In this model we will have the Client that is going to pull information about a 
 |          |                                   |          |
 +----------+                                   +----------+
          Figure 8:  SCIM  Flow and Orchestrator roles maps
-~~~~~~~~
+~~~
    
 1. The SCIM client will do an HTTP GET to obtain the selected list of RO (Resource Object) and its RA (Resource Attributes).  
 2. The SCIM Service Provider will return the RO and its RA with additional metadata information to allow for audit.  
@@ -402,7 +402,7 @@ A good example would be SaaS service that needs to consume a list of contacts or
 ##### Resource Object Creation or Update and Subscription
 In this model we will bring together both of the two previous SCIM actions for pull information, where a typically a device can be the creator or their own attributes and will allow an SaaS service to subscribe to all the different RO/RA and deliver additional services for itself and other devices. It isn't expected from any of the SCIM clients in the Active pull model to create any status database of attributes changes, so the clients will always do a pull on one or many RO (Resource Objects) based on triggers.
 
-~~~~~~~~
+~~~
 +----------+                 +---------------+               +--------+
 |          |                 |               |               |        |
 |          |                 |               |               |        |
@@ -417,7 +417,7 @@ In this model we will bring together both of the two previous SCIM actions for p
 |          |                 |               |               |        |
 +----------+                 +---------------+               +--------+
                     Figure 9:  SCIM  Flow and Orchestrator roles maps
-~~~~~~~~
+~~~
 1. The SCIM client will do an HTTP GET to obtain the RO/RA that will be available in the Server.   
 2. The SCIM Server will return the RO/RA with additional metadata information to allow for audit.  
 3. The SCIM client will do an HTTP GET to obtain the selected list of RO (Resource Object) and its RA (Resource Attributes).  

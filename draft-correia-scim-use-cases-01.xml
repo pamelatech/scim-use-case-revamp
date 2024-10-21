@@ -351,7 +351,7 @@ An entity can have one or more orchestrator roles, depending on the overall arch
 </section>
 <section anchor="co-ordinated-provisioning"><name>Co-Ordinated Provisioning</name>
 <t>In these relationships, an Event Publisher and Receiver <xref target="SCIM Profile for Security Event Tokens"></xref> typically exchange resource change events without exchanging data. For the receiver to know the value of the data, the Event Receiver usually makes calls back to the SCIM Event Publisher domain to receive a new copy of the data (e.g., using a SCIM GET request).
-In any Event Publisher and Receiver relationship, the set of SCIM resources (e.g., users) that are linked or coordinated is managed within the context of an event feed, which MAY be a subset of the total set of resources on either side. For example, an event feed could be limited to users who have consented to the sharing of information between domains. To support this capability, "feed" specific events are defined to indicate the addition and removal of SCIM resources from a feed.</t>
+ In any Event Publisher and Receiver relationship, the set of SCIM resources (e.g., users) that are linked or coordinated is managed within the context of an event feed, which MAY be a subset of the total set of resources on either side. For example, an event feed could be limited to users who have consented to the sharing of information between domains. To support this capability, "feed" specific events are defined to indicate the addition and removal of SCIM resources from a feed.</t>
 
 <figure><artwork><![CDATA[
 +--------+                +---------------+                 +---------+
@@ -382,21 +382,21 @@ In any Event Publisher and Receiver relationship, the set of SCIM resources (e.g
 </section>
 <section anchor="scim-use-cases"><name>SCIM Use Cases</name>
 <t>This section describes some common SCIM use cases, explaining when, where, why, and how they are found in cross-domain environments. The ultimate goal is to provide guidance for developers working on common models, explaining the challenges and components involved.
-Because SCIM is a protocol where two entities exchange information about resources across domains, the use cases explain how the different components can interact to support simple to complex architectures for cross-domain resource management. Orchestrator roles are mapped to the use cases to simplify the explanation of the multiple functions of the SCIM elements. The use cases build on each other, starting with simple cases and ending with the most complex ones.</t>
+ Because SCIM is a protocol where two entities exchange information about resources across domains, the use cases explain how the different components can interact to support simple to complex architectures for cross-domain resource management. Orchestrator roles are mapped to the use cases to simplify the explanation of the multiple functions of the SCIM elements. The use cases build on each other, starting with simple cases and ending with the most complex ones.</t>
 
 <section anchor="use-cases-for-orchestrator-roles"><name>Use Cases for Orchestrator Roles</name>
 
 <section anchor="resource-subscriber-rs-1"><name>Resource Subscriber (RS)</name>
 <t>A Resource Subscriber (RS) receives data from a remote corporate data store. This is a very common and simple SCIM use case, where the Resource Object (RO) and its Resource Attributes (RA) are created by another party. The CRUD operations on these resources trigger specific actions to facilitate the information exchange between two entities, typically the SCIM Client and Server.
-The Resource Subscriber (RS) will decide which RA (Resource Attributes) to consider and how the RO (Resource Object) will appear in its resource database.
-Typically, we find this kind of use case in small to mid-sized organizations, and it is usually seen in on-premises deployments.</t>
+ The Resource Subscriber (RS) will decide which RA (Resource Attributes) to consider and how the RO (Resource Object) will appear in its resource database.
+ Typically, we find this kind of use case in small to mid-sized organizations, and it is usually seen in on-premises deployments.</t>
 
 <section anchor="single-tenant-resource-subscriber-rs"><name>Single-Tenant Resource Subscriber (RS)</name>
 <t>Resource Subscriber (RS) in a single tenant that can either be the SCIM Client or SCIM Server. Typically, we see this in an on-premise application.</t>
 
 <section anchor="single-tenant-resource-subscriber-that-is-the-scim-server"><name>Single-Tenant Resource Subscriber that is the SCIM Server</name>
 <t>It is common today for the SCIM Client, typically performing the roles of RM (Resource Manager), RC (Resource Creator), and RU (Resource Updater), to perform CRUD operations on the database of the RS (Resource Subscriber) using the Active Push method. This action delivers RO (Resource Objects) and their RA (Resource Attributes) to the single-tenant RS.
-A good example would be an on-premises application (most commonly a single-tenant application) that creates its own database of objects for its own use, obtaining the objects from a central IdM (Identity Management) system.</t>
+ A good example would be an on-premises application (most commonly a single-tenant application) that creates its own database of objects for its own use, obtaining the objects from a central IdM (Identity Management) system.</t>
 
 <figure><artwork><![CDATA[
                                              Provision Domain
@@ -409,7 +409,7 @@ A good example would be an on-premises application (most commonly a single-tenan
 |          |                                   |          |
 | (Source) |                                   |(Consumer)|
 +----------+                                   +----------+
-         Figure 9: Single-Tenant Resource Subscriber that is the SCIM Server
+    Figure 9: Single-Tenant Resource Subscriber that is the SCIM Server
 ]]></artwork></figure>
 
 <t><list style="numbers" type="1">
@@ -419,7 +419,7 @@ A good example would be an on-premises application (most commonly a single-tenan
 </section>
 <section anchor="single-tenant-resource-subscriber-that-is-the-scim-client"><name>Single-Tenant Resource Subscriber that is the SCIM Client</name>
 <t>The SCIM Client, which is the RS (Resource Subscriber), will perform CRUD operations on its own database using the Active and/or Delta Pull methods. Source information is available in the SCIM server, which is the IdM (Identity Management) system and is responsible for the roles of RM (Resource Manager), RC (Resource Creator), and RU (Resource Updater) for the RO (Resource Objects) and their RA (Resource Attributes).
-A good example would be an on-premises application (most commonly a single-tenant application) that creates its own database of objects, such as devices, from a central IdM (Identity Management) system. This option is a good solution for situations where the RS (Resource Subscriber) is not reachable from the IdM.</t>
+ A good example would be an on-premises application (most commonly a single-tenant application) that creates its own database of objects, such as devices, from a central IdM (Identity Management) system. This option is a good solution for situations where the RS (Resource Subscriber) is not reachable from the IdM.</t>
 
 <figure><artwork><![CDATA[
                                              Provision Domain
@@ -446,7 +446,7 @@ A good example would be an on-premises application (most commonly a single-tenan
 
 <section anchor="multi-tenant-resource-subscriber-that-is-the-scim-server"><name>Multi-Tenant Resource Subscriber that is the SCIM Server</name>
 <t>It is the most common today for the SCIM Client, typically performing the roles of RM (Resource Manager), RC (Resource Creator), and RU (Resource Updater), to perform CRUD operations on the database of the RS (Resource Subscriber) using the Active Push method. This action delivers RO (Resource Objects) and their RA (Resource Attributes) to the multi-tenant RS (Resrouce Subscriber).
-A good example would be a SaaS application (most commonly a multi-tenant applications) that creates its own database of objects for its own use, obtaining the objects from a central IdM (Identity Management) system.</t>
+ A good example would be a SaaS application (most commonly a multi-tenant applications) that creates its own database of objects for its own use, obtaining the objects from a central IdM (Identity Management) system.</t>
 
 <figure><artwork><![CDATA[
                                               Provision Domain
@@ -491,7 +491,7 @@ A good example would be a SaaS application (most commonly a multi-tenant applica
 <section anchor="multi-tenant-resource-subscriber-that-is-the-scim-client"><name>Multi-Tenant Resource Subscriber that is the SCIM Client</name>
 <t>The SCIM Client, which is the RS (Resource Subscriber), will perform CRUD operations on its own database using the Active and/or Delta Pull methods. Source information is available in the SCIM server, which is the IdM (Identity Management) system and is responsible for the roles of RM (Resource Manager), RC (Resource Creator), and RU (Resource Updater) for the RO (Resource Objects) and their RA (Resource Attributes).
 A good example would be a SaaS application (most commonly a multi-tenant application) that creates its own database of objects for each of its tenants, using a central IdM (Identity Management) system.
-~~~~~~~~
+~~~
                                              Provision Domain
                                               +------------+
 +----------+                                  |+----------+|
@@ -524,7 +524,7 @@ A good example would be a SaaS application (most commonly a multi-tenant applica
                                               +------------+</t>
 
 <figure><artwork><![CDATA[
-     Figure 12: Multi-Tenant Resource Subscriber that is the SCIM Client ~~~~~~~~
+     Figure 12: Multi-Tenant Resource Subscriber that is the SCIM Client ~~~
 ]]></artwork></figure>
 
 <t><list style="numbers" type="1">
@@ -544,7 +544,7 @@ It is the responsibility of the Resource Creator/Updater to pass all relevant Re
 <section anchor="single-tenant-resource-creatorupdater-that-is-the-scim-client"><name>Single-Tenant Resource Creator/Updater that is the SCIM Client</name>
 <t>It is common today for the SCIM Client, typically performing the roles RC (Resource Creator) and RU (Resource Updater) to perform CRUD operations on the database of the RS (Resource Subscriber) or RM (Resrouce Manager) using the Active Push method. This action delivers RO (Resource Objects) and their RA (Resource Attributes) from a single-tenant provision service to a Consumer.
 A good example would be traditional on-premises HR (Human Resource) applications that creates Resrouce Object (RO) either in central IdM (Identity Management) system or directly in a target aplications.
-~~~~~~~~
+~~~
 Provision Domain
 +----------+                                   +----------+
 |   SCIM   |                                   |   SCIM   |
@@ -556,7 +556,7 @@ Provision Domain
 | (Source) |                                   |(Consumer)|
 +----------+                                   +----------+
          Figure 13: Single-Tenant Resource Creator/Updater that is the SCIM Client
-~~~~~~~~</t>
+~~~</t>
 
 <t><list style="numbers" type="1">
   <t>SCIM action - SCIM Client performs Active Push</t>
@@ -566,7 +566,7 @@ Provision Domain
 <section anchor="single-tenant-resource-creatorupdater-that-is-the-scim-server"><name>Single-Tenant Resource Creator/Updater that is the SCIM Server</name>
 <t>The SCIM Client, which can be the RS (Resource Subscriber) or RM (Resource Manager), will perform CRUD operations on its own database using the Active and/or Delta Pull methods. Source information is available in the SCIM server, which is the source system responsible for the roles of RC (Resource Creator) and RU (Resource Updater) for the RO (Resource Objects) and their RA (Resource Attributes).
 A good example would be a traditional HR on-premises application (most commonly a single-tenant application) that creates its own database of objects and provides them to a SCIM client. The SCIM client can either be an RS (Resource Subscriber), typically a standalone application that requires object information from the HR application, or an RM (Resource Manager), such as an on-premises IdM that will consolidate and add additional RA (Resource Attributes) to the RO (Resource Objects). This option is a good solution for situations where the RS (Resource Subscriber) or RM (Resource Manager) is not reachable from the HR application.
-~~~~~~~~
+~~~
 Provision Domain
 +----------+                                   +----------+
 |   SCIM   |                                   |   SCIM   |
@@ -578,7 +578,7 @@ Provision Domain
 | (Source) |                                   |(Consumer)|
 +----------+                                   +----------+
          Figure 14: Single-Tenant Resource Creator/Updater that is the SCIM Server
-~~~~~~~~</t>
+~~~</t>
 
 <t><list style="numbers" type="1">
   <t>SCIM action - SCIM Client performs Active/Delta Pull</t>
@@ -592,7 +592,7 @@ Provision Domain
 <section anchor="multi-tenant-resource-creatorupdater-that-is-the-scim-client"><name>Multi-Tenant Resource Creator/Updater that is the SCIM Client</name>
 <t>It is common today for the SCIM Client, typically performing the roles of RC (Resource Creator) and RU (Resource Updater), to perform CRUD operations on the database of the RS (Resource Subscriber) or RM (Resource Manager) using the Active Push method. This action delivers RO (Resource Objects) and their RA (Resource Attributes) from a multi-tenant provision service to a consumer.
 A good example would be any new SaaS HR (Human Resources) application that creates Resource Objects (RO) either in a central IdM (Identity Management) system or directly in target applications.
-~~~~~~~~
+~~~
 Provision Domain
 +------------+ 
 |+----------+|                                   +------------+
@@ -624,7 +624,7 @@ Provision Domain
 |+----------+|                                   +------------+
 +------------+
          Figure 15: Multi-Tenant Resource Creator/Updater that is the SCIM Client
-~~~~~~~~</t>
+~~~</t>
 
 <t><list style="numbers" type="1">
   <t>SCIM action - SCIM Client performs Active Push</t>
@@ -634,7 +634,7 @@ Provision Domain
 <section anchor="multi-tenant-resource-creatorupdater-that-is-the-scim-server"><name>Multi-Tenant Resource Creator/Updater that is the SCIM Server</name>
 <t>The SCIM Client, which can be the RS (Resource Subscriber) or RM (Resource Manager), will perform CRUD operations on its own database using the Active and/or Delta Pull methods. Source information is available in the SCIM server, which is the source system responsible for the roles of RC (Resource Creator) and RU (Resource Updater) for the RO (Resource Objects) and their RA (Resource Attributes).
 A good example would be a SaaS HR (Human Resource) application (most commonly a multi-tenant application) that has its own database of objects and provides them to a SCIM client. The SCIM client can either be an RS (Resource Subscriber), typically a standalone application that requires object information from the HR application, or an RM (Resource Manager), such as an on-premises IdM that will consolidate and add additional RA (Resource Attributes) to the RO (Resource Objects). 
-~~~~~~~~
+~~~
 Provision Domain
 +------------+ 
 |+----------+|                                   +------------+
@@ -666,7 +666,7 @@ Provision Domain
 |+----------+|                                   +------------+
 +------------+
          Figure 16: Multi-Tenant Resource Creator/Updater that is the SCIM Server
-~~~~~~~~</t>
+~~~</t>
 
 <t><list style="numbers" type="1">
   <t>SCIM action - SCIM Client performs Active/Delta Pull</t>
@@ -688,7 +688,7 @@ The Resource Manager (RM) can also assume the roles of Resource Creator (RC) and
 <section anchor="single-tenant-resource-manager-that-is-the-scim-server"><name>Single-Tenant Resource Manager that is the SCIM Server</name>
 <t>The upstream service will provide one or more sources of Resource Objects (RO) and their Resource Attributes (RA). If the source is a SCIM Client, it will use the Active Push method to deliver that information to the Resource Manager, which will be the SCIM Server and the consumer of those Resource Objects. The same Resource Manager will act as a SCIM server for the downstream consumer, which will be the SCIM Client performing the actions of Active/Delta Push.
 This is a partial implementation used by some IdM systems today, where they obtain Resource Objects from legacy databases using non-SCIM protocols and provide Resource Objects (RO) to downstream services, typically SaaS applications that need to create their own database of Resource Objects.
-~~~~~~~~
+~~~
                         Provision Domain
  UpStream           +-----------------------+        DownStream
 +----------+        |+---------++----------+|        +---------+
@@ -705,7 +705,7 @@ This is a partial implementation used by some IdM systems today, where they obta
 +----------+        |+---------++----------+|        +---------+
                     +-----------------------+ 
          Figure 17: Single-Tenant Resource Manager that is the SCIM Server
-~~~~~~~~</t>
+~~~</t>
 
 <t><list style="numbers" type="1">
   <t>SCIM action - SCIM Client performs Active Push</t>
@@ -717,7 +717,7 @@ This is a partial implementation used by some IdM systems today, where they obta
 <section anchor="single-tenant-resource-manager-that-is-the-scim-client"><name>Single-Tenant Resource Manager that is the SCIM Client</name>
 <t>The upstream service will provide one or more sources of Resource Objects (RO) and their Resource Attributes (RA). If the source is a SCIM Server, the Resource Manager, which will act as a SCIM Client, will use the Active/Delta Pull method to obtain that information. The same Resource Manager will act as a SCIM Server for the downstream consumer and will perform the action of pushing a select group of Resource Objects (RO) and their Resource Attributes (RA) to the consumer service.
 This is a partial implementation used by some IdM systems today, where they obtain Resource Objects from legacy databases using non-SCIM protocols and provide Resource Objects (RO) to downstream services, typically SaaS applications that need to create their own database of Resource Objects.
-~~~~~~~~
+~~~
                         Provision Domain
  UpStream           +-----------------------+        DownStream
 +----------+        |+---------++----------+|        +---------+
@@ -734,7 +734,7 @@ This is a partial implementation used by some IdM systems today, where they obta
 +----------+        |+---------++----------+|        +---------+
                     +-----------------------+ 
          Figure 18: Single-Tenant Resource Manager that is the SCIM Client
-~~~~~~~~</t>
+~~~</t>
 
 <t><list style="numbers" type="1">
   <t>SCIM action - SCIM Client performs Active/Delta Pull</t>
@@ -748,7 +748,7 @@ This is a partial implementation used by some IdM systems today, where they obta
 This scenario we will use as SCIM action Active/Delta Pull from the UpStream to the Resource Manager and the same action from it to the DownStream, for the scenarios where the initial Source is a SCIM server and the final Consumer is the SCIM Client.
 This scenarios we will use as SCIM action Active Push from the UpStream to the Resource Manager and the same action from it to the DownStream, for the scenarios where the initial Source is a SCIM Client and the final Consumer is the SCIM Server.
 This is a partial implementation used by some IdM systems today, where they obtain Resource Objects from legacy databases using non-SCIM protocols and provide Resource Objects (RO) to downstream services, typically SaaS applications that need to create their own database of Resource Objects.
-~~~~~~~~
+~~~
                         Provision Domain
  UpStream           +-----------------------+        DownStream
 +----------+        |+---------++----------+|        +---------+
@@ -765,13 +765,13 @@ This is a partial implementation used by some IdM systems today, where they obta
 +----------+        |+---------++----------+|        +---------+
                     +-----------------------+ 
          Figure 19: Single-Tenant Resource Manager that is the SCIM Client and SCIM Server
-~~~~~~~~</t>
+~~~</t>
 
 <t><list style="numbers" type="1">
   <t>SCIM action - SCIM Client performs Active/Delta Pull</t>
   <t>Non SCIM action</t>
   <t>SCIM action - SCIM Client performs Active/Delta Pull
-~~~~~~~~
+~~~
                   Provision Domain
  UpStream           +-----------------------+        DownStream
 +----------+        |+---------++----------+|        +---------+
@@ -788,7 +788,7 @@ This is a partial implementation used by some IdM systems today, where they obta
 +----------+        |+---------++----------+|        +---------+
               +-----------------------+ 
    Figure 20: Single-Tenant Resource Manager that is the SCIM Server and SCIM Client
-~~~~~~~~</t>
+~~~</t>
   <t>SCIM action - SCIM Client performs Active Push</t>
   <t>Non SCIM action</t>
   <t>SCIM action - SCIM Client performs Active Push</t>
@@ -822,7 +822,7 @@ This is a partial implementation used by some IdM systems today, where they obta
 <section anchor="manufacturer-details-provided-to-customer-by-vendor-that-is-the-scim-client"><name>Manufacturer details provided to customer by vendor that is the SCIM client</name>
 <t>The manufacturer is the multi-tenant SCIM client and will push details of devices acquired by specific customers to their SCIM servers. The customer will provide the SCIM server and will receive information from the acquired devices. Additionally, the customer will manage the attributes of those devices, assuming the roles of Resource Subscriber (RS), Resource Updater (RU), and Resource Manager (RM). After the initial creation of the Resource Object (RO) in the customer's device database, it will be the server's responsibility to add and update the Resource Attributes (RA).
 Typically, the device will reach out to a device manager in the customer's network, which will provide the SCIM server endpoint to the manufacturer. This task can also be done manually at the time of the device acquisition, allowing a SCIM push of the Resource Object (RO) to the customer's device management platform.
-~~~~~~~~
+~~~
 Provision Domain
 +------------+ 
 |+----------+|                                   +------------+
@@ -854,7 +854,7 @@ Provision Domain
 |+----------+|                                   +------------+
 +------------+
          Figure 21: Manufactor is the SCIM client and push RO to Customers 
-~~~~~~~~</t>
+~~~</t>
 
 <t><list style="numbers" type="1">
   <t>SCIM action - SCIM Client performs Active Push</t>
@@ -865,7 +865,7 @@ Provision Domain
 <t>The manufacturer is the multi-tenant SCIM server that holds the details of the Resource Objects, which it can provide to customers who acquire them. The customer will provide a SCIM client that will perform an Active Pull of the Resource Objects acquired from a specific manufacturer.
 The SCIM client will have the roles of Resource Subscriber (RS), Resource Manager (RM), and Resource Updater (RU), because after creating the Resource Object (RO) in its object database, it will be responsible for updating and modifying that object.
 This use case is especially interesting for customers whose Device Manager is not reachable from the Internet. In such cases, the Device Manager will act as a SCIM client and perform the action of pulling the Resource Object (RO) from the multi-tenant SCIM server provided by the manufacturer.
-~~~~~~~~
+~~~
 Provision Domain
 +------------+ 
 |+----------+|                                   +------------+
@@ -897,7 +897,7 @@ Provision Domain
 |+----------+|                                   +------------+
 +------------+
          Figure 22: Manufactor is the SCIM Server and Customers Pull information about Device
-~~~~~~~~</t>
+~~~</t>
 
 <t><list style="numbers" type="1">
   <t>SCIM action - SCIM Client performs Active Pull</t>
@@ -908,7 +908,7 @@ Provision Domain
 <section anchor="device-identity-creation-from-commissioner-tool"><name>Device Identity Creation from Commissioner Tool</name>
 <t>When devices are initially provisioned from the client application (mobile application, web application, etc.), the client application will allow for the provision of additional details about the devices that are specific to that installation.
 Whether the commissioning tool is already SCIM-enabled or the client application includes the commissioning tool, there will ultimately be a SCIM action to perform an Active Push. This action will provide the additional Resource Attributes (RA) to be added to the Resource Object (RO) that is maintained in the device manager.
-~~~~~~~~
+~~~
 Device Manager                Client App        Commissioner Tool
 +--------+                +---------------+    (2)   +----+
 |        |                |  SCIM client  | &lt;------&gt; | RA |
@@ -923,7 +923,7 @@ Device Manager                Client App        Commissioner Tool
 |        |                               | Client |
 +--------+                               +--------+
          Figure 23:  Commissioner tool provide Resource Attribtues to Device Manager
-~~~~~~~~</t>
+~~~</t>
 
 <t><list style="numbers" type="1">
   <t>SCIM action - SCIM client performs Active Push</t>
@@ -933,7 +933,7 @@ Device Manager                Client App        Commissioner Tool
 </section>
 <section anchor="client-applications-gets-directory-services"><name>Client Applications gets directory Services</name>
 <t>The client application retrieves information about all devices and their attributes from the Device Manager for their environments. The client application typically downloads the full list of devices daily during non-working hours, with an optional on-demand sync. SCIM clients should only be able to access the devices that they manage.
-~~~~~~~~
+~~~
 Device Manager                Client App        Commissioner Tool
 +--------+                +---------------+    (2)   +----+
 |        |                |  SCIM client  | &lt;------&gt; | RA |
@@ -948,7 +948,7 @@ Device Manager                Client App        Commissioner Tool
 |        |                               | Client |
 +--------+                               +--------+
          Figure 24: Device manager provides RO and RA to the Devices through Commissioner Tool
-~~~~~~~~</t>
+~~~</t>
 
 <t><list style="numbers" type="1">
   <t>SCIM action - SCIM client performs Active Pull</t>
@@ -958,7 +958,7 @@ Device Manager                Client App        Commissioner Tool
 </section>
 <section anchor="provide-credetials-to-manage-device"><name>Provide Credetials to manage Device</name>
 <t>The Device Manager can provide Resource Attributes to the client application so that the devices can be configured using the commissioning tool. For example, the Device Manager can provide credentials to the device using the client application as the gateway. Through the commissioning tool, which can be a single entity, these credentials can be delivered to the device.
-~~~~~~~~
+~~~
 Device Manager                Client App        Commissioner Tool
 +--------+                +---------------+    (2)   +----+
 |        |     (1)        |               | &lt;------&gt; | RA |
@@ -967,7 +967,7 @@ Device Manager                Client App        Commissioner Tool
 |        |                |      RS       | &lt;------&gt; | RA |
 +--------+                +---------------+          +----+
          Figure 25:  Device Manager provide Resource Attributes to the Commissioner tool to configure device
-~~~~~~~~</t>
+~~~</t>
 
 <t><list style="numbers" type="1">
   <t>SCIM action - SCIM client performs Active Push</t>
@@ -987,7 +987,7 @@ Device Manager                Client App        Commissioner Tool
 The application is the authority for one or more specific Resource Attributes (RA), such as the email address of a given user. This means the application will serve as the Resource Manager (RM), Resource Creator (RC), and Resource Updater (RU) for those specific attributes only.
 Both the Provision Domain and the application will function as both the SCIM Client and SCIM Server for the respective Resource Attributes they are responsible for. They will use the SCIM action of Active Push to pass the Resource Attributes of the Resource Object to their counterpart.
 Thus, both the roles of SCIM Server and SCIM Client exist within the Provision Domain and the application.
-~~~~~~~~
+~~~
                                                  Application
 Provision Domain                                  Customer A
 +------------+                                  +------------+ 
@@ -1011,7 +1011,7 @@ Provision Domain                                  Customer A
 |+----------+|                                  |+----------+|
 +------------+                                  +------------+
          Figure 26: Single Ro with diferent RA authority implemented between the Provision Domain and the customer SaaS App 
-~~~~~~~~</t>
+~~~</t>
 
 <t><list style="numbers" type="1">
   <t>SCIM action - SCIM Client performs Active Push</t>
@@ -1022,7 +1022,7 @@ Provision Domain                                  Customer A
 <t>The implementer's domain acts as the SCIM Client and is the authority for regular attributes, such as first name, last name, home address, etc., of a user. These attributes are created and updated by the Provision Domain, which functions as the Resource Manager (RM), Resource Creator (RC), and Resource Updater (RU).
 The application is the authority for one or more specific Resource Attributes (RA), such as the email address of a given user. This means the application will serve as the Resource Manager (RM), Resource Creator (RC), and Resource Updater (RU) for those specific attributes only.
 In this use case, since the Provision Domain is always the SCIM Client and the application is always the SCIM Server, the Active Push method will be used for the regular attributes of the Resource Objects (RO). The Active/Delta Pull method will be used to retrieve the specialized Resource Attributes that are the responsibility of the application.
-~~~~~~~~
+~~~
                                               Application
 Provision Domain                               Customer A
 +----------+                                  +----------+
@@ -1034,7 +1034,7 @@ Provision Domain                               Customer A
 |          |                                  |          |
 +----------+                                  +----------+
          Figure 27: Single RO with diferent RA authority implemented between the Provision Domain and the customer SaaS App 
-~~~~~~~~</t>
+~~~</t>
 
 <t><list style="numbers" type="1">
   <t>SCIM action - SCIM Client performs Active Push</t>
@@ -1245,312 +1245,312 @@ Detailed security considerations are specified in Section 7 of the SCIM protocol
   </back>
 
 <!-- ##markdown-source:
-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
+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
-Pzk8kCuNL5nq6ddf//nrp4cHpp4upTFSldV6JU7Z+cur7w8P3on1jdL5KfvH
-eVkJXYrq5AX0PWCTs/OLnw4PbpR+N9eqXp3ik8ODw4OMV6dMljN1eFDJqhCn
-7MvJ2lRiyWZKszOtjDnJ1ZLLkp3noqxktWYXvORzsRRldcpeiJksZSVVaQbs
-8lroayluBuxMlZlYVWbAeJmzsfhnLTW+Yb48PODTqRbXMNLZ+QV7awQ7g7V+
-eXjwmpfzUybKwwNeVwulTw8PThhB6Q2vC8V+UHou2BnB6vCAMaXnp+xMmkwx
-mreBp2LJZXHKVrxGsP5nBg2GmVrCkkOPS1Fw9kKW80L4vi5kppVRswpGWSnN
-YW1Rn1+u8LVhjq/959I1h96/hO5LpZe8ktfiFN4af3/29MmTP5/CLwDmxm/f
-/vHZN9H3Z+77n588+Tr6/tR9/9OzJ9/i9xfiWmaCTbKFWHL28n0lSkAHwyrF
-qoXA/WVLlYsCmzPGKq7nojpli6pamdPHj3Ne8Urz7J3QQymq2VDp+eNcZY8J
-H82CL37hOeFjjqOdYH+uO8KW3edh3/Mbi3+5vbgYsgkN2Pjh1ZCd/3PKi8bj
-l0P2WnBtn+a8Eqfs6ddPvzn5+lsGD3HYN1rNZCEQkyciqzUg78trUVbsSr0T
-pflA0MAjgouAzkwKkd2G3giNN0P2qi6rxtMfh+yML0/+Lsu5aP52MWT/JY3o
-A8jhwcnJCeNTA6uq4O+rhTQsV1kNh5KttLqWuTAsj4+zsscZz7ARhcgqkbPa
-CIa0iakZbfHu9IIdAXSOh4ydV6zga8NUXWEnBjv50rDMUw7EGktBZoW6sV9l
-xWSZFTVM18/F/rRcFTgOHlroyshc0BE2QweGpcxzOPCHB1+w87LSKq8ze8iv
-Pmg5bMaXslgDPMxKZHImMxqS/cMe8Z9wevavZz8xgL0wcl6KHA7KEntkWhhV
+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
-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
+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
-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
+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
-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
-TmU7DN2lBFxqyrN3hwf/H6M2e/7+IwEA
+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
 
 -->
 
