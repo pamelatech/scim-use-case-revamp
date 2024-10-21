@@ -331,7 +331,7 @@ In any Event Publisher and Receiver relationship, the set of SCIM resources (e.g
          Figure 8:  SCIM actions aggregated by a SCIM server then transmitted via SCIM Events using Co-Ordinated Provisioning
 ~~~~~~~~
 
-   1. SCIM Action.   
+   1. SCIM Action.
    2. SCIM Response.   
    3. Event SCIM:prov:<op> id:xyz
    4. SCIM Active Pull
@@ -353,6 +353,7 @@ Resource Subscriber (RS) in a single tenant that can either be the SCIM Client o
 ##### Single-Tenant Resource Subscriber that is the SCIM Server
 It is common today for the SCIM Client, typically performing the roles of RM (Resource Manager), RC (Resource Creator), and RU (Resource Updater), to perform CRUD operations on the database of the RS (Resource Subscriber) using the Active Push method. This action delivers RO (Resource Objects) and their RA (Resource Attributes) to the single-tenant RS.
 A good example would be an on-premises application (most commonly a single-tenant application) that creates its own database of objects for its own use, obtaining the objects from a central IdM (Identity Management) system.
+
 ~~~~~~~~
                                              Provision Domain
 +----------+                                   +----------+
@@ -372,6 +373,7 @@ A good example would be an on-premises application (most commonly a single-tenan
 ##### Single-Tenant Resource Subscriber that is the SCIM Client
 The SCIM Client, which is the RS (Resource Subscriber), will perform CRUD operations on its own database using the Active and/or Delta Pull methods. Source information is available in the SCIM server, which is the IdM (Identity Management) system and is responsible for the roles of RM (Resource Manager), RC (Resource Creator), and RU (Resource Updater) for the RO (Resource Objects) and their RA (Resource Attributes).
 A good example would be an on-premises application (most commonly a single-tenant application) that creates its own database of objects, such as devices, from a central IdM (Identity Management) system. This option is a good solution for situations where the RS (Resource Subscriber) is not reachable from the IdM.
+
 ~~~~~~~~
                                              Provision Domain
 +----------+                                   +----------+
@@ -394,6 +396,7 @@ It only differs from the Single-Tenant Resource Subscriber (RS) by supporting mu
 ##### Multi-Tenant Resource Subscriber that is the SCIM Server
 It is the most common today for the SCIM Client, typically performing the roles of RM (Resource Manager), RC (Resource Creator), and RU (Resource Updater), to perform CRUD operations on the database of the RS (Resource Subscriber) using the Active Push method. This action delivers RO (Resource Objects) and their RA (Resource Attributes) to the multi-tenant RS (Resrouce Subscriber).
 A good example would be a SaaS application (most commonly a multi-tenant applications) that creates its own database of objects for its own use, obtaining the objects from a central IdM (Identity Management) system.
+
 ~~~~~~~~
                                               Provision Domain
                                               +------------+
